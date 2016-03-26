@@ -1,0 +1,40 @@
+  <?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('inbox'); ?>">Email &rsaquo;</a></li>
+             <li><a class="before" href="<?php echo $this->url('contact-groups'); ?>">Groups &rsaquo;</a></li>
+            <li>Delete Group</li> 
+        </ul>
+    </div>
+<div class='clear'></div>
+<div class="row">
+    <div class="email_main">
+        <div id="collapse4" class="body">            
+            <?php
+            $title = 'Delete Group';
+            $this->headTitle($title);
+            ?>
+            <div class="alertbox">
+            <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+            <p>Are you sure that you want to delete
+                '<?php echo $this->escapeHtml($this->group->title); ?>'?
+            </p>
+            <?php
+            $url = $this->url('contact-groups', array(
+                'action' => 'delete',
+                'id' => $this->group->id,
+            ));
+            ?>
+            <form action="<?php echo $url; ?>" method="post">
+                <div>
+                    <input type="hidden" name="id" value="<?php echo (int) $this->group->id; ?>" />
+                    <input type="submit" name="del" value="Yes" class="btn btn-danger btn-sm"/>
+                    <input type="submit" name="del" value="No" class="btn btn-warning btn-sm"/>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>

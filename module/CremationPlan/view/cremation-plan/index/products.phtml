@@ -1,0 +1,127 @@
+
+<?php
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/tablesorter/js/jquery.tablesorter.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js');
+?>
+<style>
+    .dataTables_length{float:right} 
+    table{float: left;display: inline-block;}
+    thead{display:none}
+    .paging_bootstrap{text-align:center}
+    td {border: none !important;}
+</style>
+<?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+            <li>Purchase <?php echo $this->category; ?></li> 
+        </ul>
+    </div>
+<div class='clear'></div>
+<div class="row">
+    <div class="find">
+        <div class="topbar">
+            <h3><?php echo $this->category; ?></h3>
+            <div class="main_search">
+                <form action="" method="POST" >
+                    <input type="text" name="name" class="form-control" value="<?php echo $this->find['name']; ?>" placeholder="Enter keywords,eg,Food"/>
+                    <input type="submit" class="btn btn-default" value="Go"/>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="main_product">
+            <div id="categories">
+                <ul>
+                    <?php foreach ($this->productCategory as $category) { ?>
+                        <li <?php if ($category['label'] == $this->category) { ?> class="active" <?php } ?>>
+                            <a href="<?php echo $this->url('cremation-plans', array('action' => 'products', 'id' => $category['value'])); ?>"  data-id="<?php echo $category['value'] ?>">
+                                <?php echo $category['label'] ?>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>  
+            </div>
+
+            <div id="productlist"> 
+               
+                <table id="dataTable" class="table ">
+                    <thead>
+                        <tr>
+
+                            <th>Products</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $i = 0;
+                        foreach ($this->productList as $product) {
+                           // if (($i % 3) == 0) {
+                                ?>
+                                <tr>
+                                <?php //} ?>
+                                <td>
+                                    <div class="findimage floatleft"> 
+                                        <?php if ($product["product_image"] != '') { ?>
+                                            <img src="<?php echo $this->basePath("/../module/CremationPlan/assets/product/thumb/" . $product["id"] . "_" . $product["product_image"]); ?>" width="120" height="72"/>
+                                        <?php } else { ?>
+                                            <img src="<?php echo $this->basePath("/../module/CremationPlan/assets/product/user-placeholder.gif"); ?>" width="120" height="72"/>
+
+                                        <?php } ?>
+
+                                    </div>
+                                    <div class="productdetails floatleft">
+                                        <p><b><?php echo $this->escapeHtml($product["title"]); ?> </b></p>
+                                        <p><?php echo $this->escapeHtml($product["description"]); ?>  </p>
+    <!--                                        <p> Product Sku: <?php //echo $product["sku"];  ?></p>-->
+                                        <p>Product Price: <?php echo $product["price"]; ?></p>
+
+                                        <form name="_xclick" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+                                            <input type="hidden" name="cmd" value="_xclick">
+                                            <input type="hidden" name="business" value="vasanth.ganes.raju-facilitator@gmail.com">
+                                            <input type="hidden" name="currency_code" value="USD">
+                                            <input type="hidden" name="item_name" value="<?php echo $this->escapeHtml($product["description"]); ?>">
+                                            <input type="hidden" name="return" value="http://www.testdomain.cmm/antim/public/cremation-plans/payment">
+                                            <input type="hidden" name="amount" value="<?php echo $product["price"]; ?>">
+                                            <input type="submit" value="Buy Now">
+                                        </form>
+
+                                        <a class="favourite" href="<?php echo $this->url('cremation-plans', array('action' => 'whislist', 'id' => $category['value'])); ?>" >
+                                            Add WishList
+                                        </a>
+                                    </div>
+                                </td>
+                                <?php //if (($i % 3) == 2) { ?>
+                                </tr>
+                            <?php //}$i++; ?>
+
+                        <?php } ?>
+                    </tbody></table>
+                  
+            </div>
+<div class="advertisement">
+                    <img src=""  width="300" height="250"/>
+                    <img src=""  width="300" height="250"/>
+                </div>
+        </div>
+
+    </div>
+</div>
+<?php $this->inlineScript()->captureStart() ?>
+
+$(document).ready(function() {
+$('#dataTable').dataTable( {
+"bPaginate": true,
+"bFilter": false,
+"iDisplayLength": 3,
+"bInfo": false,
+"bSort": false,
+"bLengthChange": false,
+} );
+} );
+<?php $this->inlineScript()->captureEnd() ?>

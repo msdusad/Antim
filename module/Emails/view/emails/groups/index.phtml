@@ -1,0 +1,82 @@
+<?php
+$title = 'Contact Groups';
+$this->headTitle($title);
+
+
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/tablesorter/js/jquery.tablesorter.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js');
+?>
+
+  <?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('inbox'); ?>">Email &rsaquo;</a></li>
+            <li>Groups</li> 
+        </ul>
+    </div>
+<div class='clear'></div>
+<?php if ($this->message != '') { ?>
+                <div class="flash_message">
+                    <?php echo $this->message[0]; ?>
+                </div>
+            <?php } ?>
+<div class="row">
+    <div class="email_main">
+        <div id="collapse4" class="body"> 
+
+            <form name="dataform" method="POST" action="">
+                <div class="top">
+            <h4>Groups</h4>
+                <div class="emailaction">                                    
+                    <select name="action" class="form-control">
+                        <option value="">Select Action</option>
+                        <option value="multidelete">Delete</option>                                        
+                    </select>
+                    <input type="submit" value="Submit" class="btn btn-default btn-sm"/>
+                </div>
+                </div>
+                <table id="dataTable" class="table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" name="sellectall" value=""></th>
+                            <th>Title</th>                           
+                            <th><a href="<?php echo $this->url('contact-groups', array('action' => 'add')); ?>">Add Group</a></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($this->paginator as $groups) : // <-- change here!  ?>
+                            <tr>
+                                <td><input type="checkbox" class="case" name="ids[]" value="<?php echo $groups->id ?>"></td>
+                                <td><?php echo $this->escapeHtml($groups->title); ?></td>                               
+                                <td>
+                                    <a href="<?php echo $this->url('contact-groups', array('action' => 'edit', 'id' => $groups->id));
+                            ?>"><i class="fa fa-pencil fa-fw"></i></a>
+                                    <a href="<?php echo $this->url('contact-groups', array('action' => 'delete', 'id' => $groups->id));
+                            ?>"><i class="fa fa-trash-o fa-fw"></i></a>
+                                    <a href="<?php echo $this->url('contact-group-users', array('id' => $groups->id));
+                            ?>"><i class="fa fa-user fa-fw"></i></a>
+                             <a title="email to this group" href="<?php echo $this->url('compose-mail', array('id' => $groups->id));
+                            ?>"><i class=" fa fa-envelope fa-fw"></i></a>
+                                </td>
+
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <?php $this->inlineScript()->captureStart() ?>
+        $(function() { 
+
+
+        metisTable();   
+        });
+        <?php $this->inlineScript()->captureEnd() ?>
+    </div>
+
+</div>

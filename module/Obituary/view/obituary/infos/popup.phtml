@@ -1,0 +1,92 @@
+<?php
+
+$this->headLink()
+        ->prependStylesheet($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.css')
+        ->prependStylesheet($this->basePath() . '/assets/css/ui.css');
+
+$this->headScript()
+        ->prependFile($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.min.js');
+
+?>
+
+<style>
+    #top{display:none;}
+    .socialmedia{display:none;}
+    .fancybox-inner{display: inline;}
+    footer {display: none;}
+    #ui-datepicker-div{z-index:99999;}
+    
+    
+</style>
+<?php
+$title = 'Personal Information';
+$this->headTitle($title);
+?>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('obituary-create-infos',array('action' => 'popup','id'=>$this->id,'type'=>'update')));
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="persionalform">
+    <div class="mainform">
+    <h4><?php echo $this->escapeHtml($title); ?></h4>
+    <div id="step1">
+        <?php
+        echo $this->formHidden($form->get('id'));
+        echo $this->formHidden($form->get('obituary_id'));
+        echo $this->formRow($form->get('first_name'));
+        echo $this->formRow($form->get('middle_name'));
+        echo $this->formRow($form->get('last_name'));
+        echo $this->formRow($form->get('dob'));
+        echo $this->formRow($form->get('dod')); 
+        echo $this->formRow($form->get('age'));
+         echo $this->formRow($form->get('death_place'));
+         
+        ?>
+    </div>
+    <div id="step2">
+        <?php 
+          echo $this->formRow($form->get('school'));
+         echo $this->formRow($form->get('ug'));
+         echo $this->formRow($form->get('ug_specialization'));
+         echo $this->formRow($form->get('pg'));
+         echo $this->formRow($form->get('pg_specialization'));
+         echo $this->formRow($form->get('family'));
+       
+        ?>
+    </div>
+    </div>
+    <div class="clear"></div>
+    <div class="editor"><?php  echo $this->formRow($form->get('description')); ?></div>
+    <div class="clear"></div>
+     <?php     
+     echo $this->formSubmit($form->get('submit')); ?>   
+     <br/>
+</div>
+<?php
+echo $this->form()->closeTag();
+
+?>
+
+<?php //$this->inlineScript()->captureStart() ?>
+<script>
+
+
+$("#dob").datepicker({dateFormat: 'yy-mm-dd' ,       
+        onSelect: function(selected) {
+          $("#dod").datepicker("option","minDate", selected)
+        }
+    });
+    $("#dod").datepicker({dateFormat: 'yy-mm-dd' ,
+        onSelect: function(selected) {
+           $("#dob").datepicker("option","maxDate", selected)
+        }
+    }); 
+
+ $("#description").cleditor();
+ 
+ 
+</script>
+<?php //$this->inlineScript()->captureEnd() ?>

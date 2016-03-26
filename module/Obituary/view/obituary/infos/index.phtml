@@ -1,0 +1,113 @@
+<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/ui.css'); ?>
+<?= $this->partial('layout/top_links'); ?>
+<?php
+$title1 = 'Personal Information';
+$title2 = 'Education';
+$title3 = 'Family Details';
+$this->headTitle($title1);
+?>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('obituary-create-infos'));
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="layout_nav">
+    <ul>
+        <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+        <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+        <li><a class="before" href="<?php echo $this->url('obituary'); ?>">Obituary &rsaquo;</a></li>
+        <li>Step 1 </li> 
+    </ul>
+</div>
+<div class="clear"></div>
+<div class="persionalform">
+    <div class="mainform">
+        <h4><?php echo $this->escapeHtml($title1); ?></h4>
+
+        <div id="step1">
+            <?php
+            echo $this->formHidden($form->get('id'));
+            echo $this->formHidden($form->get('obituary_id'));
+            echo $this->formRow($form->get('first_name'));
+            echo $this->formRow($form->get('middle_name'));
+            echo $this->formRow($form->get('last_name'));
+            
+            ?>
+        </div>
+        <div id="step2">
+            <?php
+          	echo $this->formRow($form->get('dod'));
+            echo $this->formRow($form->get('death_place'));
+          	echo $this->formRow($form->get('dob'));
+            ?>
+        </div>      
+        
+
+    </div>
+    <div class="clear"> </div> 
+    <br>
+    
+    <div class="mainform">
+        <h4><?php echo $this->escapeHtml($title2); ?></h4>
+
+        <div id="step1">
+            <?php
+             echo $this->formRow($form->get('school'));
+            echo $this->formRow($form->get('ug'));
+            echo $this->formRow($form->get('ug_specialization'));
+            ?>
+        </div>
+       
+
+        <div id="step2">
+            <?php
+          	echo $this->formRow($form->get('pg'));
+            echo $this->formRow($form->get('pg_specialization'));
+           
+            ?>
+        </div>      
+       
+
+    </div>
+    <div class="clear"> </div>    
+    <br/>
+    
+    <div class="mainform">
+        <h4><?php echo $this->escapeHtml($title3); ?></h4>
+        <div style="width:70%;float:none; ">
+            <?php
+               echo $this->formRow($form->get('family'));
+            ?>
+        </div>
+        
+        <div class="save-countinue">    
+        <?php echo $this->formSubmit($form->get('submit')); ?> 
+        </div>  
+
+    </div>
+</div>
+<?php
+echo $this->form()->closeTag();
+?>
+
+<?php $this->inlineScript()->captureStart() ?>
+$(function() {
+
+
+$("#dob").datepicker({dateFormat: 'yy-mm-dd' ,
+
+onSelect: function(selected) {
+$("#dod").datepicker("option","minDate", selected)
+}
+});
+$("#dod").datepicker({dateFormat: 'yy-mm-dd' ,
+onSelect: function(selected) {
+$("#dob").datepicker("option","maxDate", selected)
+}
+}); 
+
+});
+
+<?php $this->inlineScript()->captureEnd() ?>

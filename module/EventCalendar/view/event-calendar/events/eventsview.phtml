@@ -1,0 +1,125 @@
+<?php
+$this->headLink()
+        ->prependStylesheet($this->basePath() . '/assets/lib/timepicker/css/bootstrap-timepicker.css')
+        ->prependStylesheet($this->basePath() . '/assets/css/rituals.css');
+
+$this->headScript()->prependFile($this->basePath() . '/assets/lib/timepicker/js/bootstrap-timepicker.min.js');
+?>
+<?php echo $this->partial('layout/top_links'); ?>
+
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+            <li><a class="before" href="<?php echo $this->url('event-calendar-events'); ?>">Events &rsaquo;</a></li> 
+            <li>Add Event</li> 
+        </ul>
+ </div>
+
+<div class='clear'></div>
+
+<div class="col-md-4 col-sm-5 col-xs-5">
+    <div class="eventmenu" data-role="content" > 
+    <select name="create" id="create">
+        <option value="">Select</option>
+        <option value="event">Create Event</option>
+    	  <option value="viewevent">View Event</option>
+    </select>
+    <div class="datepicker"></div>
+    <ul>       
+
+        <li class="active"><a href="<?php echo $this->url('event-calendar-events'); ?>">My Calendar</a></li>
+        <li><a href="<?php echo $this->url('event-calendar-events', array('action' => 'in')); ?>">Indian Holidays</a></li>  
+        <li><a href="<?php echo $this->url('event-calendar-events', array('action' => 'us')); ?>">US Holidays</a></li> 
+    </ul>
+</div>
+</div>
+
+<div class="col-md-8 col-sm-7 col-xs-7 event-block">
+<div class="eventmain">
+<?php 
+foreach($event as $e){
+?>
+<p><strong>Profile Type:</strong> <?php echo $e['profile_type'];?></p>
+<p><strong>Title:</strong> <?php echo $e['title'];?></p>
+<p><strong>Event Date:</strong> <?php echo $e['edate'];?></p>
+<p><strong>Start Time:</strong> <?php echo $e['start'];?></p>
+<p><strong>End Time:</strong> <?php echo $e['end'];?></p>
+<p><strong>Location:</strong> <?php echo $e['location'];?></p>
+<p><strong>Contact:</strong> <?php echo $e['contact'];?></p>
+<p><strong>Content:</strong> <?php echo $e['content'];?></p>
+
+
+<?php
+}
+
+?>
+</div>
+</div>
+<form id="eventadd" method="GET">
+</form>
+<script>
+
+    $(function() {
+
+        $('.dp').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+        $('.timepicker-default').timepicker();
+
+
+        $(".datepicker").datepicker();
+                
+
+        $('#profile_type').change(function(e) {
+            var taskUrl;
+
+            if ($(this).val() == 'obituary') {
+
+                taskUrl = '<?php echo $this->url('sharedtasks', array('action' => 'obituarytasks')); ?>';
+            } else if ($(this).val() == 'memoralize') {
+
+                taskUrl = '<?php echo $this->url('sharedtasks', array('action' => 'memoralizetasks')); ?>';
+            }
+            var data = {
+                'user_id': '<?php echo $this->userid; ?>',
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: taskUrl,
+                data: data,
+                success: function(data) {
+
+                    $('#profile_id').html(data);
+
+                }
+            });
+        });
+        <?php if($this->type=='obituary'){ echo "$('#profile_type').trigger('change');";}?>
+   
+   setTimeout(function(){
+       $("#profile_id").val('<?php echo $this->id;?>');
+   },1000);
+    });
+
+    $(document).ready(function() {
+$("#create").change(function() {
+//alert();
+            if ($(this).val() == 'event') {                
+                //var url = '<?php echo $this->url('event-calendar-events', array('action' => 'add','type'=>$this->type,'id'=>$this->id)); ?>';
+				var url = '<?php echo $this->url('event-calendar-events', array('action' => 'add')); ?>';
+               $('#eventadd').attr('action',url);
+               $('#eventadd').submit();
+            }
+			if ($(this).val() == 'viewevent') {                
+               var url = '<?php echo $this->url('event-calendar-events'); ?>';
+               $('#eventadd').attr('action',url);
+               $('#eventadd').submit();
+            }
+        });
+	});
+              
+            
+        
+</script>

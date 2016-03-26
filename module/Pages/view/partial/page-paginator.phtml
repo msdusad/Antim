@@ -1,0 +1,33 @@
+<?php if(count($pages)>0):?>
+<?php $sn=1; foreach($pages as $page):?>
+                                            
+    <tr>
+        <td><?php echo $sn;?></td>
+        <td><?php echo ucwords($page['title']);?></td>
+        <td><?php echo ucwords($page['alias']);?></td>
+        <td><?php echo substr(strip_tags($page['content']),0,40) ?>..</td>
+        <td><?php echo $page['status']?></td>
+        <td>
+        <div class="btn-group">
+        <button class="btn btn-info" type="button">Action</button>
+        <button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul role="menu" class="dropdown-menu">
+		<li><a href="<?php echo $this->url('administrator',array('controller'=>'administrator','action'=>'edit','id'=>$page['id']))?>">Edit</a></li>
+        <li><a href="javascript:void(0);" onclick="previewPage('<?php echo $page['id'];?>');" >Preview</a></li>
+        <li><a href="javascript:void(0);" onclick="deletepage('<?php echo $page['id'];?>');" >Delete</a></li>
+        
+        </ul>
+        </div>
+        
+        </td>
+    </tr>
+
+    
+    <?php $sn++;
+    endforeach;?>
+<?php endif; exit;?>
+
+						

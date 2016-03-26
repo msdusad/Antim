@@ -1,0 +1,80 @@
+<?php
+$title = 'Inbox';
+$this->headTitle($title);
+
+
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/tablesorter/js/jquery.tablesorter.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js');
+?>
+  <?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+    <ul>
+        <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>        
+        <li>Inbox</li> 
+    </ul>
+</div>
+<div class="row">
+    <?php if ($this->message != '') { ?>
+                <div class="flash_message">
+                    <?php echo $this->message[0]; ?>
+                </div>
+            <?php } ?>
+    <div class="email_main">
+        <div id="collapse4" class="body">  
+            <form name="dataform" method="POST" action="">
+            <div class="top">
+            <h4>Email-Inbox</h4>
+                <div class="emailaction">
+                    <a href="<?php echo $this->url('compose-mail'); ?>" class="btn btn-default">Compose new</a>
+                     <a href="<?php echo $this->url('contact-groups'); ?>" class="btn btn-default">Groups</a>
+                    <select name="action" class="form-control">
+                        <option value="">Select Action</option>
+                        <option value="multidelete">Delete</option>                                        
+                    </select>
+                    <input type="submit" value="Submit" class="btn btn-default"/>
+                     
+                </div>
+            </div>
+                <table id="dataTable" class="table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" name="sellectall" value=""></th>
+                            <th colspan="2">From</th>
+                          
+                            <th>Date</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($this->paginator as $email) : // <-- change here!  ?>
+                            <tr data-url='<?php echo $this->url('maildetail', array('id' => $email->id,'title'=>'inbox')); ?>'>
+                                <td><input type="checkbox" class="case" name="ids[]" value="<?php echo $email->id ?>"></td>
+                                <td><?php echo $this->escapeHtml($email->user); ?></td>
+                                <td><?php echo substr($email->subject . '<span> - ' . $email->message, 0, 100); ?></span></td>
+                                <td><?php echo date('Y M d h:i A', strtotime($email->created_date)); ?></td>
+
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <?php $this->inlineScript()->captureStart() ?>
+        $(function() { 
+
+        $("#dataTable tbody").delegate("tr", "click", function() { 
+
+                 var url = $(this).data('url');
+
+                 window.location.href = url;
+
+        });
+        metisTable();   
+        });
+        <?php $this->inlineScript()->captureEnd() ?>
+    </div>
+
+</div>

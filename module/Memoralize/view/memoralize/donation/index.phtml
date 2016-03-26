@@ -1,0 +1,105 @@
+
+<?php
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/tablesorter/js/jquery.tablesorter.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js');
+?>
+  <?= $this->partial('layout/top_links'); ?>
+
+<div class="row">
+    <div class="find">
+        <div class="title">
+            <h3>Donations</h3>
+        </div>
+        <div class="main_search">
+            <form action="" method="POST" >
+                <input type="text" name="name" class="form-control" value="<?php echo $this->search['name']; ?>" placeholder="Enter keywords,eg,Food"/>
+                <input type="submit" class="btn btn-default" value="Go"/>
+
+            </form>
+        </div>
+        <div class="main_find">
+            <div id="categories">
+                <ul>
+                    <?php foreach ($this->donationCategory as $category) { ?>
+                        <li <?php if ($category['id'] == $this->search['id']) { ?> class="active" <?php } ?>>
+                            <a href="<?php echo $this->url('donations', array('id' => $category['id'])); ?>"  data-id="<?php echo $category['id'] ?>">
+                                <?php echo $category['title'] ?>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>  
+            </div>
+
+            <div id="findlist"> 
+                <?php if (empty($this->donationList)) { ?>
+                    <ul>
+                        <li>
+                            No records
+                        </li>
+                    </ul>
+
+                <?php } ?>
+                <table id="dataTable" class="table ">
+                    <thead>
+                        <tr>
+
+                            <th>Products</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($this->donationList as $product) { ?>
+
+                            <tr>
+                                <td>
+                                    <div class="findimage floatleft"> 
+                                        <?php if ($product['photo'] != '') { ?>
+                                            <img src="<?php echo $this->basePath('/../module/Admin/assets/donation/thumb/' . $product['id'] . '_' . $product['photo']); ?>" width="72" height="72"/>
+                                        <?php } else { ?>
+                                            <img src="<?php echo $this->basePath('/../module/Admin/assets/donation/user-placeholder.gif'); ?>" width="72" height="72"/>
+
+                                        <?php } ?>
+
+                                    </div>
+                                    <div class="finddetails floatleft">
+                                        <b><?php echo $this->escapeHtml($product['name']); ?></b>
+                                        <br />
+                                        <?php echo $this->escapeHtml($product['address']); ?>
+                                        <br />
+                                       
+                                        <form name="_xclick" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+                                            <input type="hidden" name="cmd" value="_donations">
+                                            <input type="hidden" name="business" value="vasanth.ganes.raju-facilitator@gmail.com">
+                                            <input type="hidden" name="currency_code" value="USD">
+                                            <input type="hidden" name="item_name" value="<?php echo $this->escapeHtml($product['name']); ?>">
+                                            <input type="hidden" name="return" value="http://192.168.1.222/antimsanskar/public/cremation-plans/payment">
+                                            <input type="hidden" name="amount" value="<?php echo $product['amount'];?>">
+                                            <input type="image" src="<?php echo $this->basePath('/../module/Memoralize/assets/donate.jpg'); ?>" border="0" name="submit" alt="Make payments with PayPal - it\'s fast, free and secure!">
+                                        </form>
+
+                                       
+                                    </div>
+                                </td>
+                            </tr>
+
+                        <?php } ?>
+                    </tbody></table>
+                </ul>  
+            </div>
+        </div>
+    </div>
+</div>
+<?php $this->inlineScript()->captureStart() ?>
+
+$(document).ready(function() {
+$('#dataTable').dataTable( {
+"bPaginate": true,
+"bFilter": false,
+"bInfo": false
+} );
+} );
+<!--$(function() { metisTable(); metisSortable();});-->
+<?php $this->inlineScript()->captureEnd() ?>
+

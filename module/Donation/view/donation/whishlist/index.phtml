@@ -1,0 +1,170 @@
+<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css'); ?>
+<?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+    <ul>
+        <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>        
+        <li>Whish List</li> 
+    </ul>
+</div>
+<div class="clear"></div>
+<?php if ($this->message != '') { ?>
+    <div class="flash_message">
+        <?php echo $this->message[0]; ?>
+    </div>
+<?php } ?>
+<div class="row">
+    <form name="actionform" id="actionform" method="POST" action="" >
+        <div class="topbar">
+            <h3><?php echo 'Whish List'; ?></h3>
+            <div class="action">
+
+                <select name="action" class="form-control" id="action">
+                    <option value="">Select Action</option>
+                    <option value="multidelete">Delete</option>    
+                    <option value="share">share</option> 
+                </select>
+                <input type="submit" value="Submit" class="btn btn-default btn-sm"/>
+            </div>
+        </div>
+        <div class="main_whishlist" id="tabs">
+
+            <ul>
+                <li><a href="#whishlist">Products</a></li>
+                <li><a href="#checklist">Check List</a></li>
+                <li><a href="#formlist">Form List</a></li>
+            </ul>  
+
+            <div id="whishlist">
+                <?php
+                if (count($this->whishlist) <= 0) {
+                    echo '<div class="noitems">No Items</div>';
+                }
+                ?>
+
+                <?php foreach ($this->whishlist as $list) { ?>
+                    <div class="items" >
+                        <h5><span><input type="checkbox" name="ids[]" class="check" value="<?php echo $list['id']; ?>"/> </span>
+                            <?php echo $list['title']; ?></h5>
+                        <p><?php echo $list['description']; ?></p>
+                        <p><i>Address :</i> <?php echo $list['address']; ?></p>
+                        <p><i>Price : </i> <?php echo $list['price']; ?></p>
+                        <?php if ($list['url'] != '') { ?>
+                            <a href="<?php echo $list['url']; ?>">Add to cart</a>   
+                        <?php } ?>
+                    </div>                
+                <?php } ?>
+
+            </div>
+            <div id="checklist">
+                <?php
+                if (count($this->checkList) <= 0) {
+                    echo '<div class="noitems">No Items</div>';
+                }
+                ?>
+
+                <?php foreach ($this->checkList as $list) { ?>
+                    <div class="items">
+
+                        <h5><span><input type="checkbox" name="check_ids[]" class="check" value="<?php echo $list['id']; ?>"/> </span>
+                            <?php echo $list['title']; ?></h5>                       
+                    </div>                
+                <?php } ?>
+
+            </div>
+            <div id="formlist">
+                <?php
+                if (count($this->formList) <= 0) {
+                    echo '<div class="noitems">No Items</div>';
+                }
+                ?>
+                <?php foreach ($this->formList as $list) { ?>
+                    <div class="items">
+                        <h5><span><input type="checkbox" name="form_ids[]" class="check" value="<?php echo $list['id']; ?>"/> </span>
+                            <?php echo $list['title']; ?></h5>  
+                            <?php if ($list['url'] != '') { ?>
+                            <a target="_blank" href="<?php echo $this->basePath('/../module/PrePlanning/assets/forms/' . $list['url']); ?>">Download</a>   
+                        <?php } ?>
+                    </div>                
+                <?php } ?>
+
+            </div>
+        </div>   
+
+        <input type="hidden" name="msg" value=""/>
+        <input type="hidden" name="subject" value="<?php echo 'Purchase List -' . date('d-m-Y'); ?>"/>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function() {
+
+        $("#tabs").tabs({
+            activate: function(event, ui) {
+
+                if (ui.newTab.index() == 0) {
+
+                    if ($("#action option[value='share']").length <= 0) {
+                        $("#action").append('<option value="share">Share</option>');
+                    }
+
+                } else {
+                    $("#action option[value='share']").remove();
+                }
+            }
+        });
+
+        $("#actionform").submit(function(event) {
+
+            if ($('.check').is(':checked') && $('#action').val()!='') {
+
+                return true;
+            }
+            if($('#action').val()!=''){
+              
+             alert('Please select items');
+                
+            }else{
+                alert('Please select action');
+            }
+            
+            event.preventDefault();
+           
+        });
+
+
+
+        $('#action').change(function(event) {
+
+            var type = $(this).val();
+            var ids = $('input:checkbox:checked.check').map(function() {
+                return this.value;
+            }).get();
+
+            if (type == 'share' && $('.check').is(':checked')) {
+
+                var data = {'ids': ids}
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo $this->url('whish-list', array('action' => 'share')); ?>',
+                    data: data,
+                    success: function(data) {
+
+                        $('[name="msg"]').val(data);
+                        $('#actionform').attr('action', '<?php echo $this->url('compose-mail', array('share' => 'share')) ?>');
+                    }
+                });
+
+            } else if (type == 'share' && !$('.check').is(':checked')) {
+
+                alert('Please select items');
+                $(this).val('');
+
+            } else {
+
+                $('#actionform').attr('action', '<?php echo $this->url('whish-list') ?>');
+            }
+
+        });
+    });
+
+</script>

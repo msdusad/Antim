@@ -1,0 +1,188 @@
+
+<?= $this->partial('layout/top_links'); ?>
+<?php if ($this->message != '') { ?>
+    <div class="flash_message">
+        <?php echo $this->message[0]; ?>
+    </div>
+<?php } ?>
+
+<div class="obituary">
+    <div>
+        <h4>create a permanent obituary profile in simple 4 steps</h4>
+
+        <form action="<?php echo $this->url('obituary-create'); ?>" method="post">
+            <input type='submit' value='search'/>
+            <input type="test" name="profile" placeholder='Search Recent Obituries' value="<?php echo $this->profile; ?>"/>
+        </form>
+    </div>
+    <div class='clear'></div>
+    <div class="steps" >
+        <?php
+        $step1Path = '/img/step1.gif';
+        if ($this->step == 0) {
+
+            $url = $this->url('obituary-create-infos');
+        } else if ($this->draftSteps == 2) {
+            $step1Path = '/img/step1-draft.gif';
+            $url = $this->url('obituary-create-infos', array('id' => $this->id, 'type' => 'create'));
+        } else {
+            $step1Path = '/img/step1-complete.gif';
+            $url = $this->url('obituary-create-infos', array('id' => $this->id, 'type' => 'create'));
+        }
+        ?>
+        <h3>step 1</h3>
+        <div class='step1'><a  href="<?php echo $url; ?>"> <img src="<?php echo $this->basePath($step1Path); ?>" alt=""></a></div>
+        <p>
+            <a  href="<?php echo $url; ?>"> add info about the person</a>
+        </p>
+    </div>
+    <div class="steps" <?php $step2Path = '/img/step2.gif';
+        if ($this->step > 0) {
+            
+        } else { ?> style="pointer-events: none;" <?php } ?>>
+        <h3>step 2</h3>
+        <div class='step2'> 
+<?php if ($this->draftSteps == 2 && $this->step > 1) {
+    $step2Path = '/img/step2-draft.gif';
+} else if ($this->step > 1) {
+    $step2Path = '/img/step2-complete.gif';
+} ?>
+            <a  href="<?php echo $this->url('obituary-create-media', array('id' => $this->id, 'step' => 1)) ?>">
+                <img src="<?php echo $this->basePath($step2Path); ?>" alt="">
+            </a>
+        </div>
+        <p>
+            <a  href="<?php echo $this->url('obituary-create-media', array('id' => $this->id, 'step' => 1)) ?>"> Add pictures & video or audio</a>
+        </p>
+    </div>
+    <div class="steps" <?php $step3Path = '/img/step3.gif';
+if ($this->step > 1) {
+    
+} else { ?> style="pointer-events: none;" <?php } ?>>
+        <h3>step 3</h3>
+        <div class='step3'>
+        <?php if ($this->draftSteps == 2 && $this->step > 2) {
+            $step3Path = '/img/step3-draft.gif';
+        } else if ($this->step > 2) {
+            $step3Path = '/img/step3-complete.gif';
+        } ?>
+            <a  href="<?php echo $this->url('obituary-create-themes', array('id' => $this->id, 'step' => 2)) ?>">
+                <img src="<?php echo $this->basePath($step3Path); ?>" alt="">
+            </a>
+        </div>
+        <p>
+            <a  href="<?php echo $this->url('obituary-create-themes', array('id' => $this->id, 'step' => 2)) ?>">Select the themes</a>
+        </p>
+    </div>
+    <div class="steps" <?php $step4Path = '/img/step4.gif';
+        if ($this->step > 2) {
+            
+        } else { ?> style="pointer-events: none;" <?php } ?>>
+        <h3>step 4</h3>
+<?php if ($this->step > 3) {
+    $step4Path = '/img/step4-complete.gif';
+} ?>
+        <div class='step4'><a href='#'> <img src="<?php echo $this->basePath($step4Path); ?>" alt=""></a></div>
+       
+           <form method="post" id="emailform" action="<?php echo $this->url('compose-mail',array('share'=>'share')); ?>">
+    <input type="hidden" name="subject" id="subject" value=""/>  
+    <input type="hidden" name="msg" id="msg" value=""/>  
+     <input type="hidden" name="url" id="url" value="<?php echo $this->url('obituary',array('id'=>$this->id)); ?>"/>
+     <p> <a href="#" class='publishshare'>send to friends & family</a></p>
+</form> 
+    
+
+    </div>
+    <div class='clear'></div>
+    <div class='obituary_action'>
+        <?php if ($this->step > 0) { ?>
+            <a href='#'  id="draft" class='draft'>Make it Draft</a>
+        <?php } else if (count($this->drafts) > 0) { ?>
+            <a href='#drafts' class='fancybox draft'>Show Drafts</a>
+        <?php } else {
+            
+        } ?>
+
+        <a href='#' id="publish" class='publish' <?php if ($this->step < 3) { ?> style="pointer-events: none;" <?php } ?> >Publish</a>
+        <a href='#' id="publishshare" class='publishshare' <?php if ($this->step < 3) { ?> style="pointer-events: none;" <?php } ?> >Publish and Share</a>
+    </div>
+</div>
+<div id="drafts" style="display:none">
+    <ul>
+<?php
+foreach ($this->drafts as $draft) {
+
+    switch ($draft['steps']) {
+        case 1:
+            $url = $this->url('obituary-create', array('id' => $draft['id'], 'step' => 1));
+            break;
+        case 2:
+            $url = $this->url('obituary-create', array('id' => $draft['id'], 'step' => 2));
+            break;
+        case 3:
+            $url = $this->url('obituary-create', array('id' => $draft['id'], 'step' => 3));
+            break;
+    }
+    ?>
+            <li> <a href="<?php echo $url; ?>"><?php echo $draft['first_name'] . ' ' . $draft['middle_name'] . ' ' . $draft['last_name']; ?></a></li>
+<?php } ?>  
+    </ul>
+</div>
+
+<script>
+
+    $(document).ready(function() {
+        
+        $('.fancybox').fancybox();
+
+        $("#draft").click(function(event) {
+            event.preventDefault();
+            var id = '<?php $this->id; ?>';
+            var formData = {id: id, action: "draft"};
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $this->url('obituary', array('action' => 'draft', 'id' => $this->id)); ?>",
+                data: formData,
+                success: function(result) {
+                    location.reload();
+                }});
+
+        });
+        $("#publish").click(function(event) {
+            event.preventDefault();
+          
+            var id = '<?php echo $this->id; ?>';
+            var formData = {id: id, action: "publish"};
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $this->url('obituary', array('action' => 'publish', 'id' => $this->id)); ?>",
+                data: formData,
+                success: function(result) {
+                   
+                      window.location.href = "<?php echo $this->url('obituary', array('action' => 'publish', 'id' => $this->id)); ?>";
+        
+                }});
+        });
+        $(".publishshare").click(function(event) {
+            event.preventDefault();
+     
+            var id = '<?php echo $this->id; ?>';
+            var formData = {id: id, action: "publish-share"};
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $this->url('obituary', array('action' => 'publish-share', 'id' => $this->id)); ?>",
+                data: formData,
+                 dataType:"json",
+                success: function(result) {
+               
+                  var msg = result.message;
+                   var subject = result.subject;
+                   
+                      $('#msg').val(msg);
+                      $('#subject').val(subject);
+                      $('#emailform').submit();
+        
+                }});
+        });
+    });
+</script>

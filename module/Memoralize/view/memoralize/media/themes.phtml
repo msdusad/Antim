@@ -1,0 +1,98 @@
+<?php
+$this->headLink()->prependStylesheet($this->basePath() . '/assets/lib/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css');
+
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/uniform/jquery.uniform.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/plupload/js/jquery.plupload.queue/jquery.plupload.queue.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/plupload/js/plupload.full.min.js');
+?>
+  <?= $this->partial('layout/top_links'); ?>
+<div id="error"></div>
+<form method='post' action=''>
+    <div class='memo_images'>
+        <ul>
+            <?php foreach ($images as $image) { ?>
+                <li>
+                    <?php if($image['user_id']!=0){?>
+                    <input type="checkbox" name="ids[]" value="<?php echo $image['id']; ?>">
+                    <?php }?>
+                    <img src="<?php echo $this->basePath('/../module/Memoralize/assets/themes/' . $image['image_url']); ?>" width="72" height="72"/>
+                    <br>
+                    <input type="radio" name="theme" <?php
+                    if ($image['theme_id'] != '') {
+                        echo 'checked';
+                    }
+                    ?> value="<?php echo $image['id']; ?>"> Theme
+
+                </li>
+            <?php } ?>
+        </ul>
+        <input type='submit' value='Update' class="btn btn-lg btn-default btn-sm"/>
+        <input type='hidden' name='action' value='cover'/>
+        <a ref='#' id='delete' class="btn btn-lg btn-default btn-sm">Delete</a>
+    </div>
+</form>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box">
+            <header>
+                <h5>Image Uploader</h5>
+            </header>
+            <div id="collapse2" class="block">
+                <form>
+                    <div id="uploader"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+
+ <a  href="<?php echo $this->url('memoralize-create',array('step'=>'3','id'=>$this->id))?>"> 
+    Complete Step 3
+ </a>
+<script>
+
+    $(document).ready(function() {
+        $('#uploader').pluploadQueue({
+            url: '<?php echo $this->basePath('memoralize-step2/uploadthemes/' . $this->id.''); ?>',
+            max_files: 2,
+            filters: [
+                {title: "Image files", extensions: "jpg,gif,png"}
+            ],
+            rename: true,
+            init: {
+                FilesAdded: function(up, files) {
+                },
+                UploadComplete: function(up, files) {
+                    // destroy the uploader and init a new one
+                   up.destroy();
+                   location.reload();
+
+                }
+            }
+        });
+
+
+        $("#delete").click(function() {
+            event.preventDefault();
+            var searchIDs = $(".memo_images input:checkbox:checked").map(function() {
+                return $(this).val();
+            }).get();
+            if (searchIDs.length != 0) {
+                var formData = {ids: searchIDs, action: "delete"};
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo $this->basePath('memoralize-step3'); ?>",
+                    data: formData,
+                    success: function(result) {
+                        location.reload();
+                    }});
+            } else {
+                $("#error").html('Please select images');
+            }
+        });
+
+
+    });
+</script>

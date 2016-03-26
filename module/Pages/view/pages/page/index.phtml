@@ -1,0 +1,21 @@
+<?php
+$this->headTitle($this->page['title']);
+$this->headMeta()->appendName('title', $this->page['meta_title']);
+$this->headMeta()->appendName('keywords', $this->page['meta_keywords']);
+$this->headMeta()->appendName('description', $this->page['meta_description']);
+if($this->page['robots']=='index'){
+   $this->headMeta()->appendName('robots','index follow'); 
+}else{
+  $this->headMeta()->appendName('robots','noindex nofollow');
+}
+?>
+<script src="assets/js/tinymce/tinymce.min.js"></script>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="heading-rule"><?php echo ucwords($this->page['title']); ?></h2>
+            <?php echo html_entity_decode($this->page['content']); ?>
+        </div>
+    </div>
+</div>
+

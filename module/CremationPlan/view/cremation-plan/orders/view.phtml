@@ -1,0 +1,34 @@
+<div id="top"><?= $this->partial('layout/admin_top_menu', array('tittle' => 'Order Details')); ?></div>
+<div id="left"> <?= $this->partial('layout/left-menu', array('products' => 'active')); ?></div> 
+<div id="content"> 
+    <div class="outer">
+        <div class="inner">
+<div class="findimage floatleft"> 
+            <?php if ($this->product['product_image'] != '') { ?>
+                <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/product/thumb/' . $this->product['productid'] . '_' . $this->product['product_image']); ?>" width="72" height="72"/>
+            <?php } else { ?>
+                <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/product/user-placeholder.gif'); ?>" width="72" height="72"/>
+
+            <?php } ?>
+
+        </div>
+        <div class="finddetails floatleft">
+             Product Title: <b><?php echo $this->escapeHtml($this->product['title']); ?></b>
+            <br />
+             Product Description:<?php echo $this->escapeHtml($this->product['description']); ?>           
+            <br />
+            Product Price: <b><?php echo $this->product['price']; ?></b>
+            <br />
+            Purchased Quantity : <b><?php echo $this->product['total_quantity']; ?></b>
+            <br />
+            Purchased Amount : <b><?php echo $this->product['total_amount']; ?></b>
+            <br />
+            Category : <b><?php echo $this->product['category']; ?></b>
+            <br />
+            Customer : <b><?php echo $this->product['user']; ?></b>
+            <br />
+           
+            <a href="<?php echo $this->url('admin/orders');?>">Back</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="form-group">
+<div class="input-group">
+<span class="input-group-addon">Sender Email</span>
+    <input type="email" readonly="readonly"  class="form-control"  value="<?php echo $mail->sender; ?>" />
+</div>
+</div>
+<div class="form-group">
+<div class="input-group">
+<span class="input-group-addon">Subject:</span>
+<input type="text" class="form-control" readonly="readonly" value="<?php echo $mail->subject;?>" />
+</div>
+</div>
+<div class="form-group">
+<textarea name="body" class="form-control"  readonly="readonly"  style="height: 150px;" ><?php echo $mail->body;?></textarea>
+</div>

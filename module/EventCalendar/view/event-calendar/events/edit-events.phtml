@@ -1,0 +1,68 @@
+		  <?php
+if(isset($_GET['edit'])){
+$id=$_GET['edit'];
+	?>
+		<body onload="myFunction()">
+		<script>
+			function myFunction(){
+			document.getElementById("main-all-tabes").style.display="none";
+			document.getElementById("edit-event").style.display="block";
+				
+			}
+		</script>
+		<?php
+	$title=$_GET['title'];
+	$profile_type=$_GET['profile_type'];
+	$eventdate=$_GET['eventdate'];
+	$startsate=$_GET['startsate'];
+	$enddate=$_GET['enddate'];
+	$location=$_GET['location'];
+	$contact=$_GET['contact'];
+	$content=$_GET['content'];
+	
+}
+
+if(isset($_POST['submit'])){
+	require_once("config/autoload/conn.php");
+   $id=$_POST['id'];
+	$s_profile_type=mysql_real_escape_string($_POST['profile_type']);
+	$s_profile_id=mysql_real_escape_string($_POST['profile_id']);
+	$s_title=mysql_real_escape_string($_POST['title']);
+	$s_edate=mysql_real_escape_string($_POST['edate']);
+	$s_startsate=mysql_real_escape_string($_POST['start_time']);
+	$s_enddate=mysql_real_escape_string($_POST['end_time']);
+	$s_location=mysql_real_escape_string($_POST['location']);
+	$s_contact=mysql_real_escape_string($_POST['contact']);
+	$s_ontent=mysql_real_escape_string($_POST['content']);
+	$sql=mysql_query("update  event_list set profile_type='$s_profile_type',name='$s_profile_id',title='$s_title',edate='$s_edate',start='$s_startsate',end='$s_enddate',location='$s_location',	contact='$s_contact',content='$s_ontent' where id='$id'");
+	
+	if($sql){
+
+$basename = basename($_SERVER['REQUEST_URI']);
+$current_url = explode('?', $basename);
+//echo $current_url[0];
+echo "<script type='text/javascript'>window.location.href='$current_url[0]';</script>;"; 
+	}
+	else{
+	echo mysql_error();
+	}
+	
+}
+
+if(isset($_GET['delete'])){
+	require_once("config/autoload/conn.php");
+$id=$_GET['delete'];
+	$sql=mysql_query("delete from event_list where id='$id'");
+	if($sql){
+
+$basename = basename($_SERVER['REQUEST_URI']);
+$current_url = explode('?', $basename);
+//echo $current_url[0];
+echo "<script type='text/javascript'>window.location.href='$current_url[0]';</script>;"; 
+	}
+	else{
+	echo mysql_error();
+	}
+	
+}
+	

@@ -1,0 +1,87 @@
+<?php
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/tablesorter/js/jquery.tablesorter.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js');
+?>
+<div id="top"><?= $this->partial('layout/admin_top_menu', array('tittle' => 'Shopping Items')); ?></div>
+<div id="left"> <?= $this->partial('layout/left-menu', array('donation' => 'active')); ?></div> 
+<div id="content"> 
+     <?php if ($this->message != '') { ?>
+                <div class="flash_message">
+                    <?php echo $this->message[0]; ?>
+                </div>
+            <?php } ?>
+    <div class="outer">
+        <div class="inner">
+            <!--/span-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <header>
+                            <div class="icons"><form name="categoryform" method="POST" action="" >
+                                    <select onchange="this.form.submit()" name="category_id"  class="form-control">
+                                        <option value=''>All</option>
+                                        <?php foreach ($this->categories as $category) { ?>
+                                            <option <?php if ($category['id'] == $this->category) { ?> selected <?php } ?> value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </form></div>
+                            <h5>Donation Charities
+                            
+                            </h5>                           
+                        </header>
+                        <div id="collapse4" class="body">
+                            <?php if(isset($this->category->parent_id)){?>
+                            <a href="<?php echo $this->url('admin/donation-charity', array('id'=>$this->category->parent_id)); ?>"><< <?php echo $this->category->title;?> Category</a>
+                            <?php }?>
+                            <form name="dataform" method="POST" action="">
+                                <div class="action">
+                                    <select name="action" class="form-control">
+                                        <option value="">Select Action</option>
+                                        <option value="multidelete">Delete</option>                                        
+                                    </select>
+                                    <input type="submit" value="Submit" class="btn btn-default btn-sm"/>
+                                </div>
+                                <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" name="sellectall" value=""></th>
+                                            <th>Charity Name</th> 
+                                            <th>Cause</th> 
+                                            <th>Contact Person</th> 
+                                            <th> <a href="<?php echo $this->url('admin/donation-charity', array('action' => 'add','id'=>$this->category)); ?>">Add Charity</a></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($this->items as $item) : ?>
+                                            <tr>
+                                                <td><input type="checkbox" class="case" name="ids[]" value="<?php echo $item['id'] ?>"></td>
+                                                <td><?php echo ucfirst($this->escapeHtml($item['name'])); ?></td>
+                                                 <td><?php echo ucfirst($item['cause']); ?></td> 
+                                                 <td><?php echo $item['contact_name']; ?></td>       
+                                                <td>                                                    
+                                                    <a title="Edit Charity" href="<?php echo $this->url('admin/donation-charity', array('action' => 'edit', 'id' => $item['id']));
+                                            ?>"><i class="fa fa-pencil fa-fw"></i></a>
+                                                    <a title="Delete Charity" href="<?php echo $this->url('admin/donation-charity', array('action' => 'delete', 'id' => $item['id']));
+                                            ?>"><i class="fa fa-trash-o fa-fw"></i></a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div></div>
+                </div>
+                <!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
+    </div>
+    <?php $this->inlineScript()->captureStart() ?>
+    $(function() { metisTable(); metisSortable();});
+    <?php $this->inlineScript()->captureEnd() ?>
+
+</div> 

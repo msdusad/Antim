@@ -1,0 +1,192 @@
+<script>
+$(document).ready( function() {
+	$('a.state').click( function() {
+        url=$(this).attr('href');
+		rel=$(this).attr('rel');
+        setrel =(rel=='0' ? '1': '0');
+        state = (rel=='0' ? 'state btn btn-xs btn-success':'state btn btn-xs btn-danger');
+        title = (rel=='0' ? 'Active':'Inactive');
+        $(this).attr('class',state);
+        $(this).attr('rel',setrel);
+        $(this).text(title);
+		$.post(url,{state:rel});
+        return false;
+	});
+});
+</script>
+<script>
+function deletepage(id)
+{
+    $('#deletepage').attr('href',"<?php echo $this->url('admin-pages',array('controller'=>'admin-pages','action'=>'delete')); ?>/"+id);
+    $('#deletepage-modal').modal('show');
+}
+
+ function previewPage(id)
+ {
+   
+    $.ajax({
+          type:'post',
+          url:'<?php echo $this->url('admin-pages',array('controller'=>'admin-pages','action'=>'preview')); ?>/'+id,
+          success:function(res)
+          {
+            $('#preview-page').html(res);
+            $('#previewpage-modal').modal('show');
+          }
+    });
+    return false; 
+ }
+</script>
+<script>
+function paginationbutton(pagenumber){
+   
+     var per_page =15;
+     $.ajax({
+              type: "POST",
+              url: "<?php echo $this->url('admin-pages',array('controller'=>'admin-pages','action'=>'page-paginator')); ?>",
+              data: {page:pagenumber,per_page:per_page},
+              success:function(response){
+                 $('#pagesTable tbody').html(response);
+              }
+      }); //end ajax table
+    
+    $.ajax({
+           type: "POST",
+           url: "<?php echo $this->url('admin-pages',array('controller'=>'admin-pages','action'=>'page-paginator-layout')); ?>",
+  		   data: {page:pagenumber,per_page:per_page},
+           success:function(response)
+           {
+            $('#pagination_section').html(response);
+           }
+      
+    });//end ajax layout
+ }
+</script>
+<!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title"><?php echo $this->translate('Manage All Pages');?></h3>  
+                                  
+                                </div><!-- /.box-header -->
+                          
+                            
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title"><?php echo $this->translate('Pages List') ?></h3> 
+                                    <a style="float: right;" class="btn btn-danger" href="<?php echo $this->url('admin-pages',array('controller'=>'admin-pages','action'=>'add'))?>"><?php echo $this->translate('Add Page');?></a>  
+                                                                       
+                                </div><!-- /.box-header -->
+                                <div class="box-body table-responsive">
+                                <?php if(count($pages)>0):?>
+                                    <table id="pagesTable" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th><?php echo $this->translate('SNO');?></th>
+                                                <th><?php echo $this->translate('TITLE');?></th>
+                                                <th><?php echo $this->translate('ALIAS');?></th>
+                                                <th><?php echo $this->translate('CONTENT');?></th>
+                                                <th><?php echo $this->translate('STATUS');?></th>
+                                                <th><?php echo $this->translate('ACTION');?></th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $sn=1; foreach($pages as $page):
+                                            ?>
+                                            
+                                            <tr>
+                                                <td><?php echo $sn;?></td>
+                                                <td><?php echo ucwords($page['title']);?></td>
+                                                <td><?php echo ucwords($page['alias']);?></td>
+                                                <td><?php echo substr(strip_tags($page['content']),0,40) ?>..</td>
+                                                <td><a href="<?php echo $this->url('admin-pages',array('controller'=>'admin-pages','action'=>'status','id'=>$page['id'])); ?>" class='state <?php echo $page['status']=='0' ? ' btn btn-xs btn-danger':' btn btn-xs btn-success';?>' rel='<?php echo $page['status'];?>' ><?php echo $page['status']=='0' ? "Inactive" : "Active ";?></a></td>
+                                                <td>
+                                                <div class="btn-group">
+                                                <button class="btn btn-info" type="button">Action</button>
+                                                <button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <ul role="menu" class="dropdown-menu">
+												<li><a href="<?php echo $this->url('admin-pages',array('controller'=>'admin-pages','action'=>'edit','id'=>$page['id']))?>">Edit</a></li>
+                                                <li><a href="javascript:void(0);" onclick="previewPage('<?php echo $page['id'];?>');" >Preview</a></li>
+                                                <li><a href="javascript:void(0);" onclick="deletepage('<?php echo $page['id'];?>');" >Delete</a></li>
+                                                
+                                                </ul>
+                                                </div>
+                                                
+                                                </td>
+                                            </tr>
+      
+                                            
+                                            <?php $sn++;
+                                            endforeach;?>
+                                            
+                                        </tbody>
+                                        
+                                    </table>
+                                    <?php endif;?>
+                                     <div id="pagination_section">
+                                          <?php  echo $this->paginationControl($this->paginator,'Sliding','partial/pagination', array('records_number' =>$records_number)); ?>
+                                     </div>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+
+
+<!-- delete Page modal -->
+    <div class="modal fade" id="deletepage-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><?php echo $this->translate('Delete Page');?></h4>
+                    </div>
+                    
+                        <div class="modal-body">
+                         <?php echo $this->translate("Do you want to delete this Page ?"); ?>
+                        </div>
+                        <div class="modal-footer clearfix">
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> <?php echo $this->translate("Close"); ?></button>
+                          <a href="" id="deletepage" class="btn btn-info"><?php echo $this->translate("Delete"); ?></a>
+                             
+                        </div>
+                    
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+<!-- end delete Page modal-->
+
+<!-- preview Page -->
+  <div class="modal fade" id="previewpage-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><?php echo $this->translate('Preview Page');?></h4>
+                    </div>
+                    
+                        <div class="modal-body" id="preview-page">
+                           
+                        </div>
+                        <div class="modal-footer clearfix">
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> <?php echo $this->translate("Close"); ?></button>
+                          
+                             
+                        </div>
+                    
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
+<!-- end preview Page -->
+

@@ -1,0 +1,120 @@
+<?php
+echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/lib/bxslider/jquery.bxslider.css');
+$this->headScript()->prependFile($this->basePath() . '/assets/lib/bxslider/jquery.bxslider.min.js');
+?>
+<?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>            
+            <li><a class="before" href="<?php echo $this->url('cremation-plans', array('action' => 'impacts', 'id' => $this->impactDetails['category_id'])); ?>">Impact &rsaquo;</a></li>
+            <li><?php echo $this->impactDetails['title'] ?></li> 
+        </ul>
+    </div>
+<div class='clear'></div>
+<div class="row">
+    <div class="find">
+        <div class="topbar">
+            <h3><?php echo $this->category; ?></h3>
+            <div class="main_search">
+                <form action="" method="POST" >
+                    <input type="text" name="name" class="form-control" value="<?php echo $this->find['name']; ?>" placeholder="Enter keywords,eg,Ganga"/>
+                    <input type="submit" class="btn btn-default" value="Go"/>           
+                </form>
+
+            </div>
+
+        </div>
+
+        <div class="main_find">
+            <div id="categories">
+                <ul>
+                    <?php foreach ($this->impactList as $impact) { ?>
+                        <li <?php if ($impact['id'] == $this->id) { ?> class="active" <?php } ?>>
+                            <a href="<?php echo $this->url('cremation-plans', array('action' => 'impact-details', 'id' => $impact['id'])); ?>">
+                                <?php echo $impact['title'] ?>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>  
+            </div>
+
+            <div id="impactlist"> 
+                <?php if (empty($this->impactList)) { ?>
+                    <ul>
+                        <li>
+                            No records
+                        </li>
+                    </ul>
+
+                <?php } ?>
+                <div class="">              
+                    <div class="gallery">
+                        <img src="<?php echo $this->basePath('/../module/Admin/assets/impact/thumb/' . $this->impactDetails['id'] . '_' . $this->impactDetails['photo_url']); ?>" width="100" height="120"/>
+                        <h4><?php echo $this->impactDetails['title'] ?></h4>
+                        <p><?php echo $this->impactDetails['content']; ?></p>
+
+
+                        <div class="slider1">
+                            <?php foreach ($this->photose as $photose) { ?>
+                                <div class="slide">
+                                    <a href="<?php echo $this->basePath('/../module/Admin/assets/impact/'. $photose['photo_url']); ?>" rel="photo_group"/>
+                                    <img class="impactimg" src="<?php echo $this->basePath('/../module/Admin/assets/impact/thumb/' . $this->id . '_' . $photose['photo_url']); ?>">
+                                    </a>
+                                </div>                              
+                            <?php } ?>
+                        </div>
+                        
+                        <!-- AddThis Button BEGIN -->
+                                <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52f07ae406c6fbf3">
+                                    <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0;margin-top: 7px;"/>
+                                </a>
+                                <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+                                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-52f07ae406c6fbf3"></script>
+                                <!-- AddThis Button END -->
+                        <?php if ($this->impactDetails['country']!='' && $this->impactDetails['location']) { ?>
+                        <a onClick="window.open('https://www.google.com/maps?q=<?php  echo $this->impactDetails['country'].','.$this->impactDetails['location'];?>','','width=800,height=600' )" href="#"  class="fa fa-map-marker fa-fw mapicon" style="margin-top:15px"></a>
+                         <?php }?>
+
+                    </div>
+                    <div class="video">
+                        <ul>
+                            <?php foreach ($this->videos as $video) {
+
+                                parse_str(parse_url($video['video_url'], PHP_URL_QUERY), $my_array_of_vars);
+                                ?>
+                                <li><iframe width="250" height="200" src="//www.youtube.com/embed/<?php echo $my_array_of_vars['v']; ?>" frameborder="1" style="border:1px solid #dfdfdf" allowfullscreen></iframe></li>
+<?php } ?>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    
+
+$(document).ready(function(){
+$('.slider1').bxSlider({
+slideWidth: 200,
+minSlides: 4,
+maxSlides: 4,
+slideMargin: 10,
+pager:false
+});
+
+$("a[rel=photo_group]").fancybox({
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none',
+		'titlePosition' 	: 'over',
+		'titleFormat'       : function(title, currentArray, currentIndex, currentOpts) {
+		    return '<span id="fancybox-title-over">Image ' +  (currentIndex + 1) + ' / ' + currentArray.length + ' ' + title + '</span>';
+		}
+	});
+});
+</script>
+
+

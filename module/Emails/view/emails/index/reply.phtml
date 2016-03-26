@@ -1,0 +1,63 @@
+<?php
+$this->headLink()->prependStylesheet($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.css')
+        ->prependStylesheet($this->basePath() . '/css/jquery-ui-1.7.2.custom.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/fancybox/jquery.fancybox.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/chosen/chosen.css');
+
+$this->headScript()->prependFile($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/js/jquery-ui.js')
+        ->prependFile($this->basePath() . '/assets/lib/fancybox/jquery.fancybox.js');
+?>
+<?= $this->partial('layout/top_links'); ?>
+<div class="row">
+    <div class="email_main">
+        <div id="collapse4" class="body">           
+            <?php
+            $title = 'Reply Mail';
+            $this->headTitle($title);
+            ?>
+            <div class="top">
+                <h4><?php echo $this->escapeHtml($title); ?></h4>
+                <div class="emaillink">
+                    <a href="<?php echo $this->url('inbox'); ?>" class="btn btn-default">Inbox</a>
+                    <a href="<?php echo $this->url('sent-items'); ?>" class="btn btn-default">Sent</a>
+                   </div>
+            </div>
+            <div class="form">
+
+                <?php
+                $form = $this->form;
+                $form->setAttribute('action', $this->url(
+                                'reply-mail', array('id' => $this->id,
+                                )
+                ));
+                $form->prepare();
+
+                echo $this->form()->openTag($form);
+                echo $this->formHidden($form->get('id'));
+                echo $this->formHidden($form->get('from_id'));
+
+                echo $this->formRow($form->get('to_id'));
+
+
+                echo $this->formRow($form->get('subject'));
+
+
+                echo $this->formRow($form->get('message'));
+
+                echo '<br/>';
+                echo $this->formSubmit($form->get('submit'));
+                echo $this->form()->closeTag();
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php $this->inlineScript()->captureStart() ?>
+  $(document).ready(function() {
+   $("textarea").cleditor();
+  
+  });
+  <?php $this->inlineScript()->captureEnd() ?>

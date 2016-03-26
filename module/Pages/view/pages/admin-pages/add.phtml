@@ -1,0 +1,112 @@
+<?php 
+echo $this->headScript()->prependFile($this->basePath('addthis/editor/tinymce/tinymce.min.js')); ?>
+<script type="text/javascript">
+tinymce.init({
+    selector: "textarea",
+    theme: "modern",
+    width: "800",
+    height: "200",
+    plugins: [
+        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+        "searchreplace wordcount visualblocks visualchars code fullscreen",
+        "insertdatetime media nonbreaking save table contextmenu directionality",
+        "emoticons template paste textcolor colorpicker textpattern"
+    ],
+    toolbar1: "insertfile undo redo |imageupload| styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+    toolbar2: "print preview media | forecolor backcolor emoticons",
+    image_advtab: true,
+    templates: [
+        {title: 'Edit Blog', content: 'Test 1'},
+        {title: 'Test template 2', content: 'Test 2'}
+    ]
+});
+</script>
+<section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title"><?php echo $this->translate('Add New Page') ?></h3> 
+                                  </div><!-- /.box-header -->
+                                <div class="box-body table-responsive">
+                                <?php echo $this->form()->openTag($form);?> 
+                            <div class="row">
+                           <div class="col-md-6">
+                           <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon">Title</label>
+                                    <?php echo $this->formRow($form->get('title'));?>
+								</div>
+							</div>
+                            </div>
+                             
+                            </div>
+                            <div class="row">
+							 <div class="col-md-8">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <?php echo $this->formRow($form->get('content'));?>
+								</div>
+							</div>
+                            </div>
+                            </div>
+                            <div class="row">
+                             <div class="col-md-6">
+							<div class="form-group">
+                                <div class="input-group">
+                                     <label class="input-group-addon">Meta Title</label>
+                                    <?php echo $this->formRow($form->get('meta_title'));?>
+								</div>
+							</div>
+							</div>
+                            </div>
+                             <div class="row">
+                             <div class="col-md-6">
+    							<div class="form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon">Meta Keywords</label>
+                                        <?php echo $this->formRow($form->get('meta_keywords'));?>
+    								</div>
+    							</div>
+                            </div>
+                            </div>
+                              <div class="row">
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon">Meta Dsr</label>
+                                    <?php echo $this->formRow($form->get('meta_description'));?>
+								</div>
+							</div>
+                            </div>
+                            </div>
+                             <div class="row">
+                            <div class="col-md-6">
+    							<div class="form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon">Robots</label>
+                                        <?php echo $this->formRow($form->get('robots'));?>
+    								</div>
+    							</div>
+                            </div>
+                            </div>
+                            <div class="row">
+                            <div class="col-md-6">
+    							<div class="form-group">
+                                    <div class="input-group">
+                                       <label class="input-group-addon">Status</label>
+                                        <?php echo $this->formRow($form->get('status'));?>
+    								</div>
+    							</div>
+                           </div>
+                           </div>
+                        
+                            <?php echo $this->formRow($form->get('submit'));?>
+                        
+                              <?php echo $this->form()->closeTag();?>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section>

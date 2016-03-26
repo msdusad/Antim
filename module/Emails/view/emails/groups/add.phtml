@@ -1,0 +1,34 @@
+<?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('inbox'); ?>">Email &rsaquo;</a></li>
+             <li><a class="before" href="<?php echo $this->url('contact-groups'); ?>">Groups &rsaquo;</a></li>
+            <li>Add Group</li> 
+        </ul>
+    </div>
+<div class='clear'></div>
+<div class="row">
+    <div class="email_main">
+        <div id="collapse4" class="body">         
+            <?php
+            $title = 'Add new group';
+            $this->headTitle($title);
+            ?>
+            <div class="top">
+                <h4><?php echo $this->escapeHtml($title); ?></h4>
+            </div>
+            <div class="form">
+            <?php
+            $form = $this->form;
+            $form->setAttribute('action', $this->url('contact-groups', array('action' => 'add')));
+            $form->prepare();
+
+            echo $this->form()->openTag($form);
+            echo $this->formCollection($form);
+            echo $this->form()->closeTag();
+            ?>
+                </div>
+        </div>
+    </div>
+</div>

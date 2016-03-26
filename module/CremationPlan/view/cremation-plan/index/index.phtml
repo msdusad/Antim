@@ -1,0 +1,195 @@
+<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css'); ?>
+<?php echo  $this->partial('layout/top_links'); ?>
+<?php
+        echo $this->headScript()->prependFile($this->basePath() . '/assets/lib/fancybox/jquery.fancybox.js');?>
+<div class="row">
+    <div class="layout_nav" style="margin-top:-37px;">
+        <ul>
+            <li style="margin-left:15%;"><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+
+            <li>Cremation Planning</li> 
+        </ul>
+    </div>
+    <div id="cremationplan">
+        <div id="learn" class='blocks'>
+            <h4>Learn About</h4>
+            <ul class="list">
+                <?php foreach ($this->learnCategory as $category) { ?>
+
+                    <li>
+                        <a style="padding:5px;" href="<?php echo $this->url('cremation-plans', array('action' => strtolower($category['label']), 'id' => $category['value'])); ?>">
+                            <?php echo $category['label'] ?>
+                        </a>
+                    </li>
+
+                <?php } ?>
+            </ul>
+        </div>
+        <div id="find" class='blocks'>
+            <h4>Find</h4>
+            <ul class="list">
+                <?php foreach ($this->findCategory as $category) { ?>
+
+                    <li>
+                        <a href="<?php echo $this->url('cremation-plans', array('action' => 'find', 'id' => $category['value'])); ?>">
+                            <?php echo $category['label'] ?>
+                        </a>
+                    </li>
+
+                <?php } ?>
+            </ul>
+        </div>
+        <div id="tabs" class='tabs'>
+            <ul class='tab' >
+                <li><a href="#fragment-1"><span>Announce</span></a></li>
+                <li><a href="#fragment-2"><span>Tools</span></a></li>
+            </ul>
+            <div id="fragment-1" class='inlineblocks'>
+                <ul class="list">
+                    <li>
+                        <?php
+                        if ($this->userId != 0) {
+                            $url = $this->url('add-death-user');
+                        } else {
+                            //$url = "#login";
+							$url = $this->url('add-death-user');
+                        }
+                        ?>
+                        <a class="fancybox"  href="<?php echo $url; ?>">
+                            Obituaries
+                        </a>
+
+                    </li>
+                    <li>
+                        <?php
+                       
+                            //$url = $this->url('event-calendar-events');
+                        $url=$this->url('event-calendar-events', array('action' => 'add'));
+                        ?>
+                        <a class="fancybox" href="<?php echo $url; ?>">
+                            Events
+                        </a>
+                    </li>
+                    <li>
+<?php
+if ($this->userId != 0) {
+    $url = $this->url('sharedtasks');
+} else {
+   $url = "#login";
+   // $url=$this->url('obituary');
+}
+?>
+                        <a class="fancybox" href="<?php echo $url; ?>">                            
+                            Shared Tasks
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="fragment-2" class='inlineblocks'>
+                <ul class="list">
+                    <li><a href="#Tfacebook" class="fancybox"> Facebook </a></li>
+                    <li><a href="#Ttwitter" class="fancybox"> Twitter </a></li>
+                    <li><a href="#Tyoutube" class="fancybox"> Youtube </a></li>
+                    <li><a href="#Tskype" class="fancybox"> Skype </a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="purchase" class='blocks'>
+            <h4>Purchase</h4>
+            <ul class="list">
+
+                <li>
+                    <a href="<?php echo $this->url('groceries'); ?>">
+                        Groceries
+                    </a>
+                </li>  
+                <li>
+                    <a href="<?php echo $this->url('shopping'); ?>">
+                        Food
+                    </a>
+                </li>  
+                <li>
+				
+				<a href="<?php echo $this->url('travel'); ?>">Travel Related</a>
+
+<!--
+                    <a href="travel/">
+                        Travel Related
+                    </a>
+-->
+
+                </li>  
+
+
+            </ul>
+        </div>
+        <div id="protect" class='blocks'>
+            <h4>Protect</h4>
+            <ul class="list">
+
+<?php foreach ($this->protectList as $category) { ?>
+                    <li>
+                        <a href="<?php echo $this->url('cremation-plans', array('action' => 'protects', 'id' => $category['id'])); ?>" data-id="<?php echo $category['id'] ?>">
+                    <?php echo $category['title'] ?>
+                        </a>
+                    </li>  
+             <?php } ?>                   
+
+            </ul>
+        </div>
+        <div id="impact" class='blocks'>
+            <h4>Impact</h4>
+            <ul class="list">
+<?php foreach ($this->impactCategory as $category) { ?>
+
+                    <li>
+                        <a href="<?php echo $this->url('cremation-plans', array('action' => 'impacts', 'id' => $category['value'])); ?>">
+    <?php echo $category['label'] ?>
+                        </a>
+                    </li>
+
+<?php } ?>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="Tfacebook" style="display:none;">
+    <h4>Facebook</h4>
+    <p style="width:500px">
+        Millions of people use Facebook everyday to keep up with friends, 
+        upload an unlimited number of photos, share links and videos, 
+        and learn more about the people they meet. Comment Policy: We love your comments,
+        but please be respectful of others.
+    </p>
+    <a target="blank" href="https://www.facebook.com" class="readmore">Read More</a>
+</div>
+<div id="Ttwitter" style="display:none;">
+    <h4>Twitter</h4>
+    <p style="width:500px">
+       Twitter is an online social networking and microblogging service that enables users to send and read "tweets", which are text messages limited to 140 characters. Registered users can read and post tweets, but unregistered users can only read them. Users access Twitter through the website interface, SMS, or mobile device app.Twitter Inc
+    </p>
+    <a target="blank" href="https://twitter.com/" class="readmore">Read More</a>
+</div>
+<div id="Tyoutube" style="display:none;">
+    <h4>YouTube</h4>
+     <p style="width:500px">
+      YouTube is a video-sharing website, created by three former PayPal employees in February 2005 and owned by Google since late 2006, on which users can upload, view and share videos
+    </p>
+   <!-- <a target="blank" href="http://www.youtube.com/" class="readmore">Read More</a>-->
+</div>
+<div id="Tskype" style="display:none;">
+    <h4>Skype</h4>
+     <p style="width:500px">
+      Skype is for doing things together, whenever you’re apart. Skype’s text, voice and video make it simple to share experiences with the people that matter to you, wherever they are.
+    </p>
+    <a target="blank" href="http://www.skype.com/" class="readmore">Read More</a>
+</div>
+
+<?php $this->inlineScript()->captureStart()  ?>
+    $(function() {
+
+        $("#tabs").tabs();
+        $(".fancybox").fancybox();
+
+    });
+<?php $this->inlineScript()->captureEnd()  ?>

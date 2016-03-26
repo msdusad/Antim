@@ -1,0 +1,625 @@
+<?php
+$this->headLink()
+        // ->prependStylesheet($this->basePath() . '/assets/lib/gldatepicker/css/glDatePicker.flatwhite.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/gldatepicker/css/glDatePicker.default.css')
+        ->prependStylesheet($this->basePath() . '/assets/css/ui.css')  
+        ->prependStylesheet($this->basePath() . '/assets/player/video-js.css');
+
+$this->headScript()
+        ->prependFile($this->basePath() . '/assets/lib/gldatepicker/glDatePicker.js')
+        ->prependFile($this->basePath() . '/assets/player/video.js');
+?>
+
+<?= $this->partial('layout/top_links'); ?>
+<style>table tr th,td{padding: 5px 1px;border-right: 1px solid #dfdfdf;}
+.obituary form input {
+width: 20px !important;
+float: left !important;
+}
+</style>
+<div class="layout_nav">
+    <ul>
+        <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+        <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+        <li>Obituary </li> 
+    </ul>
+</div>
+<div class="clear"></div>
+<?php if ($this->message != '') { ?>
+    <div class="flash_message">
+        <?php echo $this->message[0]; ?>
+    </div>
+<?php } ?>
+<div class="profiletop">
+    <?php if (count($this->profileList) >= 1) { ?>
+        <select name="profile" id="profile">
+            <?php
+            foreach ($this->profileList as $option) {
+                if ($option['id'] == $this->id) {
+                    $selected = 'selected';
+                } else {
+                    $selected = '';
+                }
+                echo $option = '<option ' . $selected . ' value="' . $option['id'] . '">' . ucfirst($option['name']) . '</option>';
+            }
+            ?>
+        </select>
+    <?php } ?>
+    <a href='<?php echo $this->url('obituary-create-infos'); ?>'>Create</a>
+    <?php if (count($this->profileList) >= 1) { ?>
+        <a  class="fancybox" href='#delete'>Delete</a>
+        <form action="<?php echo $this->url('compose-mail', array('share' => 'share')); ?>" method="POST"> 
+            <input type="hidden" name="subject" id="subject" value="<?php echo 'obituary - ' . $this->info->first_name . ' ' . $this->info->middle_name . ' ' . $this->info->last_name; ?>"/>  
+            <input type="hidden" name="msg" id="msg" value="<?php echo strip_tags($this->info->description); ?>"/> 
+            <input type="hidden" name="url" id="url" value="<?php echo $this->url('obituary', array('id' => $this->id)); ?>"/>
+            <input type="submit" value="Share">
+        </form>
+    <?php } ?>
+    <div id='delete' class="alertbox" style='display:none'>
+        <h1>Delete Profile Permanently</h1>
+        <p>This action will delete your profile and associated content. it can't revert back</p>
+        <form action="<?php echo $this->url('obituary', array('action' => 'delete', 'id' => $this->id)); ?>" method="post">
+            <div>
+                <input type="hidden" name="id" value="<?php echo $this->id; ?>">
+                <input type="submit" name="del" value="Yes">
+                <a href="#" class="cancel"> Cancel </a>
+            </div>
+        </form>
+    </div>
+         <p class="floatright">Created By <?php  if(isset($this->obituary->created_by)){ echo ucwords($this->obituary->created_by);}?></p>
+</div>
+<div class="clearfix" style="margin: 5px;"></div>
+<div class="obituary">
+    <?php if ($this->info) { ?>
+        <h4>
+            <?php echo $this->info->first_name . ' ' . $this->info->middle_name . ' ' . $this->info->last_name; ?>
+            &nbsp;<a class="fa fa-pencil ajax" href="<?php echo $this->url('obituary-create-infos', array('action' => 'popup', 'id' => $this->id)); ?>" ></a>
+        </h4>
+        <span class="periods"><?php
+            $date = new DateTime($this->info->dob);
+            echo $date->format('F j, Y');
+            echo ' - ';
+            $deathDate = new DateTime($this->info->dod);
+            echo $deathDate->format('F j, Y');
+            ?>
+            &nbsp;<a class="fa fa-pencil ajax" href="<?php echo $this->url('obituary-create-infos', array('action' => 'popup', 'id' => $this->id)); ?>" ></a></span>
+    <a class="btn btn-default floatright" href="<?php echo $this->url('obituary-create-themes', array('id' => $this->id, 'type' => 'obituary')); ?>">Template</a>
+        <div class="clear"></div>
+        <div class="obituary_gallery"> 
+            <?php
+            foreach ($this->garlands as $garland) {
+                if ($garland['id'] == $this->info->garland_id) {
+                    ?>
+
+                    <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/garland/' . $garland['garland_image']); ?>" width="145" height="177" class="garland"/>
+
+                    <?php
+                }
+            }
+            ?>
+            <div class="obituary_gallery_image">
+                <div class="thumbnails">
+                    <?php
+                    $mainUrl = '';
+                    foreach ($this->images as $image) {
+
+                        if ($image['main_image'] == 1) {
+
+                            $mainUrl = $this->basePath('/../module/Obituary/assets/images/'.$image['obituary_id'] . '/' . $image['image_url']);
+                            $url = $this->basePath('/../module/Obituary/assets/images/'.$image['obituary_id'] . '/' . $image['image_url']);
+                        } else {
+                            $url = $this->basePath('/../module/Obituary/assets/images/'.$image['obituary_id'] . '/' .$image['image_url']);
+                        }
+                        ?>  
+                        <a class="fancybox" href="<?php echo $url; ?>" rel="photo_group"/>
+                        <img src="<?php echo $url; ?>" width="60" height="60"/>
+                        </a>
+                    <?php } ?>
+                </div>
+                <div class="mainthumb">
+                    <a class="fancybox" href="<?php echo $mainUrl; ?>" rel="photo_group"/>
+                    <img class="mainimage" src="<?php echo $mainUrl; ?>" />
+                    </a>
+                </div>             
+            </div>
+
+            <div class="obituary_desc">
+                <a class="fa fa-pencil ajax" href="<?php echo $this->url('obituary-create-infos', array('action' => 'popup', 'id' => $this->id)); ?>"></a>
+                <?php echo $this->info->description; ?> 
+            </div>
+            <div class="clear"></div> 
+            <?php if(isset($this->media->media_url) && $this->media->media_url!=''){ ?>
+            <a class="fancybox link" href="#videos">Audio & Video</a>
+            <?php }?>
+            <a class="link obituary-upload" href="<?php echo $this->url('obituary-create-media', array('id' => $this->id)); ?>">Click to ADD</a>
+            <div id="videos" class="obituary_gallery_media" style="display:none;">
+                    <video class="video-js vjs-default-skin" controls preload="none" width="640" height="264"                           
+                           data-setup="{}">
+                        <source src="<?php echo $this->basePath('/../module/Obituary/assets/media/'.$this->media->obituary_id.'/'. $this->media->media_url); ?>" type='video/mp4' />  
+                    </video>
+            </div>
+        </div>
+        
+        <div class="clear"></div>
+        <hr>
+        <div class="obituary_info">
+            <div id="tabs" >
+                <ul>
+                    <li><a href="#tabs-1">Deceased Info</a></li>
+                    <li><a href="#tabs-2">Education</a></li>
+                    <li><a href="#tabs-3">Family</a></li>
+                    <li><a href="#tabs-4">Tributes</a></li>                                 
+                    <li><a href="#tabs-5">Donate</a></li>
+                    <li><a href="#tabs-6">Guest Book && Offering</a></li>
+                    <li><a href="#tabs-7">Privacy</a></li>
+                </ul>
+                <div id="tabs-1">
+                    <ul>
+                        <li><label>First Name: </label><?php echo $this->info->first_name; ?></li>
+                        <li><label>Middle Name: </label><?php echo (isset($this->info->middle_name) && !empty($this->info->middle_name)) ? $this->info->middle_name : 'N/A'; ?></li>
+                        <li><label>Last Name: </label><?php echo (isset($this->info->last_name) && !empty($this->info->last_name)) ? $this->info->last_name : 'N/A'; ?></li>
+                        <li><label>DOB: </label><?php echo $date->format('F j, Y'); ?></li>
+                        <li><label>DOD: </label><?php echo $deathDate->format('F j, Y'); ?></li>
+                        <li><label>Age: </label><?php echo $this->info->age; ?></li>
+                        <li><label>Death Place: </label><?php echo $this->info->death_place; ?></li>
+                    </ul>
+                </div>
+                <div id="tabs-2">
+                     <ul>
+                        <li><label>School: </label><?php echo (isset($this->info->school) && !empty($this->info->school)) ? $this->info->school : 'N/A'; ?></li>
+                        <li><label>Basic Graduation: </label><?php echo (isset($this->info->ug) && !empty($this->info->ug)) ? $this->info->ug : 'N/A'; ?>  <?php  if($this->info->ug_specialization!=''){ echo '- '.$this->info->ug_specialization; } ?></li>
+                        <li><label>Post Graduation: </label><?php echo (isset($this->info->pg) && !empty($this->info->pg)) ? $this->info->pg : 'N/A'; ?> <?php  if($this->info->pg_specialization!=''){ echo '- '.$this->info->pg_specialization; } ?></li>
+                    </ul>
+                  
+                </div>
+                <div id="tabs-3">
+                    <p><?php echo $this->info->family; ?></p>
+                </div>
+                <div id="tabs-4">
+                    <ul>
+                        <?php foreach ($this->tributes as $tribute) { ?>
+                            <li>                                    
+                                <p class="posteddate"><?php echo date("F j, Y", strtotime($tribute['created_at'])); ?></p>
+
+                                <p><?php echo $tribute['description']; ?> 
+                                    <?php if ($tribute['user_id'] == $this->userid) { ?> 
+                                        <a class="fa fa-pencil tributeedit" href="#" data-id="<?php echo $tribute['id']; ?>" data-content="<?php echo $tribute['description']; ?>"></a>
+                                    <?php } if ($tribute['user_id'] == $this->userid || isset($this->obituary->user_id) && $this->obituary->user_id == $this->userid) { ?> 
+                                        <a class="fa fa-trash-o tributedelete" href="#" data-id="<?php echo $tribute['id']; ?>"></a>
+                                    <?php } ?></p>
+                                <div class="clear"></div>
+                                <p>
+                                    <b>Posted by </b>~ <?php echo ucfirst($tribute['display_name']); ?>
+                                </p>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                    <form action="#" method="post" >
+                        <input type="hidden" name="tribute_id" id="tribute_id"/> 
+                        <textarea name="tribute_message" id="tribute_message"> </textarea>                        <div>
+                            <a href="#" id="tributepost" class="btn btn-default">Submit</a>  
+                        </div>
+                    </form>
+                </div>
+
+                <div id="tabs-5">
+                    <a href="<?php echo $this->url('donation',array('id'=>$this->obituary->id,'type'=>'obituary'))?>">Donate</a>
+                </div>
+                <div id="tabs-6">
+                    <div class="prayerwall">
+                        <h5>Offering & Prayers WALL</h5>
+                        <div class="prayer_options" data-id="<?php echo $this->id; ?>" data-userid="<?php echo $this->userid; ?>">
+                            <a href="#" data-type="1" data-image="diya.jpg" class="light btn btn-default">Light a Diya</a>
+                            <a href="#" data-type="2" data-image="candle.jpg" class="light btn btn-default">Light a Candle</a>
+                            <a href="#" data-type="3" data-image="thali.jpg" class="light btn btn-default">Offer Thali</a>
+                            <a href="#" data-type="4" data-image="award.jpg" class="light btn btn-default">Offer Medal</a>
+                            <a href="#" data-type="5" data-image="wreath.jpg" class="light btn btn-default">Offer Reath</a>
+                        </div>
+                        <div class="guestform" style="display:none">
+                            <img class="toparrow" src="<?php echo $this->basePath('/assets/img/top_arrow.png'); ?>" align="" style="border-width: 0px;">
+                            <div class="tabbox" >
+                                <form action="#" method="post" >
+                                    <input type="hidden" name="guestbook_id" id="guestbook_id"/> 
+                                    <input type="hidden" name="offer" id="offer_status"/> 
+                                    <a href="#" class="offerbg">
+                                        <img id="offerimage" src=""/>
+                                    </a>
+                                    <textarea name="guest_message" id="guest_message"> </textarea>
+                                    <div>
+                                        <a href="#" id="post" class="btn btn-default">Submit</a>  
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recent_offers">
+                        <h5>Recent Offerings & Prayers</h5>
+                        <ul>
+                            <?php foreach ($this->guestBooks as $guest) { ?>
+                                <li>
+                                    <p class="posteddate"><?php echo date("F j, Y", strtotime($guest['created_at'])); ?></p>
+                                    <a href="#" class="offerbg"><img id="offerimage" src="<?php echo $this->basePath('/../module/Obituary/assets/offers/' . $guest['offer_img']); ?>"/></a>
+
+                                    <p><?php echo $guest['description']; ?> 
+                                        <?php if ($guest['user_id'] == $this->userid) { ?> 
+                                            <a class="fa fa-pencil edit" href="#" data-id="<?php echo $guest['id']; ?>" data-content="<?php echo $guest['description']; ?>"></a>
+                                        <?php } if ($guest['user_id'] == $this->userid || isset($this->obituary->user_id) && $this->obituary->user_id == $this->userid) { ?> 
+                                            <a class="fa fa-trash-o delete" href="#" data-id="<?php echo $guest['id']; ?>"></a>
+                                        <?php } ?></p>
+                                    <div class="clear"></div>
+                                    <p>
+                                        <b>Offered by </b>~ <?php echo ucfirst($guest['display_name']); ?>
+                                    </p>
+                                 <hr/>
+                                </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                </div><div id="tabs-7">
+<?php foreach ($this->privacy as $privacy) { 
+echo $privacy['visibility_categories'];
+ } ?><form action="#" method="post" >
+                        <input type="hidden" name="privacy_id" id="privacy_id"/> Privacy Selection: <select id="privacySelect" onchange="changePrivacy()" style="margin-bottom:20px">
+									<option value="private">Private</option>  
+									<option value="public">Public</option> 
+									                     
+                        </select>  
+                        <div class="row" id="privacyOptions">
+				<div class="col-md-3">
+                <input type="checkbox" id="checkbox1" name="user[guestbook]" value="guestbook" class="css-checkbox" /> 
+                <label class="" for="checkbox1">Guest Book</label>
+            </div>
+            
+				<div class="col-md-3">
+                <input type="checkbox" id="checkbox2" name="user[tributes]" value="tributes" class="css-checkbox" /> 
+                <label class="" for="checkbox2">Tributes</label>
+            </div>
+        
+				<div class="col-md-3">
+                <input type="checkbox" id="checkbox3" name="user[donate]" value="donate" class="css-checkbox" /> 
+                <label class="" for="checkbox3">Donate</label>
+            </div>
+            
+				<div class="col-md-3">
+                <input type="checkbox" id="checkbox4" name="user[employmenthistory]" value="employment history" class="css-checkbox" /> 
+                <label class="" for="checkbox4">Employment History</label>
+            </div>
+            
+            <div class="col-md-3">
+                <input type="checkbox" id="checkbox5" name="user[achivementsawards]" value="achivements and awards" class="css-checkbox" /> 
+                <label class="" for="checkbox5">Achivements & Awards</label>
+            </div>
+            
+				<div class="col-md-3">
+                <input type="checkbox" id="checkbox6" name="user[personalhonor]" value="personal honors" class="css-checkbox" /> 
+                <label class="" for="checkbox6">Personal Honors</label>
+            </div>
+                        
+            <div class="col-md-3">
+                <input type="checkbox" id="checkbox6" name="user[digitalfootprintslinks]" value="digital footprints and links" class="css-checkbox" /> 
+                <label class="" for="checkbox6">Digital Footprints & links</label>
+            </div>
+            
+            <div class="col-md-3">
+                <input type="checkbox" id="checkbox6" name="user[personal honors]" value="personal honors" class="css-checkbox" /> 
+                <label class="" for="checkbox6">Personal Honors</label>
+            </div>
+            </div>
+                         <div style="margin-top:30px">
+                            <a href="#" id="privacypost" class="btn btn-default">Submit</a>  
+                        </div>
+                    </form>
+                  
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="obituary_bottom" >
+                <div class="events border-right">
+                    <div class="calendar border-right">								<div class="calender-heading"> 
+                        <h4>Event Calendar</h4>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="datepicker"></div>
+                    </div>
+                    <div class="daywise">							<div class="daywise-heading">
+                        <h4>Day Wise Plan &nbsp;<a class="fa fa-pencil" href="<?php echo $this->url('event-calendar-events', array('id' => $this->id, 'type' => 'obituary')); ?>"></a></h4>							</div>
+
+                        <?php if (count($this->events) <= 0) { ?>
+                            <a href="<?php echo $this->url('event-calendar-events', array('type' => 'obituary', 'id' => $this->id)) ?>">Create Events</a>
+                        <?php } ?>
+                        <?php
+                        foreach ($this->events as $key => $event) {
+                            $day = $key + 1;
+                            ?>
+                            <div class="days">
+                                <p>
+                                    <?php echo 'Day ' . $day; ?>
+                                </p>
+                                <p>
+                                    <?php echo $event['title']; ?>
+                                </p>
+                            </div>
+                        <?php } ?>
+                    </div>               
+                </div>
+                <div class="sharedtasks">						<div class="share-heading" >
+                    <h4>Shared Task &nbsp;<a class="fa fa-pencil" href="<?php echo $this->url('sharedtasks', array('id' => $this->id, 'type' => 'obituary')); ?>"></a></h4>						 </div>
+						<div class="shared-tasks-table">                    
+                    <?php if (count($this->sharedTasks) > 0) { ?>
+                        <table width="100%"  >
+                            <thead>
+                                <tr>
+                                    <th>Task</th>                           
+                                    <th>Due Date</th> 
+                                    <th>Due Time</th>                             
+                                    <th>Prioriy</th>                             
+                                    <th>Status</th>                            
+                                    <th>Helpers</th>                            
+                                </tr>
+                            </thead>
+                            <tbody  	>
+                                <?php foreach ($this->sharedTasks as $task) : ?>
+                                    <tr class="disabled sharedrows" id="<?php echo $task['id']; ?>">
+                                        <td><?php echo $task['task']; ?></td>                               
+                                        <td><?php echo date('d', strtotime($task['due_date'])); ?></td>
+                                        <td><?php echo $task['due_time']; ?></td>                               
+                                        <td><?php echo $task['priority']; ?></td>
+                                        <td><?php echo $task['status']; ?></td>                                                        
+                                        <td><?php echo $task['userName']; ?></td>                                
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php } ?>
+                    <?php if (count($this->sharedTasks) <= 0) { ?>
+                        <a href="<?php echo $this->url('sharedtasks', array('type' => 'obituary', 'id' => $this->id)) ?>">Create Shared Task</p>
+                        <?php } ?>
+                </div>
+                </div>
+            </div>
+            <div class="obituary_status">
+                <div class="updates">
+                    <h4>Updates</h4>
+                    <ul>
+                        <?php
+                        foreach ($this->updates as $update) {
+                            echo '<li><p>' . $update['name'] . ' completed ' . $update['task'] . ' at ' . $update['time'] . '</p></li>';
+                        }
+                        ?>
+
+                    </ul>
+                </div>
+                <div class="alerts">
+                    <h4>Alerts</h4>
+                    <ul>
+                        <?php
+                        foreach ($this->alerts as $key => $alert) {
+                            echo '<li><p>' . $alert . ' on ' . $key . '</p></li>';
+                        }
+                        ?>
+                    </ul>
+                </div>
+                <div class="points">
+                    <h4>Meets & Greet Points</h4>
+                </div>
+            </div>
+        </div>
+        <?php
+    } else {
+        echo '<p>No Profiles</p>';
+    }
+    ?>
+</div>
+<div id="loading" style="display:none"><img src="<?php echo $this->basePath('/img/ajax-loading.gif'); ?>"/></div>
+<script>
+function changePrivacy(){
+var pselect=$("#privacySelect").val();
+if(pselect=="private"){
+	$("#privacyOptions").show();
+}else{
+	$("#privacyOptions").hide();
+}
+}
+
+    $(document).ready(function() {
+
+        var thumbnail = <?php echo count($this->images); ?>;
+        
+        videojs.options.flash.swf = "video-js.swf";
+
+        if (thumbnail > 9) {
+            $('.thumbnails').css('overflow-y', 'scroll');
+        }
+
+        $('.cancel').click(function(e) {
+            $.fancybox.close();
+        });
+
+        $("#tabs").tabs();
+        $("#cals").tabs();
+
+        $('.obituary_gallery_image a img').click(function(e) {
+            e.preventDefault();
+            $('.mainimage').attr('src', $(this).attr('src'));
+        });
+        $('.fancybox').fancybox();
+
+        $('#profile').change(function(e) {
+            var id = $(this).val();
+            window.location.href = "<?php echo $this->url('obituary') ?>/" + id;
+        });
+
+        $("a[rel=photo_group]").fancybox({
+            'transitionIn': 'none',
+            'transitionOut': 'none',
+            'titlePosition': 'over',
+            'titleFormat': function(title, currentArray, currentIndex, currentOpts) {
+                return '<span id="fancybox-title-over">Image ' + (currentIndex + 1) + ' / ' + currentArray.length + ' ' + title + '</span>';
+            }
+        });
+
+
+        var dates = [];
+        var obj = $.parseJSON('<?php echo $this->dates; ?>');
+        for (var key in obj) {
+
+            dates.push({
+                date: new Date(key),
+                data: {message: obj[key]},
+                repeatMonth: false
+            });
+        }
+
+        $('.datepicker').glDatePicker(
+                {
+                    showAlways: true,
+                    borderSize: 1,
+                    dowNames: null,
+                    cssName: 'default',
+                    allowMonthSelect: false,
+                    allowYearSelect: false,
+                    selectedDate: new Date(),
+                    specialDates: dates,
+                    onClick: (function(el, cell, date, data) {
+                        alert(data.message);
+
+                    }),
+                });
+
+        $('.ajax').fancybox({
+            href: $(this).attr('href'),
+            type: 'ajax'
+        });
+        $('#post').click(function(e) {
+
+            e.preventDefault();
+
+            var user_id = '<?php echo $this->userid; ?>';
+            var obituary_id = '<?php echo $this->id; ?>';
+            var description = $('#guest_message').val();
+            var id = $('#guestbook_id').val();
+            var offerImg = $('#offer_status').val();
+
+            var data = {obituary_id: obituary_id, user_id: user_id, description: description, id: id, offer_img: offerImg}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('obituary', array('action' => 'guestbook')); ?>',
+                data: data,
+                success: function(data) {
+
+                    alert('post saved successfully');
+                    location.reload();
+
+                }
+            });
+        });
+
+        $('.edit').click(function(e) {
+            e.preventDefault();
+            $('#guest_message').val($(this).data('content'));
+            $('#guestbook_id').val($(this).data('id'));
+        });
+
+        $('.delete').click(function(e) {
+            e.preventDefault();
+            var data = {id: $(this).data('id')}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('obituary', array('action' => 'guestbookdelete')); ?>',
+                data: data,
+                beforeSend: function() {
+                },
+                success: function(data) {
+                    alert('post deleted successfully');
+                    location.reload();
+                }
+            });
+
+        });
+        $('.light').click(function(e) {
+            e.preventDefault();
+            var left = $(this).position().left;
+            var image = '<?php echo $this->basePath('/../module/Obituary/assets/offers/'); ?>' + $(this).data('image');
+
+            $('#offer_status').val($(this).data('image'));
+            $('.guestform').css('display', 'block');
+            $(".toparrow").css('margin-left', left + 'px');
+            $('#offerimage').attr('src', image);
+
+
+        });
+        $('#tributepost').click(function(e) {
+            e.preventDefault();
+
+            var user_id = '<?php echo $this->userid; ?>';
+            var obituary_id = '<?php echo $this->id; ?>';
+            var description = $('#tribute_message').val();
+            var id = $('#tribute_id').val();
+
+            var data = {obituary_id: obituary_id, user_id: user_id, description: description, id: id}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('obituary', array('action' => 'tributes')); ?>',
+                data: data,
+                success: function(data) {
+
+                    alert('post saved successfully');
+                    location.reload();
+
+                }
+            });
+        });
+        $('.tributeedit').click(function(e) {
+            e.preventDefault();
+            $('#tribute_message').val($(this).data('content'));
+            $('#tribute_id').val($(this).data('id'));
+        });
+        $('.tributedelete').click(function(e) {
+            e.preventDefault();
+            var data = {id: $(this).data('id')}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('obituary', array('action' => 'tributesdelete')); ?>',
+                data: data,
+                beforeSend: function() {
+                },
+                success: function(data) {
+                    alert('post deleted successfully');
+                    location.reload();
+                }
+            });
+
+        });
+         $('#privacypost').click(function(e) {
+            e.preventDefault();
+
+            var user_id = '<?php echo $this->userid; ?>';
+            var obituary_id = '<?php echo $this->id; ?>';
+            var privacy = $('#privacySelect').val();
+            var privacyCheck="";
+            if (privacy=='private') {
+            	$(".css-checkbox").each(function () {
+            		if(this.checked){
+							privacyCheck +=this.value+",";            		
+            		}
+            	});
+            }
+           var privacytrim= privacyCheck.substring(0,privacyCheck.length - 1);//alert(privacytrim);
+            var id = $('#privacy_id').val();
+
+            var data = {obituary_id: obituary_id, user_id: user_id, privacy: privacy,privacyCheck:privacytrim, id: id}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('obituary', array('action' => 'privacy')); ?>',
+                data: data,
+                success: function(data) {
+
+                    alert('post saved successfully');
+                   // location.reload();
+
+                }
+            });
+        });
+    });
+</script>

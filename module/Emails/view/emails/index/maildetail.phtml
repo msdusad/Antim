@@ -1,0 +1,24 @@
+<?= $this->partial('layout/top_links'); ?>
+
+<div class="row">
+    <div class="email_main">
+        <div id="collapse4" class="body">           
+            <?php
+            $this->headTitle($this->title);
+            ?>
+            <div class="top">
+                <h4><?php echo $this->escapeHtml($this->title); ?></h4>
+            </div>
+            <div class="maildetails">
+                <div class="fromdetails"><i class="fa fa-user"></i><b><?php echo $this->emailDetails['from_id']; ?></b></div>    
+            <div class="message"><?php echo $this->emailDetails['message']; ?></div>     
+            <i class="fa fa-user"></i>
+            <div class="amn">
+                Click here to <a href="<?php echo $this->url('reply-mail', array('id' => $this->emailDetails['id'])); ?>">Reply</a> or <a href="<?php echo $this->url('forward-mail', array('id' => $this->emailDetails['id'])); ?>">Forward</a>
+            </div>
+</div>
+        </div>
+    </div>
+
+</div>
+

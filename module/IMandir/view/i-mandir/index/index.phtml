@@ -1,0 +1,387 @@
+<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css'); ?>
+<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/imandir-style.css'); ?>
+
+<?php $this->partial('layout/top_links'); ?>
+	<!--start-home-->
+	<div id="home" class="header">
+		<div class="header-bottom">
+			<div class="">
+            
+            <div class="header-flag">
+            	<div class="flag"> <img src="<?php echo $this->basePath('/img/indian_flag_new.gif');?>" alt="india" height="40" width="35"/> </div>
+            </div>
+            
+            <script>
+			$(document).ready(function() {
+			var date = new Date();
+		
+			var day = date.getDate();
+			var month = date.getMonth() + 1;
+			var year = date.getFullYear();
+		
+			if (month < 10) month = "0" + month;
+			if (day < 10) day = "0" + day;
+		
+			var today = year + "-" + month + "-" + day;       
+			$("#theDate").attr("value", today);
+			});
+			
+            </script>
+            
+        
+            <div class="container" style="background:#ff9900;"> 
+            <div class="header-menu" style="width:100%;">
+            
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 row"> 
+	            <div class="date pull-left">
+                	 <p> <input type="date" id="theDate" class="dis-date" style="">   </p>           
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+          		<div class="logo" >
+					<a href="index.html"><h3 style="text-align:center; color:#fff; font-weight:bold; padding-top:7px; margin-right:-30px;"> i Mandir </h3></a>
+				</div>
+             </div>
+            
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 "> 
+            	<div class="row time pull-right">
+                	<p>   <script type="text/javascript">
+						 now = new Date();
+						 localtime = now.toString();
+						var h=now.getHours(); // => 9
+						var m=now.getMinutes(); // =>  30
+						var s=now.getSeconds(); 
+						 document.write("<p class='dis-time'>"+h+ ":"+ m+":"+ s+"</p>");
+					   </script>   
+                      </p>         
+                </div>
+            </div>
+            
+            </div>
+            </div>
+            
+            
+				
+				<div class="clearfix"></div>
+			</div>
+		</div>
+        
+<div class="container">	
+	<div class="banner">
+		
+		<ul id="flexiselDemo3">
+				<li>
+					<div class="biseller-column">
+					<a class="lightbox" href="#goofy">
+								   <img src="<?php echo $this->basePath('/img/s1.jpg');?>"/>
+								</a> 
+								<div class="lightbox-target" id="goofy">
+									  <img src="<?php echo $this->basePath('/img/s1.jpg');?>"/>
+								   <a class="lightbox-close" href="#"> </a>
+
+									<div class="clearfix"> </div>
+								</div>
+					</div>
+				</li>
+				<li>
+					<div class="biseller-column">
+					<a class="lightbox" href="#goofy">
+								  <img src="<?php echo $this->basePath('/img/s4.jpg');?>"/>
+								</a> 
+								<div class="lightbox-target" id="goofy">
+									  <img src="<?php echo $this->basePath('/img/s4.jpg');?>"/>
+								   <a class="lightbox-close" href="#"> </a>
+
+									<div class="clearfix"> </div>
+								</div>
+					</div>
+				</li>
+				<li>
+					<div class="biseller-column">
+					<a class="lightbox" href="#goofy">
+								  <img src="<?php echo $this->basePath('/img/s3.jpg');?>"/>
+								</a> 
+								<div class="lightbox-target" id="goofy">
+									  <img src="<?php echo $this->basePath('/img/s3.jpg');?>"/>
+								   <a class="lightbox-close" href="#"> </a>
+
+									<div class="clearfix"> </div>
+								</div>
+					</div>
+				</li>
+				<li>
+					<div class="biseller-column">
+					<a class="lightbox" href="#goofy">
+								    <img src="<?php echo $this->basePath('/img/s1.jpg');?>"/>
+								</a> 
+								<div class="lightbox-target" id="goofy">
+									<img src="<?php echo $this->basePath('/img/s1.jpg');?>"/>
+								   <a class="lightbox-close" href="#"> </a>
+
+									<div class="clearfix"> </div>
+								</div>
+					</div>
+				</li>
+				<li>
+					<div class="biseller-column">
+					<a class="lightbox" href="#goofy">
+								  <img src="<?php echo $this->basePath('/img/s4.jpg');?>"/>
+								</a> 
+								<div class="lightbox-target" id="goofy">
+									  <img src="<?php echo $this->basePath('/img/s4.jpg');?>"/>
+								   <a class="lightbox-close" href="#"> </a>
+
+									<div class="clearfix"> </div>
+								</div>
+					</div>
+				</li>
+				<li>
+					<div class="biseller-column">
+					<a class="lightbox" href="#goofy">
+								   <img src="<?php echo $this->basePath('/img/s3.jpg');?>"/>
+								</a> 
+								<div class="lightbox-target" id="goofy">
+									<img src="<?php echo $this->basePath('/img/s3.jpg');?>"/>
+								   <a class="lightbox-close" href="#"> </a>
+
+									<div class="clearfix"> </div>
+								</div>
+					</div>
+				</li>
+				<li>
+					<div class="biseller-column">
+								<a class="lightbox" href="#goofy">
+								    <img src="<?php echo $this->basePath('/img/s4.jpg');?>"/>
+								</a> 
+								<div class="lightbox-target" id="goofy">
+									<img src="<?php echo $this->basePath('/img/s4.jpg');?>"/>
+								   <a class="lightbox-close" href="#"> </a>
+									
+									<div class="clearfix"> </div>
+								</div>
+					</div>
+				</li>
+	     	</ul>
+			</div>
+			<script type="text/javascript">
+				 $(window).load(function() {
+					$("#flexiselDemo3").flexisel({
+						visibleItems:3,
+						animationSpeed: 1000,
+						autoPlay: true,
+						autoPlaySpeed: 3000,    		
+						pauseOnHover: true,
+						enableResponsiveBreakpoints: true,
+				    	responsiveBreakpoints: { 
+				    		portrait: { 
+				    			changePoint:480,
+				    			visibleItems:3
+				    		}, 
+				    		landscape: { 
+				    			changePoint:640,
+				    			visibleItems:3
+				    		},
+				    		tablet: { 
+				    			changePoint:768,
+				    			visibleItems:3
+				    		}
+				    	}
+				    });
+				    
+				});
+			   </script>
+			   <?php echo $this->headScript()->prependFile($this->basePath() . '/js/jquery.flexisel.js'); ?>
+			  	
+			   	</div>   
+		</div>
+	<!--about-->
+	<div class="container">
+		<div class=" about">
+				<div class="abou-img pull-left"> 
+                	<div class="img-responsive swami-pooja down">
+                    	<img src="<?php echo $this->basePath('/img/aarthi.PNG');?>" class="img-responsive" alt="" />
+                    </div>
+                </div>
+                
+                <div class="abou-img"> 
+                <div class="img-responsive swami-pooja">
+                    	<img src="<?php echo $this->basePath('/img/laddu.jpg');?>" class="img-responsive" alt="" />
+                    </div>
+                </div>
+                
+                <div class="abou-img"> 
+                <div class="img-responsive swami-pooja middle">
+                    	<img src="<?php echo $this->basePath('/img/deepam.JPG');?>" class="img-responsive" alt="" />
+                    </div>
+                </div>
+                
+                <div class="abou-img"  > 
+                <div class="img-responsive swami-pooja" style="margin-right:-30px;">
+                    	<img src="<?php echo $this->basePath('/img/decoration.jpg');?>" class="img-responsive" alt="" />
+                    </div>
+                </div>
+                
+                <div class="abou-img pull-right"> 
+                <div class="img-responsive swami-pooja down">
+                    	<img src="<?php echo $this->basePath('/img/ome-doopam.JPG');?>" class="img-responsive" alt="" />
+                    </div>
+                </div>
+                
+			</div>
+		</div>
+	<!--//about-->
+	<!--gallery-->
+	<div class="container ">
+		<div class="gallery">
+					
+			<div class="portfolio-bottom">
+				<div class="gallery-one">
+					<div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/deities.jpg'); ?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Deities </h3>
+					</div>
+					<div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/flower-offering.jpg');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Offerings </h3>
+					</div>
+                    <div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/arthi.JPG');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Aarti </h3>
+					</div>
+                    
+					<div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/prasadam-god.jpg');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Prasad </h3>
+					</div>
+					
+                    
+                    <div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/flower-decaration.jpg');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Decorate </h3>
+					</div>
+					
+				
+                
+					<div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/calender1.jpg');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Hindu Calender </h3>
+					</div>
+					<div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/bells.jpg');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Bell </h3>
+					</div>
+					<div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/bhakti.jpg');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Bhakti </h3>
+					</div>
+					<div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/make a wish.jpg');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Make a Wish </h3>
+					</div>
+                    
+                    <div class="offerings gallery-left">
+						<a href="#" class=" mask b-link-stripe b-animate-go   swipebox"  title="Image Title">
+								<img src="<?php echo $this->basePath('/img/spritual.jpg');?>" alt="" class="img-responsive zoom-img"/>
+						</a>
+                        <h3> Scriptural </h3>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--swipebox -->	
+			<link rel="stylesheet" href="css/swipebox.css">
+				<script src="js/jquery.swipebox.min.js"></script> 
+				<script type="text/javascript">
+					jQuery(function($) {
+						$(".swipebox").swipebox();
+					});
+				</script>
+			<!--//swipebox Ends -->
+	
+			
+	
+<!--jewellery-->
+	<div class="container">
+		<div class="j-bottom">
+		       <div class="jewellery-top">
+			    <h3>Float your virtual offerings in Ganga </h3>
+			   </div>
+		</div>
+	</div>
+<!--footer-->
+
+		<div class="footer">
+			<div class="footer-grids">
+				<div class="container"> 
+            <div class="footer-links">
+            
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 "> 
+	            <div class="date pull-left">
+                	<p style="color:#fff;"> Reminders </p>           
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+          		
+					<p style="text-align:center; color:#fff; "> Invite Others </p>
+			
+             </div>
+            
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 "> 
+            	<div class="  pull-right">
+                	<p style="color:#fff;">   My Favorites  </p>        
+                </div>
+            </div>
+            
+            </div>
+            </div>
+			</div>
+		</div>
+			
+			<!--start-smoth-scrolling-->
+			<script type="text/javascript">
+								jQuery(document).ready(function($) {
+									$(".scroll").click(function(event){		
+										event.preventDefault();
+										$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+									});
+								});
+								</script>
+							<!--start-smoth-scrolling-->
+						<script type="text/javascript">
+									$(document).ready(function() {
+										/*
+										var defaults = {
+								  			containerID: 'toTop', // fading element id
+											containerHoverID: 'toTopHover', // fading element hover id
+											scrollSpeed: 1200,
+											easingType: 'linear' 
+								 		};
+										*/
+										
+										$().UItoTop({ easingType: 'easeOutQuart' });
+										
+									});
+								</script>
+		<a href="#home" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>

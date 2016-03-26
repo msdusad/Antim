@@ -1,0 +1,70 @@
+
+<?php
+
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/tablesorter/js/jquery.tablesorter.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js');
+?>
+<div id="top"><?= $this->partial('layout/admin_top_menu', array('tittle' => 'Garland List')); ?></div>
+<div id="left"> <?= $this->partial('layout/left-menu', array('garlands' => 'active')); ?></div> 
+<div id="content"> 
+    <div class="outer">
+        <div class="inner">
+            <!--/span-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">                        
+                        <div id="collapse4" class="body">
+                            <form name="dataform" method="POST" action="">
+
+                                <div class="action">                                    
+                                    <select name="action" class="form-control">
+                                        <option value="">Select Action</option>
+                                        <option value="multidelete">Delete</option>                                        
+                                    </select>
+                                    <input type="submit" value="Submit" class="btn btn-default btn-sm"/>
+                                </div>
+                                <table id="dataTable" class="table ">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" name="sellectall" value="" ></th>
+                                            <th>Garlands 
+                                                <a class="btn btn-default btn-sm floatright" style="margin:0 0 0 10px"href="<?php echo $this->url('admin/garlands', array('action' => 'add')); ?>">Add Garland</a>
+                                             </th> 
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($this->paginator as $garland) : ?>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="case" name="ids[]" value="<?php echo $garland->id ?>"></td>
+                                                <td>
+                                                    <div class="findimage floatleft"> 
+                                                        <?php if ($garland->garland_image!= '') { ?>
+                                                            <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/garland/thumb/' .$garland->id.'_'.$garland->garland_image); ?>" width="72" height="72"/>
+                                                        <?php } else { ?>
+                                                            <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/garland/user-placeholder.gif'); ?>" width="72" height="72"/>
+
+                                                        <?php } ?>
+                                                    </div>                                                   
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div></div>
+                </div>
+                <!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
+    </div>
+    <?php $this->inlineScript()->captureStart() ?>
+    $(function() { metisTable(); metisSortable();});
+    <?php $this->inlineScript()->captureEnd() ?>
+
+</div> 

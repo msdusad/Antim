@@ -1,0 +1,174 @@
+
+<?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+    <ul>
+        <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+        <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+        <li>Purchage </li> 
+    </ul>
+</div>
+<div class="clear"></div>
+<?php if ($this->message != '') { ?>
+                <div class="flash_message">
+                    <?php echo $this->message[0]; ?>
+                </div>
+ <?php } ?>
+<div id="loading"><img src="<?php echo $this->basePath('/img/loading.gif'); ?>"/></div>
+<div class="shopping" style="display:none">
+    <div class="left">
+        <div class="leftmenu">
+            <ul >
+                <?php foreach ($this->rootCategories as $key => $root) { ?>
+                    <li class="<?php
+                    if ($root['id'] == $this->id) {
+                        echo 'active';
+                    }
+                    ?>"><a href="#"><?php echo $root['title']; ?></a></li>
+                    <?php } ?>
+            </ul>
+
+        </div>
+    </div>
+    <div class="right">
+
+        <div class="topmenu">
+            <ul id="parent_category">
+
+            </ul>
+            <div class="clear"></div>
+            <ul id="child_category">
+
+            </ul>
+        </div>
+
+        <div class="clear"></div>
+        <form action="" method="POST" id="itemform">
+            <div class="action">
+                <label>Select all</label><input type="checkbox" name="selectall" id="selectall"/>
+                <input type="text" placeholder="Search items by name" id="search_items" class="search" value="<?php echo $this->search; ?>"/>
+                <input type="hidden" name="action" value="whish"/>
+                <input type="submit" class="btn" value="Save to My Account">
+            </div>
+            <div id="shoppingmain">
+
+                <div id="itemsmain">
+
+                </div>
+
+                <div class="nearsearch">
+                    <label>Stores near you</label>
+                    <input type="text" placeholder="Zip Code" name ="zipcode" size="10"/>
+                    <input type="text" placeholder="Distance from you" name ="distance" size="25"/>
+                    <input type="text" placeholder="Free Delivery or Accept Credit Cards" name ="distance" size="35"/>                
+                </div>
+                <div class="nearitems">
+                    <ul>
+                        <?php for ($i = 1; $i < 11; $i++) { ?>
+                            <li class="stores">
+                                <img src="<?php echo $this->basePath('/stores/store-' . $i . '.jpg'); ?>">
+                            </li>
+
+                        <?php } ?>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+<script>
+
+var search ='<?php echo $this->search; ?>';
+    $(document).ready(function() {
+        
+        $("#itemform").submit(function(event) {
+            
+         var userid = '<?php echo $this->userid;?>';
+        
+         if(userid == 0) {$('.logintop').trigger('click');}
+         else if($('.check').is(':checked')){return true;}
+         else{alert('please select products'); }
+         event.preventDefault();
+     });   
+
+        var data = {'parent_id': '<?php echo $this->id; ?>'}
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo $this->url('shopping', array('action' => 'parent')); ?>',
+            data: data,
+            success: function(data) {
+
+                $("#parent_category").html(data);
+                var id = $('.activeparent').data('id');
+                child(id);
+            }
+        });
+
+        $('#search_items').keypress(function() {
+
+            var id = $('.activechild').data('id');
+            var searchOne = $(this).val();
+            
+            var itemdata = {category_id: id, search: searchOne}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('shopping', array('action' => 'item')); ?>',
+                data: itemdata,
+                success: function(data) {
+
+                    $("#itemsmain").html(data);
+                }
+            });
+
+        });
+
+    });
+    function child(id) {
+
+        var itemdata = {'parent_id': id}
+        $('#parent_category li').removeClass('activeparent')
+        $('#parent_' + id).addClass('activeparent');
+
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo $this->url('shopping', array('action' => 'child')); ?>',
+            data: itemdata,
+            success: function(data) {
+
+                $("#child_category").html(data);
+                var id = $('.activechild').data('id');
+                item(id,search)
+
+
+            }
+        });
+    }
+    function item(id,search) {
+
+
+          if(search !=''){
+                id = '';
+            }
+        var itemdata = {'category_id': id,search:search}
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo $this->url('shopping', array('action' => 'item')); ?>',
+            data: itemdata,
+            success: function(data) {
+                $('#child_category li').removeClass('activechild');
+                $('#child-' + id).addClass('activechild');
+                $("#itemsmain").html(data);
+                $('.shopping').css('display', 'block');
+                $('#loading').css('display', 'none');
+
+            }
+        });
+    }
+    $('#selectall').click(function(e) {
+
+        $('.check').prop('checked', e.target.checked);
+
+    });
+</script>

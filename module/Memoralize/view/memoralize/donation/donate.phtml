@@ -1,0 +1,72 @@
+
+  <?= $this->partial('layout/top_links'); ?>
+
+<div class="row">
+    <div class="find">
+        <div class="title">
+            <h3>Donations</h3>
+        </div>
+        <div class="main_find">
+            <select name="category" id="category">
+                <?php foreach ($this->donationCategory as $category) { ?>
+                    <option  value="<?php echo $category['id']; ?>" <?php if ($category['id'] == $this->search['id']) { ?> class="active" <?php } ?>>
+                        <?php echo $category['title'] ?>
+                    </option>
+                <?php } ?>
+            </select> 
+            <select name="list" id="list">               
+                <option  value=""> Select List </option> 
+            </select>
+             <select name="price" id="price">               
+                <option  value=""> Select price </option> 
+            </select>
+        </div>
+    </div>
+</div>
+<?php //$this->inlineScript()->captureStart() ?>
+<script>
+    $(document).ready(function() {
+
+        $("#category").change(function() {
+
+            var id = $('#category :selected').val();
+            var data = {'id': id}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('donations', array('action' => 'list')); ?>',
+                data: data,
+                success: function(data) {
+
+                    var htmlString = $('#list').html();
+                    $('#list').html(htmlString + data);
+
+
+                }
+            });
+        });
+        $("#list").change(function() {
+
+            var id = $('#list :selected').val();
+            var data = {'id': id}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('donations', array('action' => 'price')); ?>',
+                data: data,
+                dataType: "json",
+                success: function(data) {
+
+                    var htmlString = $('#price').html();
+                    
+                    $('#price').html(htmlString + data.price);
+
+
+                }
+            });
+        });
+
+    });
+
+</script>
+<!--$(function() { metisTable(); metisSortable();});-->
+<?php // $this->inlineScript()->captureEnd() ?>
+

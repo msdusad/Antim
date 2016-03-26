@@ -1,0 +1,375 @@
+<style>
+    .ulnav li {
+    display: inline-block;
+    width: 24%;
+    list-style-type: none;
+    text-decoration: none;
+    padding-top: 30px;
+}
+    .socialmedia ul li a {
+    display: block;
+    margin-top: -5px;
+}
+    .topbar h3 {
+    float: left;
+    font-size: 18px;
+    margin-top: 13px;
+    margin-left: 4px;
+}
+    .main_search {
+    float: right;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+    .layout_nav{
+        margin-left:-123px;
+            margin-top: -33px;
+    }
+.ulnav li{ 
+	display:inline-block; 
+    width:24%;
+	 list-style-type: none;
+text-decoration: none; 
+	
+}
+	.ulnav li #main-li{ 
+	color:orange;
+		font-size:14px;
+}
+.ulnav li #subtab li  {
+	   width:100%;
+		position:relative;
+	display:inline-block;
+	margin-left:-40px;
+	padding:5px;
+	color:black;
+	font-size:11px;
+	}
+</style>
+<script>
+function show(){
+    alert('gfg');
+    var data=document.getElementById('ss').innerHTML.value=avx;
+}
+</script>
+<?php
+ error_reporting(0);
+require_once('config/autoload/conn.php');
+ echo $this->partial('layout/top_links'); 
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/js/jquery.gmap.min.js')
+        ->prependFile('http://maps.google.com/maps/api/js?sensor=false')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/tablesorter/js/jquery.tablesorter.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js');
+?>
+<style>
+    .dataTables_length{float:right} 
+    thead{display:none}
+    .paging_bootstrap{text-align:center}
+
+
+</style>
+<!--<script src="http://maps.google.com/maps/api/js?v=3&sensor=false" type="text/javascript"></script> -->
+	<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+	
+	var icon = new google.maps.MarkerImage("http://maps.google.com/mapfiles/ms/micons/blue.png",
+ new google.maps.Size(32, 32), new google.maps.Point(0, 0),
+ new google.maps.Point(16, 32));
+ var center = null;
+ var map = null;
+ var currentPopup;
+	
+ var bounds = new google.maps.LatLngBounds();
+ function addMarker(lat, lng, info) {
+ var pt = new google.maps.LatLng(lat, lng);
+ bounds.extend(pt);
+ var marker = new google.maps.Marker({
+ position: pt,
+ icon: icon,
+ map: map
+ });
+ var popup = new google.maps.InfoWindow({
+ content: info,
+ maxWidth: 300
+ });
+ google.maps.event.addListener(marker, "click", function() {
+ if (currentPopup != null) {
+ currentPopup.close();
+ currentPopup = null;
+ }
+ popup.open(map, marker);
+ currentPopup = popup;
+ });
+ google.maps.event.addListener(popup, "closeclick", function() {
+ map.panTo(center);
+ currentPopup = null;
+ });
+ }
+ function initMap() {
+ map = new google.maps.Map(document.getElementById("map_addressess"), {
+ center: new google.maps.LatLng(0, 0),
+ zoom: 14,
+ mapTypeId: google.maps.MapTypeId.ROADMAP,
+ mapTypeControl: false,
+ mapTypeControlOptions: {
+ style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR
+ },
+ navigationControl: true,
+ navigationControlOptions: {
+ style: google.maps.NavigationControlStyle.SMALL
+ }
+
+ });
+ <?	
+foreach ($this->findList as $row) {
+$langi=$row['Latitude'];
+$Longi=$row['Longitude'];
+echo ("addMarker($langi, $Longi);\n");
+
+} // end while loop
+
+ ?>
+ center = bounds.getCenter();
+ map.fitBounds(bounds);
+ 
+ }
+
+</script>
+ 
+<body onload="initMap()" style="margin:0px; border:0px; padding:0px;">
+<div class="container">
+<div class="pandit-page-style">
+<div class="layout_nav" style="margin-top:-40px;">
+    <ul>
+<!--        <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>-->
+        <li style="margin-left:28%;"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+        <li><a class="before" href="<?php echo $this->url('cremation-plans', array('action' => 'find', 'id' => $this->find['id'])); ?>">Find &rsaquo;</a></li> 
+        <li><?php echo $this->category; ?></li>
+    </ul>
+</div>
+<div class='clear'></div>
+<div class="row">
+
+    <div class="find">
+		
+        <div class="topbar">
+       <a><h3 onclick="document.getElementById('menus').style.display='block';"><?php echo $this->category; ?><span id="ss"></span></h3></a>
+            <div class="main_search" style="width:75.5%;">
+				
+                <form action="" method="POST" >
+                    <input type="text" name="code" class="form-control" value="<?php echo $this->find['code']; ?>" placeholder="Search By PinCode"/>
+                    <input type="text" name="name" class="form-control" value="<?php echo $this->find['name']; ?>" placeholder="Search By Name"/>
+                    <input type="text" name="city" list="states" class="form-control" value="<?php echo $this->find['city']; ?>" placeholder="Search By City"/>
+<input type="submit" class="btn btn-default" value="Go"/>
+                    <datalist id="states">                      
+
+                    </datalist>
+
+                               
+                </form>
+
+            </div>
+
+        </div>
+		<br>
+		<?php
+		$cat=explode('->',$this->category);             
+if($cat[0]=='Special Vendors'){
+?>
+				
+		<div class="menu" id="menus"  style="display:block;position:absolute;z-index:10;background-color:white;width:66%;"  >
+
+			<ul class="ulnav" >
+			<?php
+$qry=mysql_query("select * from special_vendor_category"); 
+while($row=mysql_fetch_array($qry)){
+	$id=$row['id'];
+	$name=$row['name'];
+	echo "<li><a id='main-li' href='#' onclick='show();'><b>$name</b></a>";
+	echo "<ul id='subtab'>";
+	$qry1=mysql_query("select * from special_vendor_subcategory where category_id='$id'"); 
+while($row1=mysql_fetch_array($qry1)){
+	$subname=$row1['sub_category'];
+	echo "<li><a href='#'><b>$subname</b></a>";
+}
+	echo "</ul></li>";
+}
+
+?>								
+				</ul>
+		</div>
+		<?php
+	}
+?>
+		
+        <div class="main_find" style="display:none">
+            <div id="findlist" > 
+                <?php if (empty($this->findList)) { ?>
+
+                <?php } ?>
+                <table id="dataTable" class="table " width="100%">
+                    <thead>
+                        <tr>
+
+                            <th>&nbsp;</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $j=1; foreach ($this->findList as $find) { ?>
+
+                            <tr>
+                            	
+                                <td>
+                                    <div class="findimage floatleft"> 
+                                        <?php if ($find['photo'] != '') { ?>
+                                            <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/thumb/' . $find['id'] . '_' . $find['photo']); ?>" width="90" height="105"/>
+										
+										 <p class="rate" data-id="<?php echo $find['id']; ?>" style="margin-top:5px;">
+                                                <span></span>
+                                                <span class="stars">
+                                                    <?php
+                                                    if ($find['rating'] != '') {
+                                                        echo $find['rating'];
+                                                    } else {
+                                                        echo '0';
+                                                    }
+                                                    ?>                                          
+                                                </span>
+                                           </p>
+                                        <?php } else { ?>
+                                            <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/user-placeholder.gif'); ?>" width="72" height="72"/>
+
+                                        <?php } ?>
+
+                                    </div>
+                                    <div class="finddetails floatleft">
+                                        <div class="find-details-left"> <p class="nameicon"><?php echo $this->escapeHtml($find['name']); ?></p>                                       
+                                           
+                                            <p class="callicon"><?php echo $find['phone']; ?></p> 
+                                             <p class="skypeicon"><?php echo $this->escapeHtml($find['skype']); ?></p>
+                                              
+                                        </div>
+                                         <div class="find-details-right">
+                                            <p class="mobileicon"><?php echo $find['mobile']; ?></p>
+                                            <p class="emailicon"><?php echo $this->escapeHtml($find['email']); ?></p>
+                                          
+                                            <p>Languages:<i><?php
+                                                    $languages = unserialize($find['languages']);	
+                                                    $language = implode(',', $languages);
+                                                    echo $language;
+                                                    ?></i></p>
+                                           
+						<br>
+				
+                                        </div>
+										 <div class="find-details-left" style="width:100%;"> 
+										<p class="locationicon"><?php echo $this->escapeHtml($find['address']); ?></p>
+											 </div>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+<?php } ?>
+                    </tbody>  
+                </table>
+            </div>
+            <div class="advertisement">
+                <div id="map_addressess" class="map" style="height:560px;">
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div> 
+</div>
+
+<script>
+    $(document).ready(function() {
+
+        var userId = <?php echo $this->userId; ?>;
+        var width = 0;
+        var star = 0;
+
+        $('span.stars').stars();
+
+        $("span.stars").click(function(e) {
+            if (userId != 0) {
+                var offset = $(this).offset();
+                var x = e.clientX - offset.left;
+                var id = $(this).parent().data('id');
+
+                if (x > 1 && x < 15) {
+
+                    width = 15;
+                    star = 1;
+                } else if (x > 15 && x < 32) {
+
+                    width = 32;
+                    star = 2;
+                }
+                else if (x > 32 && x < 48) {
+
+                    width = 48;
+                    star = 3;
+                }
+                else if (x > 48 && x < 64) {
+
+                    width = 64;
+                    star = 4;
+                }
+                else if (x > 64 && x < 80) {
+
+                    width = 80;
+                    star = 5;
+                }
+
+                $(this).find("span").css('width', width);
+                var formData = {level: star, userid: userId, id: id};
+                $.ajax({
+                    type: "POST",
+                    data: formData,
+                    url: "<?php echo $this->url('cremation-plans', array('action' => 'review')); ?>",
+                    success: function(result) {
+                        location.reload();
+                    }});
+
+            } else {
+                alert('please login to continue review');
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo $this->basePath('/states'); ?>",
+            success: function(result) {
+                $('#states').html(result);
+            }});
+
+        $('#dataTable').dataTable({
+            "bPaginate": true,
+            "bFilter": false,
+            "bInfo": false,
+            "bSort": false,
+            "bLengthChange": false,
+            "iDisplayLength": 3,
+        });
+
+
+        $('#map_addresses').gMap({
+            address: "Quito, Ecuador",
+            zoom: 1,
+            markers: <?php echo $this->markers; ?>
+        });
+    });
+    $.fn.stars = function() {
+        return $(this).each(function() {
+            $(this).html($('<span />').width(Math.max(0, (Math.min(5, parseFloat($(this).html())))) * 16));
+        });
+    }
+
+</script> 

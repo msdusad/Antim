@@ -1,0 +1,96 @@
+
+<?php
+
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/tablesorter/js/jquery.tablesorter.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js');
+?>
+<div id="top"><?= $this->partial('layout/admin_top_menu', array('tittle' => 'Find List')); ?></div>
+<div id="left"> <?= $this->partial('layout/left-menu', array('find' => 'active')); ?></div> 
+<div id="content"> 
+    <div class="outer">
+        <div class="inner">
+            <!--/span-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <header>
+                            <h5><form name="categoryform" method="POST" action="" >
+                                <select onchange="this.form.submit()" name="category_id"  class="form-control">
+                                    <option value=''>All</option>
+                                    <?php foreach ($this->categories as $category) { ?>
+                                        <option <?php if($category['value']==$this->category){?> selected <?php }?> value="<?php echo $category['value'] ?>"><?php echo $category['label'] ?></option>
+                                    <?php } ?>
+                                </select>
+                                </form></h5>                           
+                        </header>
+                        <div id="collapse4" class="body">
+                            <form name="dataform" method="POST" action="">
+
+                                <div class="action">                                    
+                                    <select name="action" class="form-control">
+                                        <option value="">Select Action</option>
+                                        <option value="multidelete">Delete</option>                                        
+                                    </select>
+                                    <input type="submit" value="Submit" class="btn btn-default btn-sm"/>
+                                </div>
+                                <table id="dataTable" class="table ">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" name="sellectall" value="" ></th>
+                                            <th>Listing   <a class="btn btn-default btn-sm floatright" href="<?php echo $this->url('admin/find', array('action' => 'add')); ?>">Add List</a></th> 
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($this->paginator as $find) : ?>
+                                            <tr>
+                                                <td>
+                                                    
+                                                    <input type="checkbox" class="case" name="ids[]" value="<?php echo $find->id ?>"></td>
+                                                <td>
+                                                    <div class="findimage floatleft"> 
+                                                        <?php  if ($find->photo != '') { 
+                                                           
+                                                            ?>
+                                                            <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/thumb/' .$find->id.'_'.$find->photo); ?>" width="72" height="72"/>
+                                                        <?php } else { ?>
+                                                            <img src="<?php echo $this->basePath('/../module/CremationPlan/assets/user-placeholder.gif'); ?>" width="72" height="72"/>
+
+                                                        <?php } ?>
+
+                                                    </div>
+                                                    <div class=" floatleft">
+                                                        <p><?php echo $this->escapeHtml($find->name); ?></p>                                                      
+                                                        <p><?php echo $this->escapeHtml($find->address); ?></p> 
+                                                        <p><b>W:</b><?php echo $find->phone; ?></p>                                                        
+                                                        <p><b>Cell:</b><?php echo $find->mobile; ?></p>                                                       
+                                                        <p><b>Email:</b> <?php echo $find->email; ?></p>                                                      
+                                                        <p><b>Skype:</b><?php echo $find->skype; ?></p>                                                       
+                                                        <p><b>Language:</b><?php  $languages = unserialize($find->languages);  $language = implode(',', $languages); echo $language; ?></p>
+                                                     
+                                                        <a href="<?php echo $this->url('admin/find', array('action' => 'edit', 'id' => $find->id));
+                                                        ?>"><i class="fa fa-pencil fa-fw"></i></a>
+                                                        <a href="<?php echo $this->url('admin/find', array('action' => 'delete', 'id' => $find->id));
+                                                        ?>"><i class="fa fa-trash-o fa-fw"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div></div>
+                </div>
+                <!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
+    </div>
+    <?php $this->inlineScript()->captureStart() ?>
+    $(function() { metisTable(); metisSortable();});
+    <?php $this->inlineScript()->captureEnd() ?>
+
+</div> 

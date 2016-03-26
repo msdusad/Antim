@@ -1,0 +1,65 @@
+
+<?php
+echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.css');
+$this->headScript()->prependFile($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.min.js');
+echo $this->partial('layout/top_links');
+?>
+<div class="row">
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+            <li>Protect</li> 
+        </ul>
+    </div>
+    <div class='clear'></div>
+    <div class="topbar">
+        <h3>Protect</h3>
+    </div>
+    <div id="gothralist"> 
+
+        <?php if (empty($this->protectList)) { ?>
+            <ul>
+                <li>
+                    No records
+                </li>
+            </ul>
+
+        <?php } else { ?>
+            <div id="tabs">
+                <ul>
+                    <?php foreach ($this->protectList as $key => $val) { ?>
+
+                        <li id='index-<?php echo $val['id'] ?>'><a href="#fragment-<?php echo $val['id']; ?>"><span><?php echo $val['title']; ?></span></a></li>
+                    <?php } ?>
+                </ul>
+                <?php foreach ($this->protectList as $key => $val) { ?>
+                    <div id="fragment-<?php echo $val['id']; ?>">
+                        <?php echo $val['content']; ?>
+
+                    </div>
+                <?php } ?>
+
+            </div>
+        <?php } ?>
+    </div>
+    <input type="hidden" name="category" id="category" value="#index-<?php echo $this->id ?>"/>
+</div>
+
+<?php $this->inlineScript()->captureStart() ?>
+
+$(function(){
+
+var tab = $('#category').val();
+var index = $(tab).index();
+$('#tabs').tabs({
+  active: index
+});
+
+
+} );
+
+<?php $this->inlineScript()->captureEnd() ?>
+
+

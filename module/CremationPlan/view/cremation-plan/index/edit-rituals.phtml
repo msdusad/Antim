@@ -1,0 +1,109 @@
+
+<?php
+echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css');
+$this->headScript()->prependFile($this->basePath() . '/assets/lib/NicEditor/nicEdit.js');
+echo $this->partial('layout/top_links');
+?>
+<div class="row">
+    <div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+            <li>Customize Rituals</li> 
+        </ul>
+    </div>
+    <div class='clear'></div>
+    <div class="topbar">
+        <h3>Rituals</h3>
+        <form action='' method='POST' id='tradtionalform'>
+            <select name="tradtional_id" id="tradtional_id">
+                <?php foreach ($this->traditionalList as $traditionals) { ?>
+                    <option <?php
+                    if ($this->selected == $traditionals['value']) {
+                        echo 'selected';
+                    }
+                    ?> value="<?php echo $traditionals['value']; ?>"><?php echo $traditionals['label']; ?></option>                        
+                    <?php } ?>
+            </select>          
+        </form>        
+    </div>
+    <div class="mainrituals">
+        <h4>Traditional</h4>      
+        <div id="rituallist"> 
+           
+            <?php if (empty($this->ritualList)) { ?>
+                <ul>
+                    <li>
+                        No records
+                    </li>
+                </ul>
+
+            <?php } else { ?> 
+                <div id="tabs">
+                    <form method="post" action="">
+                    <ul>
+                        <?php foreach ($this->daysList as $key => $day) { ?>
+
+                            <li><a href="#fragment-<?php echo $key; ?>"><span>Day <?php echo $key + 1; ?></span></a></li>
+                        <?php } ?>
+                    </ul>
+                   
+                    <?php foreach ($this->daysList as $key => $day) { ?>
+                        <div id="fragment-<?php echo $key; ?>"> 
+                        <textarea  rows="6" id="editor-<?php echo $key; ?>" name="content[]"> <?php echo $day['content']; ?></textarea>   
+                        <input type="hidden" name="id[]" value="<?php echo $day['id']; ?>"/>
+                        </div>
+                        
+                    <?php } ?>
+                        <input type="submit" value="save"/>
+                        </form>
+
+                </div>
+            <?php } ?>
+
+        </div>
+
+
+        <div id="accordion">
+
+            <h3>Cultural</h3>
+            <div>
+                <?php echo $this->ritualList['cultural']; ?>
+            </div>
+            <h3>Preference</h3>
+            <div>
+                <?php echo $this->ritualList['preference']; ?>
+            </div>
+
+            <h3>Practical</h3>
+            <div>
+                <?php echo $this->ritualList['practical']; ?>
+            </div>
+
+            <h3>Interfaith</h3>
+            <div>
+                <?php echo $this->ritualList['interfaith']; ?>
+            </div>
+
+            <h3>Other</h3>
+            <div>
+                <?php echo $this->ritualList['other']; ?>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<?php $this->inlineScript()->captureStart() ?>
+
+$(function(){
+$( "#datepicker" ).datepicker();
+$( "#tabs" ).tabs();
+$( "#accordion" ).accordion();
+$('#tradtional_id').change(function() {
+$('#tradtionalform').submit();
+});
+
+} );
+<?php $this->inlineScript()->captureEnd() ?>

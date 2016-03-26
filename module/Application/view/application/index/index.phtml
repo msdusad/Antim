@@ -1,0 +1,81 @@
+<?php
+
+$this->headLink()->prependStylesheet($this->basePath() . '/assets/css/home.css');
+$this->headScript()->prependFile($this->basePath() . '/assets/js/jquery.als-1.2.min.js');
+
+?>
+
+<div class="content">
+    <div class="span4">
+        <a href="<?php echo $this->url('cremation-plans'); ?>">
+            <img src="<?php echo $this->basePath('/img/cremation.jpg'); ?>"/>
+        </a>
+    </div>
+     <div class="span4">
+     
+        <a href="<?php echo $this->url('pre-planning'); ?>">
+            <img src="<?php echo $this->basePath('/img/preplan.jpg'); ?>"/>
+        </a>
+    </div>
+    <div class="span4">
+        <a href="<?php echo $this->url('memoralize'); ?>">
+            <img src="<?php echo $this->basePath('/img/memoralize.jpg'); ?>"/>
+        </a>
+    </div>
+    <div class="span4">
+        <a href="<?php echo $this->url('search'); ?>">
+            <img src="<?php echo $this->basePath('/img/search.jpg'); ?>"/>
+        </a>
+    </div>
+</div>
+
+
+
+
+<div class="quicklinks">
+    <h4><?php echo $this->translate('Quick Links') ?></h4>
+
+    <div class="als-container" id="my-als-list">
+
+<!-- if you choose manual scrolling (which is set by default), insert <span> with class "als-prev"  and "als-next": 
+they define the buttons "previous" and "next"; within the <span> you can use images or simple text -->	
+
+        <span class="als-prev"><img src="<?php echo $this->basePath('assets/img/thin_left_arrow_333.png'); ?>" alt="prev" title="previous" /></span>
+
+        <!-- define a container with class "als-viewport": this will be the viewport for the list visible elements -->
+
+        <div class="als-viewport">
+
+            <!-- define a container with class "als-wrapper": this will be the wrapper for the list elements, 
+            it can be a classic <ul> element or even a <div> element -->
+
+            <ul class="als-wrapper">
+
+                <!-- define the list elements, each must have class "als-item"; they can be classic <li> elements 
+                or generic <div> elements and they can contain anything: text, images, ... -->
+
+                <li class="als-item"><a href="#">Rituals</a></li> <!-- text only -->
+                <li class="als-item"><a href="#">Calendar</a></li> <!-- image -->
+                <li class="als-item"><a href="#">Obit</a></li> <!-- image + text -->
+                <li class="als-item"><a href="#">Contact</a></li> <!-- text only -->
+                <li class="als-item"><a href="#">Panditiji</li> <!-- image -->
+                <li class="als-item"><a href="#">Vendors</a></li> <!-- image + text -->
+                <li class="als-item"><a href="#">Bhojan</a></li> <!-- image + text -->
+                <li class="als-item"><a href="#">Travel</a></li> <!-- image + text -->
+                <li class="als-item"><a href="#">Forms</a></li> <!-- image + text -->
+                <li class="als-item"><a href="#">Donate</a></li> <!-- image + text -->
+
+            </ul> <!-- als-wrapper end -->
+        </div> <!-- als-viewport end -->
+        <span class="als-next"><img src="<?php echo $this->basePath('assets/img/thin_right_arrow_333.png'); ?>" alt="next" title="next" /></span> <!-- "next" button -->
+    </div> 
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#my-als-list").als({
+                circular: "no"
+            });
+        });
+    </script>
+</div>
+

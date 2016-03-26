@@ -1,0 +1,465 @@
+<?php
+require_once("edit-events.phtml");
+$this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css');
+?>
+<?php echo $this->partial('layout/top_links'); ?>
+
+<div class="layout_nav">
+  <ul>
+    <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+    <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+    <li>Events</li>
+  </ul>
+</div>
+<div class='clear'></div>
+<?php if ($this->message != '') { ?>
+<div class="flash_message"> <?php echo $this->message[0]; ?> </div>
+<?php } ?>
+<div class="col-md-4 col-sm-5 col-xs-5">
+<div class="eventmenu" data-role="content" >
+  <select name="Select " id="create">
+    <option value="">Select</option>
+    <option value="event">Create Event</option>
+    <option value="viewevent" selected="selected">View Event</option>
+  </select>
+  <!--<div class="btn" id="create"> Create Event </div>-->
+  <div class="datepicker"></div>
+  <ul>
+    <li class="active"><a href="<?php echo $this->url('event-calendar-events'); ?>">My Calendar</a></li>
+    <li><a href="<?php echo $this->url('event-calendar-events', array('action' => 'in')); ?>">Indian Holidays</a></li>
+    <li><a href="<?php echo $this->url('event-calendar-events', array('action' => 'us')); ?>">US Holidays</a></li>
+  </ul>
+</div>
+</div>
+
+<div id="main-all-tabes" class="col-md-8 col-sm-7 col-xs-7 event-block">
+<div class="eventmain">
+  <div id="tabs" > 
+    <!-- AddThis Button BEGIN -->
+    
+    <ul>
+      <!-- <li>Today <?php echo date('l, F Y')?> </li>-->
+      <li><a href="#tabs-1">Day</a></li>
+      <li><a href="#tabs-2">Week</a></li>
+      <li><a href="#tabs-3">Month</a></li>
+      <li><a href="#tabs-4">Year</a></li>
+      <li><a href="#tabs-5">Today</a></li>
+      <!--<li><a href="#tabs-3">Agenta</a></li>-->
+    </ul>
+    <div id="tabs-1" class="eventscontent">
+ <h4> <?php echo date('D M j, Y',strtotime($this->edate));?> </h4>
+      <h5> Displaying events for All Audiences </h5>
+      <?php 
+             
+            foreach($this->mapper->fetchAll($this->id,$this->type,$this->edate,$this->userid) as $weekly){
+            	//print_r($weekly);exit;
+            	$dailyid=$weekly["id"];
+                
+                   //echo '<p><b>'.date('D M j, Y',strtotime($weekly['start'])).'</b> '.$weekly['content'].'</p>';
+             ?>   
+      <article id="post-15005" class="post-15005 tribe_events type-tribe_events status-publish hentry tribe_events_cat-family-friendly-fun tribe_events_cat-social-gatherings-and-networking audience-alumni audience-faculty-and-staff audience-general-public audience-kids-2 audience-parents audience-students unit-campus-recreation special-featured-home event-tag-aquatics event-tag-benefit event-tag-campus-rec event-tag-campus-recreation event-tag-charity event-tag-family event-tag-orange-county event-tag-plunge event-tag-polar event-tag-polar-plunge event-tag-pool event-tag-recreation event-tag-special-olympics cat_family-friendly-fun cat_social-gatherings-and-networking">
+      
+      
+     
+      
+      <div class="calender-view-styles alternate-cls">
+      <div class="share">
+        <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52f07ae406c6fbf3">
+            <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0;margin-top:0px;"/>
+        </a></div>
+        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$dailyid;?>
+        <!--<div class=" col-md-3 event-time"> 
+        <div class="row-cls">
+        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$dailyid;?>
+        <a href="<?php echo $link; ?>"> <span class="start-time"> <?php echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> 
+        </div>
+        </div>-->
+        <div class="col-md-9 event-content">
+          <div class="event-details">
+            <div class="extended">
+				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
+				<a href="?delete=<?php echo $weekly['id'];?>" id="delete-button">Delete</a>
+                  <p class="description"><strong>Profile Type:</strong> <?php echo $weekly['profile_type'];?></p>
+       
+           <p class="description"><a href="<?php echo $link; ?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
+          <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
+			<p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+              <p class="contact"><strong>Start Time:</strong> <?php echo date('H:i',strtotime($weekly['start']));?></p>
+              <p class="contact"><strong>End Time:</strong> <?php echo date('H:i',strtotime($weekly['end']));?></p>
+             
+             <p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+              <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
+              <p class="description"><strong>Content:</strong> <?php echo $weekly['content'];?></p>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+       <hr />
+      <?php
+			}
+      ?>      
+    </div>
+      
+    <div id="tabs-2" class="eventscontent">
+    <h4> <?php echo date('D M j, Y');?> </h4>
+      <h5> Displaying events for All Audiences </h5>
+     <?php 
+             
+            foreach($this->mapper->fetchAll($this->id,$this->type,'weekly',$this->userid) as $weekly){
+            		$weeklyid=$weekly["id"];
+            	//print_r($weekly);exit;
+                
+                   //echo '<p><b>'.date('D M j, Y',strtotime($weekly['start'])).'</b> '.$weekly['content'].'</p>';
+             ?>   
+      <article id="post-15005" class="post-15005 tribe_events type-tribe_events status-publish hentry tribe_events_cat-family-friendly-fun tribe_events_cat-social-gatherings-and-networking audience-alumni audience-faculty-and-staff audience-general-public audience-kids-2 audience-parents audience-students unit-campus-recreation special-featured-home event-tag-aquatics event-tag-benefit event-tag-campus-rec event-tag-campus-recreation event-tag-charity event-tag-family event-tag-orange-county event-tag-plunge event-tag-polar event-tag-polar-plunge event-tag-pool event-tag-recreation event-tag-special-olympics cat_family-friendly-fun cat_social-gatherings-and-networking">
+      
+      
+      
+      
+      <div class="calender-view-styles alternate-cls">
+      <div class="share">
+        <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52f07ae406c6fbf3">
+            <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0;margin-top:0px;"/>
+        </a></div>
+<?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$weeklyid;?>
+        <!--<div class=" col-md-3 event-time"> 
+        <div class="row-cls">
+<?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$weeklyid;?>
+        <a href="<?php echo $link;?>"> <span class="start-time"> <?php echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> </div>
+        </div>-->
+        <div class="col-md-9 event-content">
+          <div class="event-details">
+            <div class="extended">
+				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
+				<a href="?delete=<?php echo $weekly['id'];?>" id="delete-button">Delete</a>
+            <p class="description"><strong>Profile Type:</strong> <?php echo $weekly['profile_type'];?></p>
+          <p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
+
+          <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
+                            <p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+              <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
+              <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
+<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+              <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
+ 
+ <p class="description"><strong>Content:</strong> <?php echo $weekly['content'];?></p>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+       <hr />
+      <?php
+			}
+      ?>   
+    </div>
+    
+    
+    <div id="tabs-3" class="eventscontent" style="display:none;	">
+      <h4> <?php echo date('D M j, Y');?> </h4>
+      <h5> Displaying events for All Audiences </h5>
+     <?php 
+             
+            foreach($this->mapper->fetchAll($this->id,$this->type,'monthly',$this->userid) as $weekly){
+            	//print_r($weekly);exit;
+            	$monthlyid=$weekly['id'];
+                
+                   //echo '<p><b>'.date('D M j, Y',strtotime($weekly['start'])).'</b> '.$weekly['content'].'</p>';
+             ?>   
+      <article id="post-15005" class="post-15005 tribe_events type-tribe_events status-publish hentry tribe_events_cat-family-friendly-fun tribe_events_cat-social-gatherings-and-networking audience-alumni audience-faculty-and-staff audience-general-public audience-kids-2 audience-parents audience-students unit-campus-recreation special-featured-home event-tag-aquatics event-tag-benefit event-tag-campus-rec event-tag-campus-recreation event-tag-charity event-tag-family event-tag-orange-county event-tag-plunge event-tag-polar event-tag-polar-plunge event-tag-pool event-tag-recreation event-tag-special-olympics cat_family-friendly-fun cat_social-gatherings-and-networking">
+      
+      
+      
+      <div class="calender-view-styles alternate-cls">
+      <div class="share">
+        <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52f07ae406c6fbf3">
+            <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0;margin-top:0px;"/>
+        </a></div>
+        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$monthlyid;?>
+        <!--<div class=" col-md-3 event-time"> 
+        <div class="row-cls">
+        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$monthlyid;?>
+        <a href="<?php echo $link;?>"> <span class="start-time"> <?php echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> </div>
+        </div>-->
+        <div class="col-md-9 event-content" >
+          <div class="event-details" >
+            <div class="extended">
+				<p class="description">	
+				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
+	<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button" >Delete</a>
+				</p>
+   <p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['profile_type'];?></a></p>
+<p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
+       
+                     <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
+              <p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+              <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
+              <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
+<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+              <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
+          
+           <p class="description"><strong>Content:</strong> <?php echo $weekly['content'];?></p>
+  
+            </div>
+          </div>
+        </div>
+		  
+	
+		  
+		  
+      </div>
+       <hr />
+      <?php
+			}
+      ?> 
+    </div>
+    <div id="tabs-4" class="eventscontent">
+      <h4> <?php echo date('D M j, Y');?> </h4>
+      <h5> Displaying events for All Audiences </h5>
+     <?php 
+             
+            foreach($this->mapper->fetchAll($this->id,$this->type,'yearly',$this->userid) as $weekly){
+            	//print_r($weekly);exit;
+                $yearlyid=$weekly['id'];
+                   //echo '<p><b>'.date('D M j, Y',strtotime($weekly['start'])).'</b> '.$weekly['content'].'</p>';
+             ?>   
+      <article id="post-15005" class="post-15005 tribe_events type-tribe_events status-publish hentry tribe_events_cat-family-friendly-fun tribe_events_cat-social-gatherings-and-networking audience-alumni audience-faculty-and-staff audience-general-public audience-kids-2 audience-parents audience-students unit-campus-recreation special-featured-home event-tag-aquatics event-tag-benefit event-tag-campus-rec event-tag-campus-recreation event-tag-charity event-tag-family event-tag-orange-county event-tag-plunge event-tag-polar event-tag-polar-plunge event-tag-pool event-tag-recreation event-tag-special-olympics cat_family-friendly-fun cat_social-gatherings-and-networking">
+      
+      
+      
+      <div class="calender-view-styles alternate-cls">
+      <div class="share">
+        <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52f07ae406c6fbf3">
+            <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0;margin-top:0px;"/>
+        </a></div>
+        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$yearlyid;?>
+        <!--<div class=" col-md-3 event-time"> 
+        <div class="row-cls">
+        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$yearlyid;?>
+            <a href="<?php echo $link;?>"> <span class="start-time"> <?php echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> </div>
+        </div>-->
+        <div class="col-md-9 event-content">
+          <div class="event-details">
+            <div class="extended">
+				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
+				<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button" >Delete</a>
+<p class="description"><strong>Profile Type:</strong> <?php echo $weekly['profile_type'];?></p>
+<p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
+     
+                     <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
+              				  <p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+              <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
+              <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
+<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+              <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
+         
+          <p class="description"><strong>Content:</strong> <?php echo $weekly['content'];?></p>
+   
+            </div>
+          </div>
+        </div>
+      </div>
+       <hr />
+      <?php
+			}
+      ?> 
+    </div>
+    <div id="tabs-5" class="eventscontent">
+ <h4> <?php echo date('D M j, Y');?> </h4>
+      <h5> Displaying events for All Audiences </h5>
+      <?php 
+             
+            foreach($this->mapper->fetchAll($this->id,$this->type,'daily',$this->userid) as $weekly){
+            	//print_r($weekly);exit;
+            	$dailyid=$weekly["id"];
+                
+                   //echo '<p><b>'.date('D M j, Y',strtotime($weekly['start'])).'</b> '.$weekly['content'].'</p>';
+             ?>   
+      <article id="post-15005" class="post-15005 tribe_events type-tribe_events status-publish hentry tribe_events_cat-family-friendly-fun tribe_events_cat-social-gatherings-and-networking audience-alumni audience-faculty-and-staff audience-general-public audience-kids-2 audience-parents audience-students unit-campus-recreation special-featured-home event-tag-aquatics event-tag-benefit event-tag-campus-rec event-tag-campus-recreation event-tag-charity event-tag-family event-tag-orange-county event-tag-plunge event-tag-polar event-tag-polar-plunge event-tag-pool event-tag-recreation event-tag-special-olympics cat_family-friendly-fun cat_social-gatherings-and-networking">
+      
+      
+     
+      
+      <div class="calender-view-styles alternate-cls">
+      <div class="share">
+        <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52f07ae406c6fbf3">
+            <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0;margin-top:0px;"/>
+        </a></div>
+        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$dailyid;?>
+        <!--<div class=" col-md-3 event-time"> 
+        <div class="row-cls">
+        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$dailyid;?>
+        <a href="<?php echo $link; ?>"> <span class="start-time"> <?php echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> </div>
+        </div>-->
+        <div class="col-md-9 event-content">
+          <div class="event-details">
+            <div class="extended">
+				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
+				<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button" >Delete</a>
+            <p class="description"><strong>Profile Type:</strong> <?php echo $weekly['profile_type'];?></p>
+<p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
+         
+                     <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
+              				  <p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+              <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
+              <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
+<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+              <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
+         
+         <p class="description"><strong>Description:</strong> <?php echo $weekly['content'];?></p>
+    
+            </div>
+          </div>
+        </div>
+      </div>
+       <hr />
+      <?php
+			}
+      ?>      
+    </div>
+		
+		
+		
+		
+		
+		
+  </div>
+</div>
+</div>
+		 <!-- div for edit menu -->
+	<?php if(isset($_GET['edit'])){
+		  
+		?>
+		<form action="" method="post">
+			<input type="text" name="id" value="<?php echo $_GET['edit'];?>" style="display:none;">
+		  	<div class="col-md-8 col-sm-7 col-xs-7 event-block" id="edit-event" style="display:none;">
+    <div class="eventmain">
+    	<div  class="obituary-creation1">
+        <label style="margin-top:0px">Profile Type</label>
+        <select id="profile_type" name="profile_type" class="form-control" required>
+            <option value="">Select</option>
+            <option <?php if($profile_type=='cremationplan'){ echo 'selected';}?> value="cremationplan">Cremation Plan</option>
+            <option <?php if($profile_type=='preplanning'){ echo 'selected';}?> value="preplanning">Pre Planning</option>
+            <option <?php if($profile_type=='obituary'){ echo 'selected';}?> value="obituary">Obituary</option>
+            <option <?php if($profile_type=='memoralize'){ echo 'selected';}?> value="memoralize">Memoralize</option>
+			 <option <?php if($profile_type=='imandir'){ echo 'selected';}?> value="imandir">iMandir</option>
+			 <option <?php if($profile_type=='anniversary'){ echo 'selected';}?> value="anniversary">Anniversary</option>
+			 <option  <?php if($profile_type=='special-event'){ echo 'selected';}?> value="special-event">Special Event</option>
+        </select>
+        </div>
+    	<div  class="obituary-creation2" id="profileField">
+        <label>Profile Name</label>
+        <!--<select id="profile_id" name="profile_id" class="form-control">-->
+        <input type="text" id="profile_id" name="profile_id" class="form-control" value="<?php //echo $name;?>" placeholder="Name">
+        <!--</select>-->            
+		</div> 
+        <div class="clear"> </div>  
+        
+        <div  class="obituary-creation12"> 
+        <label>Title</label>
+        <input type="text" id="title" name="title" class="form-control" value="<?php echo $title;?>"/>        
+        </div>
+        
+        <div class="clear"> </div>
+        
+        <div  class="obituary-creation1">
+        <label>Date</label>
+        <input type="text" id="dp1" name="edate" placeholder= 'dd/mm/yyyy' class="form-control dp" value="<?php echo $eventdate;?>"/>
+        </div>
+        
+        <div class="obituary-creation2" >
+        <div  class="obituary-creation1" > 
+        <label>Start Time</label>
+        <input type="text" id="start_time" name="start_time" class="form-control timepicker-default" value="<?php echo $startsate;?>"/>
+        </div>
+        
+        <div  class="obituary-creation1" style="float:right" > 
+        <label>End Time</label>
+        <input type="text" id="end_time" name="end_time" class="form-control timepicker-default" value="<?php echo $enddate;?>"/>
+        </div>
+        </div>
+		<div class="clear"> </div>
+        
+        <div  class="obituary-creation1"> 
+          <label> Location </label>
+        <input type="text" id="location" name="location" class="form-control" value="<?php echo $location;?>"/>     
+        </div>
+        
+        <div  class="obituary-creation2"> 
+          <label> Contact </label>
+        <input type="text" id="contact" name="contact" class="form-control" value="<?php echo $contact;?>"/>     
+        </div>
+
+        <div class="clear"> </div>
+                
+        <div  class="obituary-creation100"> 
+          <label> Content </label>
+        <textarea type="text" id="nicedit" name="content" class="form-control" value="<?php echo $content;?>"> </textarea>     
+        </div>
+        
+        <div  class="obituary-creation2"> </div>
+        
+        <div class="clear"> </div>
+        <div class="add-btn-block">
+        <input id="submitbutton" class="btn btn-lg btn-primary btn-block" type="submit" value="Add" name="submit">
+        </div>
+        
+</div>
+</div>
+		</form>
+		<?php
+			 
+			 }
+			 
+			 ?>
+		  <!-- dicv for edit menu end -->
+		
+		
+		
+		
+<form id="eventadd" method="GET">
+</form>
+<script>
+
+    $(document).ready(function() {
+        $(".datepicker").datepicker(
+			{
+				onSelect: function(dateText, inst) { 
+				//alert(dateText);
+				var url = "<?php echo $this->url('event-calendar-events'); ?>";
+        			window.location = url+'?edate=' + dateText;
+    			}			
+			}        
+        );
+        $("#tabs").tabs();
+        
+        $("#create").change(function() {
+
+            if ($(this).val() == 'event') {                
+                //var url = '<?php echo $this->url('event-calendar-events', array('action' => 'add','type'=>$this->type,'id'=>$this->id)); ?>';
+				var url = '<?php echo $this->url('event-calendar-events', array('action' => 'add','type'=>'obituary','id'=>'13')); ?>';
+               $('#eventadd').attr('action',url);
+               $('#eventadd').submit();
+            }
+        });
+    });
+    $(document).ready(function() {
+$("#create").change(function() {
+//alert()
+            if ($(this).val() == 'event') {               
+                //var url = '<?php echo $this->url('event-calendar-events', array('action' => 'add','type'=>$this->type,'id'=>$this->id)); ?>';
+				var url = '<?php echo $this->url('event-calendar-events', array('action' => 'add')); ?>';
+               $('#eventadd').attr('action',url);
+               $('#eventadd').submit();
+            }
+			if ($(this).val() == 'viewevent') {                
+               var url = '<?php echo $this->url('event-calendar-events'); ?>';
+               //alert(url);
+               $('#eventadd').attr('action',url);
+               $('#eventadd').submit();
+            }
+        });
+	});
+        
+</script> 

@@ -1,0 +1,60 @@
+
+<?php
+echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.css');
+$this->headScript()->prependFile($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.min.js');
+echo $this->partial('layout/top_links');
+?>
+<div class="row">
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+            <li>Gotra</li> 
+        </ul>
+    </div>
+    <div class='clear'></div>
+    <div class="topbar">
+        <h3>Gotra</h3>
+    </div>
+    <div id="gothralist">
+        <p>
+            The seven sons of Bhrama, also known as the Sapt Rishis, were responsible for the origins of Hindus. During the performance of religious ceremonies,  it is important to remember which of these seven Gotras is your family associated with.  Gotra is the lineage or clan assigned to a Hindu at birth. In most cases, the system is patrilineal and the gotra assigned is that of the person's father. Other terms for it are vansh, vanshaj, bedagu, purvik, purvajan, pitru. 
+        </p>
+        <hr />
+
+        <?php if (empty($this->gotraList)) { ?>
+            <ul>
+                <li>
+                    No records
+                </li>
+            </ul>
+
+        <?php } else { ?>
+            <div id="tabs">
+                <ul>
+                    <?php foreach ($this->gotraList as $key => $val) { ?>
+
+                        <li><a href="#fragment-<?php echo $key; ?>"><span><?php echo $val['title']; ?></span></a></li>
+                    <?php } ?>
+                </ul>
+                <?php foreach ($this->gotraList as $key => $val) { ?>
+                    <div id="fragment-<?php echo $key; ?>">
+                        <?php echo $val['content']; ?>
+
+                    </div>
+                <?php } ?>
+
+            </div>
+        <?php } ?>
+    </div>
+</div>
+
+<?php $this->inlineScript()->captureStart() ?>
+
+$(function(){
+$( "#tabs" ).tabs();
+} );
+<?php $this->inlineScript()->captureEnd() ?>
+
+

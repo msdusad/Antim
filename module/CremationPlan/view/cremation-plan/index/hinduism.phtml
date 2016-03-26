@@ -1,0 +1,510 @@
+
+<style>
+
+a.svg:after {
+  content: ""; 
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  bottom: 0; 
+  left: 0;
+}
+</style>
+<?php
+ error_reporting(0);
+require_once('config/autoload/conn.php');
+echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.css');
+$this->headScript()->prependFile($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.min.js');
+
+echo $this->partial('layout/top_links');
+
+?> 
+<style>
+    .black_overlay{
+        display: none;
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 120%;
+        background-color: black;
+        z-index:1001;
+        -moz-opacity: 0.8;
+        opacity:.80;
+        filter: alpha(opacity=80);
+    }
+    .white_content {
+        display: none;
+        position: absolute;
+        left: 20%;
+        top:18%;
+        width: 100%;
+        height: 70%;
+        padding: 16px;
+        border: 16px solid orange;
+        background-color: white;
+        z-index:1002;
+        overflow: auto;
+    }
+    #closebutton{
+    margin-left:95%;
+        height:20px;
+        width:30px;
+        background-color:orange
+    }
+    
+    #ad-images{
+    padding-top:30px;
+    }
+    #ad-images-images{
+    padding-top:20px;
+    }
+  
+</style>
+  
+<script>
+    
+        function videoPlay(videoNum)
+    {
+
+
+     document.getElementById('light').style.display='block';
+    document.getElementById('fade').style.display='block';
+document.getElementById("video-box").setAttribute("src",videoNum);
+document.getElementById("video-box").load();
+document.getElementById("video-box").play();
+var changingurl=$("#player").attr('src', videoNum);
+
+    }
+    
+        function videoclose()
+    {  
+
+
+
+document.getElementById('light').style.display='none';
+document.getElementById('fade').style.display='none';
+    var vid=document.getElementById("player");
+        var chg="https://www.youtube.com/embed/EA27xM71m0g";
+$("#player").attr('src', chg);
+
+    }
+    
+     //     videoSRC = $('iframe').attr('src');
+     //  $('#closevideo').click(function (e) {
+     // $(' iframe').attr('src', videoSRC);
+     //      });
+          
+    
+
+</script>
+
+<div class="row">
+<div class="layout_nav" style="margin-left:12px;margin-top:-40px;">
+     
+        <ul >
+            <li style="margin-left:15%";><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+            <li>Hinduism</li> 
+        </ul>
+    </div>
+    <div class='clear'></div>
+    <div class="topbar">
+        <h3 style="">Hinduism</h3>
+    </div>
+    <div id="gothralist"> 
+        <?php if (empty($this->hindusimsList)) { ?>
+            <ul>
+                <li>
+                    No records
+                </li>
+            </ul>
+
+        <?php } else { ?>
+            <div id="tabs">
+                <ul>
+                    <?php foreach ($this->hindusimsList as $key => $val) { ?>
+                     
+
+                        <li style="width:12.5%;"><a id="sub_menu_hindu"  href="#fragment-<?php echo $key; ?>" id="showfragment<?php echo $key; ?>" ><span><?php echo $val['title']; ?></span></a></li>
+
+
+
+                    <?php } ?>
+                </ul>
+                <?php foreach ($this->hindusimsList as $key => $val) { ?>
+                    <div id="fragment-<?php echo $key; ?>">
+						<?php
+						if($val['id']=='4'){
+$num_pages=9;
+                            if (isset($_GET["page"])) { $page= $_GET["page"];
+                                                      
+                                                      } else { $page=1; }; 
+$start_from = ($page-1) * $num_pages; 
+					
+                            $hindu_id=$val['id'];
+                            $qry=mysql_query("SELECT * FROM hindusim_detail where hindusim_id='$hindu_id' LIMIT $start_from,$num_pages ");
+                            while($row=mysql_fetch_array($qry)){
+                              $videolink=$row['url'];
+                            ?>
+							<div id="tv-shows" >
+        <a class="svg" href="#" onclick="videoPlay('<?php echo $videolink;?> ')">  
+ <iframe  id="frame-tv" src="<?php echo $row['url'];?>" allowfullscreen="true" allowscriptaccess="always"> </iframe> 
+
+                         <?php echo $row['name'];?> </a>
+								</div>
+					
+						<?php 
+                       }
+
+$sql = "SELECT * FROM hindusim_detail where hindusim_id='$hindu_id'"; 
+$rs_result = mysql_query($sql); //run the query
+$total_records = mysql_num_rows($rs_result);  //count number of records
+$total_pages = ceil($total_records / $num_pages); 
+
+                                echo '
+                            <div class="dataTables_paginate paging_bootstrap" style="text-align:center;">
+                            <ul class="pagination "><li class="prev disabled" >';
+                                
+echo "<li><a href='?page=1'>".'← Previous'."</a></li>"; 
+                               
+                // Goto 1st page  
+
+for ($i=1; $i<=$total_pages; $i++) { 
+            echo "<li><a href='?page=".$i."'>".$i."</a> </li>"; 
+}
+echo "<li class='next'><a href='?page=$total_pages'>".'Next →'."</a></li> "; 
+                                
+                                echo "</ul></div>";
+
+
+
+						}
+																	  
+				if($val['id']=='6'){
+$num_pages=9;
+                            if (isset($_GET["online_content"])) { $page= $_GET["online_content"];
+                                                      
+                                                      } else { $page=1; }; 
+$start_from = ($page-1) * $num_pages; 
+
+					  $hindu_id=$val['id'];
+                            $qry=mysql_query("SELECT * FROM hindusim_detail where hindusim_id='$hindu_id' LIMIT $start_from,$num_pages");
+                            while($row=mysql_fetch_array($qry)){
+                        $videolink=$row['url'];
+                        ?>
+							 <div id="tv-shows" > 
+                                <a class="svg" href="#" onclick="videoPlay('<?php echo $videolink;?> ')">   
+  <iframe  id="frame-tv" src="<?php echo $row['url'];?>" allowfullscreen="true" allowscriptaccess="always"> </iframe>
+                    <?php echo $row['name'];?> 
+							</a>	</div>
+					
+						<?php 
+                            }
+
+$sql = "SELECT * FROM hindusim_detail where hindusim_id='$hindu_id'"; 
+$rs_result = mysql_query($sql); //run the query
+$total_records = mysql_num_rows($rs_result);  //count number of records
+$total_pages = ceil($total_records / $num_pages); 
+
+  echo '
+                            <div class="dataTables_paginate paging_bootstrap" style="text-align:center;">
+                            <ul class="pagination "><li class="prev disabled" >';
+                                
+echo "<li><a href='?online_content=1'>".'← Previous'."</a></li>"; 
+                               
+                // Goto 1st page  
+
+for ($i=1; $i<=$total_pages; $i++) { 
+            echo "<li><a href='?online_content=".$i."'>".$i."</a> </li>"; 
+}
+echo "<li class='next'><a href='?online_content=$total_pages'>".'Next →'."</a></li> "; 
+                                
+                                echo "</ul></div>";
+
+						}
+				
+
+     // code for first Scriptures module
+
+                        if($val['id']=='1'){
+$num_pages=9;
+                            if (isset($_GET["scriptures"])) { $page= $_GET["scriptures"];
+                                                      
+                                                      } else { $page=1; }; 
+$start_from = ($page-1) * $num_pages; 
+                    
+                            $hindu_id=$val['id'];
+                            $qry=mysql_query("SELECT * FROM hindusim_detail where hindusim_id='$hindu_id' LIMIT $start_from,$num_pages ");
+                            while($row=mysql_fetch_array($qry)){
+                              $videolink=$row['url'];
+                            ?>
+                            <div id="tv-shows" >
+        <a class="svg" href="#" onclick="videoPlay('<?php echo $videolink;?> ')">  
+ <iframe  id="frame-tv" src="<?php echo $row['url'];?>" allowfullscreen="true" allowscriptaccess="always"> </iframe> 
+
+                         <?php echo $row['name'];?> </a>
+                                </div>
+                    
+                        <?php 
+                       }
+
+$sql = "SELECT * FROM hindusim_detail where hindusim_id='$hindu_id'"; 
+$rs_result = mysql_query($sql); //run the query
+$total_records = mysql_num_rows($rs_result);  //count number of records
+$total_pages = ceil($total_records / $num_pages); 
+
+                                echo '
+                            <div class="dataTables_paginate paging_bootstrap" style="text-align:center;">
+                            <ul class="pagination "><li class="prev disabled" >';
+                                
+echo "<li><a href='?scriptures=1'>".'← Previous'."</a></li>"; 
+                               
+                // Goto 1st page  
+
+for ($i=1; $i<=$total_pages; $i++) { 
+            echo "<li><a href='?scriptures=".$i."'>".$i."</a> </li>"; 
+}
+echo "<li class='next'><a href='?scriptures=$total_pages'>".'Next →'."</a></li> "; 
+                                
+                                echo "</ul></div>";
+
+
+
+                        }
+
+
+
+
+// code for first Philospy module
+
+                        if($val['id']=='2'){
+$num_pages=9;
+                            if (isset($_GET["philospy"])) { $page= $_GET["philospy"];
+                                                      
+                                                      } else { $page=1; }; 
+$start_from = ($page-1) * $num_pages; 
+                    
+                            $hindu_id=$val['id'];
+                            $qry=mysql_query("SELECT * FROM hindusim_detail where hindusim_id='$hindu_id' LIMIT $start_from,$num_pages ");
+                            while($row=mysql_fetch_array($qry)){
+                              $videolink=$row['url'];
+                            ?>
+                            <div id="tv-shows" >
+        <a class="svg" href="#" onclick="videoPlay('<?php echo $videolink;?> ')">  
+ <iframe  id="frame-tv" src="<?php echo $row['url'];?>" allowfullscreen="true" allowscriptaccess="always"> </iframe> 
+
+                         <?php echo $row['name'];?> </a>
+                                </div>
+                    
+                        <?php 
+                       }
+
+$sql = "SELECT * FROM hindusim_detail where hindusim_id='$hindu_id'"; 
+$rs_result = mysql_query($sql); //run the query
+$total_records = mysql_num_rows($rs_result);  //count number of records
+$total_pages = ceil($total_records / $num_pages); 
+
+                                echo '
+                            <div class="dataTables_paginate paging_bootstrap" style="text-align:center;">
+                            <ul class="pagination "><li class="prev disabled" >';
+                                
+echo "<li><a href='?philospy=1'>".'← Previous'."</a></li>"; 
+                               
+                // Goto 1st page  
+
+for ($i=1; $i<=$total_pages; $i++) { 
+            echo "<li><a href='?philospy=".$i."'>".$i."</a> </li>"; 
+}
+echo "<li class='next'><a href='?philospy=$total_pages'>".'Next →'."</a></li> "; 
+                                
+                                echo "</ul></div>";
+
+
+
+                        }
+
+
+// code for first Pligrimages module
+
+                        if($val['id']=='5'){
+$num_pages=9;
+                            if (isset($_GET["pligrimages"])) { $page= $_GET["pligrimages"];
+                                                      
+                                                      } else { $page=1; }; 
+$start_from = ($page-1) * $num_pages; 
+                    
+                            $hindu_id=$val['id'];
+                            $qry=mysql_query("SELECT * FROM hindusim_detail where hindusim_id='$hindu_id' LIMIT $start_from,$num_pages ");
+                            while($row=mysql_fetch_array($qry)){
+                              $videolink=$row['url'];
+                            ?>
+                            <div id="tv-shows" >
+        <a class="svg" href="#" onclick="videoPlay('<?php echo $videolink;?> ')">  
+ <iframe  id="frame-tv" src="<?php echo $row['url'];?>" allowfullscreen="true" allowscriptaccess="always"> </iframe> 
+
+                         <?php echo $row['name'];?> </a>
+                                </div>
+                    
+                        <?php 
+                       }
+
+$sql = "SELECT * FROM hindusim_detail where hindusim_id='$hindu_id'"; 
+$rs_result = mysql_query($sql); //run the query
+$total_records = mysql_num_rows($rs_result);  //count number of records
+$total_pages = ceil($total_records / $num_pages); 
+
+                                echo '
+                            <div class="dataTables_paginate paging_bootstrap" style="text-align:center;">
+                            <ul class="pagination "><li class="prev disabled" >';
+                                
+echo "<li><a href='?pligrimages=1'>".'← Previous'."</a></li>"; 
+                               
+                // Goto 1st page  
+
+for ($i=1; $i<=$total_pages; $i++) { 
+            echo "<li><a href='?pligrimages=".$i."'>".$i."</a> </li>"; 
+}
+echo "<li class='next'><a href='?pligrimages=$total_pages'>".'Next →'."</a></li> "; 
+                                
+                                echo "</ul></div>";
+
+
+
+                        }
+
+// code for first News module
+
+                        if($val['id']=='8'){
+$num_pages=9;
+                            if (isset($_GET["news"])) { $page= $_GET["news"];
+                                                      
+                                                      } else { $page=1; }; 
+$start_from = ($page-1) * $num_pages; 
+                    
+                            $hindu_id=$val['id'];
+                            $qry=mysql_query("SELECT * FROM hindusim_detail where hindusim_id='$hindu_id' LIMIT $start_from,$num_pages ");
+                            while($row=mysql_fetch_array($qry)){
+                              $videolink=$row['url'];
+                            ?>
+                            <div id="tv-shows" >
+        <a class="svg" href="#" onclick="videoPlay('<?php echo $videolink;?> ')">  
+ <iframe  id="frame-tv" src="<?php echo $row['url'];?>" allowfullscreen="true" allowscriptaccess="always"> </iframe> 
+
+                         <?php echo $row['name'];?> </a>
+                                </div>
+                    
+                        <?php 
+                       }
+
+$sql = "SELECT * FROM hindusim_detail where hindusim_id='$hindu_id'"; 
+$rs_result = mysql_query($sql); //run the query
+$total_records = mysql_num_rows($rs_result);  //count number of records
+$total_pages = ceil($total_records / $num_pages); 
+
+                                echo '
+                            <div class="dataTables_paginate paging_bootstrap" style="text-align:center;">
+                            <ul class="pagination "><li class="prev disabled" >';
+                                
+echo "<li><a href='?news=1'>".'← Previous'."</a></li>"; 
+                               
+                // Goto 1st page  
+
+for ($i=1; $i<=$total_pages; $i++) { 
+            echo "<li><a href='?news=".$i."'>".$i."</a> </li>"; 
+}
+echo "<li class='next'><a href='?news=$total_pages'>".'Next →'."</a></li> "; 
+                                
+                                echo "</ul></div>";
+
+
+
+                        }
+										  
+						else{
+						   //echo $val['content'];   
+						}
+                     
+                ?>    </div>
+                <?php } ?>
+
+            </div>
+        <?php } ?>
+    </div>
+
+
+<!-- div for video play -->
+<div class="row">
+<div id="light" class="white_content" style="width:900px;">
+    <div id="closebutton">
+    <a id="closevideo" href="#" onclick="videoclose()" >&times;</a>  <!-- onclick="videoclose()"-->
+        </div>
+ <iframe id="player" style="height:90%;width:100%" src="https://www.youtube.com/embed/EA27xM71m0g" frameborder="0" allowfullscreen="true" allowscriptaccess="always"></iframe>
+
+    <video id="video-box" style="height:100%;width:100%;display:none">
+  <!-- <source src="" type="video/mp4"> -->
+ 
+</video>
+    
+</div>
+    <div id="fade" class="black_overlay"></div>
+</div>
+
+           <!-- end video popup -->
+                            
+
+
+</div>
+<?php
+ if(isset($_GET['page'])){
+
+echo "<script type='text/javascript'> 
+window.location=document.getElementById('showfragment3').href;  </script>";
+   
+}
+
+ if(isset($_GET['online_content'])){
+
+echo "<script type='text/javascript'> 
+window.location=document.getElementById('showfragment5').href;  </script>";
+   
+}
+
+if(isset($_GET['scriptures'])){
+
+echo "<script type='text/javascript'> 
+window.location=document.getElementById('showfragment0').href;  </script>";
+   
+}
+
+if(isset($_GET['philospy'])){
+
+echo "<script type='text/javascript'> 
+window.location=document.getElementById('showfragment1').href;  </script>";
+   
+}
+
+if(isset($_GET['pligrimages'])){
+
+echo "<script type='text/javascript'> 
+window.location=document.getElementById('showfragment4').href;  </script>";
+   
+}
+
+ if(isset($_GET['news'])){
+
+echo "<script type='text/javascript'> 
+window.location=document.getElementById('showfragment7').href;  </script>";
+   
+}
+
+
+$this->inlineScript()->captureStart() ?>
+
+$(function(){
+$( "#tabs" ).tabs();
+} );
+<?php $this->inlineScript()->captureEnd() ?>
+
+

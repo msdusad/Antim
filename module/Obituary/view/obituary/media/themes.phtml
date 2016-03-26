@@ -1,0 +1,79 @@
+<?= $this->partial('layout/top_links'); ?>
+<div class="layout_nav">
+    <ul>
+        <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+        <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+        <li><a class="before" href="<?php echo $this->url('obituary'); ?>">Obituary &rsaquo;</a></li>
+        <li>Step 3 </li> 
+    </ul>
+</div>
+<div class="clear"></div>
+<div class='maintemplates'>
+    <div id="error"></div>
+    <form method='POST' action='' id="template">
+        <h4>
+            <?php echo $this->translate('Select Templates') ?>
+        </h4> 
+        <div class='menus'>
+            
+            <ul>
+                <li>
+               
+                    <select name="language" id="language">
+                      <?php foreach($this->languages as $language){ if($this->language==$language['id']){$selected ="selected";}else{$selected ="";} echo '<option '.$selected.' value="'.$language['id'].'">'.$language['name'].'</option>';   }?>
+                    </select>
+               
+                </li>
+                <li><a href='#'>Style</a></li>
+                <li><a href='#'>Customized</a></li>
+                <li><a href='#'>Newspaper</a></li>
+            </ul>
+                  
+        </div>
+        <div class="templates">
+            <?php foreach ($this->templates as $templates) { ?>    
+                <div class="template" data-id="<?php echo $templates['id']; ?>">
+                    <?php echo $templates['content']; ?>
+                </div>    
+            <?php } ?>
+        </div>
+        <input type="hidden" name="theme_id" id="theme_id" value=""/>
+        <input type="hidden" name="theme_content" id="theme_content" value=""/>
+        <input type="hidden" name="action" value="selected"/>
+        <input type="hidden" name="id" value="<?php echo $this->id; ?>"/>
+    </form>
+
+    <div class="meadiafooter">
+        <?php  if ($this->step != 0 && count($this->images) > 0) { ?>
+            
+        <?php } else  { ?>
+            <a  href="<?php echo $this->url('obituary', array('id' => $this->id)) ?>"> 
+                < Go to Profile
+            </a>
+        <?php } ?>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function() {
+
+        $('.template').click(function() {
+
+            var content = $(this).html();
+            var id = $(this).data('id');
+
+            $('#theme_id').val(id);
+            $('#theme_content').val(content);
+
+            $('#template').submit();
+
+        });
+        $('#language').change(function() {
+            
+            var id = $(this).val();
+            
+             window.location.href = "<?php echo $this->url('obituary-create-themes',array('id'=>$this->id,'step'=>2)) ?>/" + id;
+        });
+    });
+
+</script>

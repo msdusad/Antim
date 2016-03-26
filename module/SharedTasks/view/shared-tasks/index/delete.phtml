@@ -1,0 +1,24 @@
+  <?= $this->partial('layout/top_links'); ?>
+<div id="content"> 
+    <div class="outer">
+        <div class="inner">
+
+            <p>Are you sure that you want to delete task id
+                '<?php echo $this->escapeHtml($this->tasks->id); ?>'?
+            </p>
+            <?php
+            $url = $this->url('sharedtasks', array(
+                'action' => 'delete',
+                'id' => $this->tasks->id,
+            ));
+            ?>
+            <form action="<?php echo $url; ?>" method="post">
+                <div>
+                    <input type="hidden" name="id" value="<?php echo (int) $this->tasks->id; ?>" />
+                    <input type="submit" name="del" value="Yes" />
+                    <input type="submit" name="del" value="No" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

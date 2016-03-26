@@ -1,0 +1,358 @@
+<section class="content-header no-margin">
+<h1 class="text-center"> Mailbox </h1>
+</section>
+                <!-- Main content -->
+                <section class="content">
+                    <!-- MAILBOX BEGIN -->
+                    <div class="mailbox row">
+                        <div class="col-xs-12">
+                            <div class="box box-solid">
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-3 col-sm-4">
+                                            <!-- BOXES are complex enough to move the .box-header around.
+                                                 This is an example of having the box header within the box body -->
+                                            <div class="box-header">
+                                                <i class="fa fa-inbox"></i>
+                                                <h3 class="box-title">INBOX</h3>
+                                            </div>
+                                            <!-- compose message btn -->
+                                            <a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i> Compose Message</a>
+                                            <!-- Navigation - folders-->
+                                            <div style="margin-top: 15px;" id="navbar">
+                                                <ul class="nav nav-pills nav-stacked " >
+                                                    <li class="header">Folders</li>
+                                                    <li class="active"><a href="javascript:void(0);" onclick="mailbox(this);"><i class="fa fa-inbox"></i> Inbox (14)</a></li>
+                                                    <li><a href="javascript:void(0);" onclick="draftmail(this);"><i class="fa fa-pencil-square-o"></i> Drafts</a></li>
+                                                    <li><a href="javascript:void(0);" onclick="sentmail(this);"><i class="fa fa-mail-forward"></i> Sent</a></li>
+                
+                                                </ul>
+                                            </div>
+                                        </div><!-- /.col (LEFT) -->
+                                        <div class="col-md-9 col-sm-8">
+                                            <div class="row pad">
+                                                <div class="col-sm-6">
+                                                    <label style="margin-right: 10px;">
+                                                        <input type="checkbox" id="check-all"/>
+                                                    </label>
+                                                    <!-- Action button -->
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-default btn-sm btn-flat dropdown-toggle" data-toggle="dropdown">
+                                                            Action <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" role="menu">
+                                                              <li><a href="#">Delete</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <button id="loader"  class="btn btn-warning disabled" style="margin-left: 170px; display:none">Loading...</button>
+                                            </div><!-- /.row -->
+
+                                            <div class="table-responsive" id="mailbox">
+                                                <!-- THE MESSAGES -->
+                                                
+                                                <table class="table table-mailbox" id="mail_table_id" >
+                                                <?php if(count($paginator)>0):
+                                                           foreach($paginator as $mail):
+                                                           $is_read =($mail['view']==0)?'unread':'';
+                                                           ?>
+                                                    <tr class="<?php echo $is_read; ?>">
+                                                        <td class="small-col"><input type="checkbox" name="mail[]" value="<?php echo $mail['admin_email_id'] ?>" /></td>
+                                                        <td class="small-col"><i class="fa fa-star"></i></td>
+                                                        <td class="name"><a href="javascript:void(0);" onclick="viewmail(<?php echo $mail['admin_email_id'] ?>);"><?php echo $mail['sender'];?></a></td>
+                                                        <td class="subject"><a href="javascript:void(0);" onclick="viewmail(<?php echo $mail['admin_email_id'] ?>);"><?php echo $mail['subject'];?></a></td>
+                                                        <td><a href="javascript:void(0)" onclick="replymail('<?php echo $mail['sender'] ?>','<?php echo $mail['admin_email_id'] ?>');"><i class="fa fa-mail-forward"></i>Reply</a></td>
+                                                        <td class="time"><?php echo  date("(d-M-Y)  g:i A", strtotime($mail['created']));?></td>
+                                                    </tr>
+                                                    <?php endforeach;?>
+                                                    <?php else:?>
+                                                    <tr><td colspan="5">No mail in mailbox yet !</td></tr>
+                                                <?php endif;?>
+                                                    
+                                                </table>
+                                                <div class="pull-right">
+                                                <div id="pagination_section">
+                                                        <?php  echo $this->paginationControl($this->paginator,'Sliding','partial/mailpagination', array('records_number' =>$records_number,'type'=>'recieve')); ?>
+                                                </div>
+                                            </div>
+                                                  
+                                            </div><!-- /.table-responsive -->
+                                              
+                                        </div><!-- /.col (RIGHT) -->
+                                    </div><!-- /.row -->
+                                </div><!-- /.box-body -->
+                                <div class="box-footer clearfix">
+                                   
+                                </div><!-- box-footer -->
+                            </div><!-- /.box -->
+                        </div><!-- /.col (MAIN) -->
+                    </div>
+                    <!-- MAILBOX END -->
+
+                </section><!-- /.content -->
+                
+                <!-- COMPOSE MESSAGE MODAL -->
+        <div class="modal fade" id="compose-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><i class="fa fa-envelope-o"></i> Compose New Message</h4>
+                    </div>
+                    <?php  echo $this->form()->openTag($form); ?>
+                        <div class="modal-body">
+                            <div class="form-group">
+                             
+                                <div class="input-group">
+                                    <span class="input-group-addon">TO:</span>
+                                    	<?php echo $this->formRow($form->get('reciever')); ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">Subject:</span>
+                                    	<?php echo $this->formRow($form->get('subject')); ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                	<?php echo $this->formRow($form->get('body')); ?>
+                            </div>
+                          
+                        </div>
+                        <div class="modal-footer clearfix">
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Discard</button>
+                           <?php echo $this->formInput($form->get('draft'))?>&nbsp;&nbsp;
+                           	<?php echo $this->formInput($form->get('sent'))?>
+                        </div>
+                     <?php  echo $this->form()->closeTag($form) ?>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+      
+ <!-- reply Of mail System -->
+ 
+ <div class="modal fade" id="reply-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><i class="fa fa-envelope-o"></i> Reply  Message</h4>
+                    </div>
+                    <form method="post" action="<?php echo $this->url('mail',array('controller'=>'mail','action'=>'reply')) ?>">
+                        <div class="modal-body" >
+                            <div class="form-group">
+                             
+                                <div class="input-group">
+                                    <span class="input-group-addon">TO:</span>
+                                    	<input type="email"  class="form-control" name="reciever" id="reciever_id" value="" />
+                                        <input type="hidden"  class="form-control" name="parent_id" id="parent_id" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">Subject:</span>
+                                    	<input type="text" class="form-control" name="subject" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                               <textarea name="body" class="form-control"  style="height: 120px;" id="reply_message"></textarea>
+                            </div>
+                          
+                        </div>
+                        <div class="modal-footer clearfix">
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Discard</button>
+                           <input type="submit" name="reply" value="Reply" class="btn btn-info pull-right" />
+                        </div>
+                     </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal --> 
+        
+  <!----- DRAFT EMAIL ---->
+  
+    <!-- COMPOSE MESSAGE MODAL -->
+        <div class="modal fade" id="draft-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" id="send-draft">
+                   
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+  
+  
+        
+  <!-- view Model ------------------>
+  <div class="modal fade" id="view-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><i class="fa fa-envelope-o"></i> View  Message</h4>
+                    </div>
+                    
+                        <div class="modal-body" id="mailresult">
+                      
+                        </div>
+                        <div class="modal-footer clearfix">
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Discard</button>
+                           
+                        </div>
+                    
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->     
+        <script type="text/javascript">
+            $(function() {
+
+                "use strict";
+                
+               
+
+                //When unchecking the checkbox
+                $("#check-all").on('ifUnchecked', function(event) {
+                
+                    //Uncheck all checkboxes
+                    $("input[type='checkbox']", ".table-mailbox").iCheck("uncheck");
+                });
+                //When checking the checkbox
+                $("#check-all").on('ifChecked', function(event) {
+                    //Check all checkboxes
+                    $("input[type='checkbox']", ".table-mailbox").iCheck("check");
+                });
+                //Handle starring for glyphicon and font awesome
+                $(".fa-star, .fa-star-o, .glyphicon-star, .glyphicon-star-empty").click(function(e) {
+                    e.preventDefault();
+                    //detect type
+                    var glyph = $(this).hasClass("glyphicon");
+                    var fa = $(this).hasClass("fa");
+
+                    //Switch states
+                    if (glyph) {
+                        $(this).toggleClass("glyphicon-star");
+                        $(this).toggleClass("glyphicon-star-empty");
+                    }
+
+                    if (fa) {
+                        $(this).toggleClass("fa-star");
+                        $(this).toggleClass("fa-star-o");
+                    }
+                });
+
+                //Initialize WYSIHTML5 - text editor
+                $("#email_message").wysihtml5();
+                $("#reply_message").wysihtml5();
+            });
+        </script>
+
+<script type="text/javascript">
+function sentmail(obj)
+{
+    $('#navbar ul li').removeClass('active');
+    $(obj).closest('li').addClass('active');
+    
+    $.ajax({
+            type:'POST',
+            url:'<?php echo $this->url('mail',array('controller'=>'mail','action'=>'sent-mail')); ?>',
+            success:function(response){
+                $('#mailbox').html(response);
+            },
+    });
+    return false;
+}
+function mailbox(obj)
+{
+     $('#navbar ul li').removeClass('active');
+     $(obj).closest('li').addClass('active');
+        
+     $.ajax({
+            type:'POST',
+            url:'<?php echo $this->url('mail',array('controller'=>'mail','action'=>'view-mail')); ?>',
+            success:function(response){
+                $('#mailbox').html(response);
+            },
+    });
+    return false;
+    
+}
+function draftmail(obj)
+{
+    $('#navbar ul li').removeClass('active');
+    $(obj).closest('li').addClass('active');
+    $.ajax({
+            type:'POST',
+            url:'<?php echo $this->url('mail',array('controller'=>'mail','action'=>'draft-mail')); ?>',
+            success:function(response){
+                $('#mailbox').html(response);
+            },
+    });
+    return false;
+}
+function replymail(mail,id)
+{   
+    $('#reciever_id').attr('value',mail);
+    $('#parent_id').attr('value',id);
+    $('#reciever_id').attr('readonly','readonly');
+    $('#reply-modal').modal('show');  
+}
+function viewmail(id)
+{
+  $('#loader').css('display','block');  
+  $.ajax({
+            type:'POST',
+            url:'<?php echo $this->url('mail',array('controller'=>'mail','action'=>'check-mail')); ?>',
+            data:{id:id},
+            success:function(response){
+                $('#loader').css('display','none');
+                $('#mailresult').html(response);
+                $('#view-modal').modal('show');
+            },
+    });
+    return false;  
+}
+function senddraftmail(id)
+{
+  $('#loader').css('display','block');  
+  $.ajax({
+            type:'POST',
+            url:'<?php echo $this->url('mail',array('controller'=>'mail','action'=>'view-draft-mail')); ?>',
+            data:{id:id},
+            success:function(response){
+                $('#loader').css('display','none');
+                $('#send-draft').html(response);
+                $('#draft-modal').modal('show');
+            },
+    });
+    return false;  
+    
+}
+//pagination script goes here
+
+function paginationbutton(pagenumber,type){
+   
+     var per_page = 15;
+     $.ajax({
+              type: "POST",
+              url: "<?php echo $this->url('mail',array('controller'=>'mail','action'=>'mail-paginator')); ?>",
+              data: {action:type,page:pagenumber,per_page:per_page},
+              success:function(response){
+                 $('#mail_table_id tbody').html(response);
+              }
+      }); //end ajax table
+    
+    $.ajax({
+           type: "POST",
+           url: "<?php echo $this->url('mail',array('controller'=>'mail','action'=>'mail-paginator-layout')); ?>",
+  		   data: {action:type,page:pagenumber,per_page:per_page},
+           success:function(response)
+           {
+            $('#pagination_section').html(response);
+           }
+      
+    });//end ajax layout
+ }
+
+</script>

@@ -1,0 +1,181 @@
+
+<?php
+$this->headLink()->prependStylesheet($this->basePath() . '/css/jquery-ui-1.7.2.custom.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/fullcalendar-1.6.2/fullcalendar/fullcalendar.css');
+
+$this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
+        ->prependFile($this->basePath() . '/assets/lib/fullcalendar-1.6.2/fullcalendar/fullcalendar.min.js')
+        ->prependFile($this->basePath() . '/js/jquery-ui.js');
+?>
+  <?= $this->partial('layout/top_links'); ?>
+
+<div class="memoralize">
+    <h4><?php echo $this->info->first_name . $this->info->middle_name . $this->info->last_name; ?></h4>
+    <div class="memoralize_gallery"> 
+        <div class="memoralize_gallery_image">
+            <img class="frameimage" src="<?php echo $this->basePath('/../module/Memoralize/assets/themes/' . $this->theme->image_url); ?>"  width="125" height="150"/>
+<?php foreach ($this->images as $image) {
+    if ($image['main_image'] == 1) {
+        ?>
+                    <img class="mainimage" src="<?php echo $this->basePath('/../module/Memoralize/assets/images/' . $image['image_url']); ?>" width="40" height="40"/>
+                <?php } ?>
+                <img src="<?php echo $this->basePath('/../module/Memoralize/assets/images/' . $image['image_url']); ?>" width="40" height="40"/>
+            <?php } ?>
+            <div id="light" style="display: none;">
+                <img src="" width="60" height="60"/>
+
+            </div>
+
+        </div>
+        <div  class="memoralize_gallery_media">
+            <video controls width="200" height="200" src="<?php echo $this->basePath('/../module/Memoralize/assets/media/' . $this->media->media_url); ?>">
+                Your browser does not support the <code>video</code> element.
+            </video>
+           
+        </div>
+         <?php echo $this->info->description; ?>
+    </div>
+    <div class="memoralize_info">
+        <div id="tabs" >
+            <ul>
+                <li><a href="#tabs-1">Info</a></li>
+                <li><a href="#tabs-2">Education</a></li>
+                <li><a href="#tabs-3">Family</a></li>
+                <li><a href="#tabs-4">Tributes</a></li>
+                <li><a href="#tabs-5">Guest Book</a></li>
+                <li><a href="#tabs-6">Privacy</a></li>
+            </ul>
+            <div id="tabs-1">
+                <ul>
+                    <li><label>First Name: </label><?php echo $this->info->first_name; ?></li>
+                    <li><label>Middle Name: </label><?php echo $this->info->middle_name; ?></li>
+                    <li><label>Last Name: </label><?php echo $this->info->last_name; ?></li>
+                    <li><label>DOB: </label><?php echo $this->info->dob; ?></li>
+                    <li><label>Age: </label><?php echo $this->info->age; ?></li>
+                    <li><label>Death Place: </label><?php echo $this->info->death_place; ?></li>
+                </ul>
+            </div>
+            <div id="tabs-2">
+                <p><?php echo $this->info->education; ?></p>
+            </div>
+            <div id="tabs-3">
+                <p><?php echo $this->info->family; ?></p>
+            </div>
+            <div id="tabs-4">
+                <p><?php echo $this->info->tributes; ?></p>
+            </div>
+            <div id="tabs-5">
+                <p><?php echo $this->info->guest_book; ?></p>
+            </div>
+				<div id="tabs-6">
+                <p><?php echo $this->info->privacy; ?></p>
+            </div>
+        </div>
+        <div id="cals" >
+            <ul>
+                <li><a href="#cal-1">Events</a></li>
+                <li><a href="#cal-2">Timeline</a></li>
+                <li><a href="#cal-3">Donate</a></li>
+
+            </ul>
+            <div id="cal-1">
+                <div id="calendar" class="col-lg-9"></div>
+            </div>
+            <div id="cal-2">
+                <p><?php echo $this->info->education; ?></p>
+            </div>
+            <div id="cal-3">
+                <p><?php echo $this->info->family; ?></p>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="prayerwall">
+        <h4>Offering & Prayers WALL</h4>
+        <div class="prayer_options" data-id="<?php echo $this->id; ?>" data-userid="<?php echo $this->userid; ?>">
+            <a href="#" data-type="1" data-image="diya.gif" class="light btn btn-lg btn-default btn-sm">Light a Diya</a>
+            <a href="#" data-type="2" data-image="candle.gif" class="light btn btn-lg btn-default btn-sm">Light a Candle</a>
+            <a href="#" data-type="3" data-image="thali.gif" class="light btn btn-lg btn-default btn-sm">Offer Thali</a>
+        </div>
+        <div class="recent_offers">
+            <h5>Recent Offerings & Prayers</h5>
+            <?php
+            foreach ($this->offers as $offer) {
+
+                switch ($offer['type']) {
+                    case 1:
+                        $image = 'diya.gif';
+                        break;
+                    case 2:
+                        $image = 'candle.gif';
+                        break;
+                    case 3:
+                        $image = 'thali.gif';
+                        break;
+                }
+                ?>
+                <img title="<?php echo $offer['display_name']; ?>" src="<?php echo $this->basePath('/../module/Memoralize/assets/offers/' . $image); ?>" width="50" height="50"/>
+
+            <?php } ?>
+        </div>        
+    </div>
+</div>
+<script>
+
+    $(document).ready(function() {
+
+        $("#tabs").tabs();
+        $("#cals").tabs();
+
+        $('.memoralize_gallery_image img').click(function(e) {
+            
+                $('.mainimage').attr('src',$(this).attr('src'));  
+        });
+
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        $('.light').click(function(e) {
+
+            var image = '<?php echo $this->basePath('/../module/Memoralize/assets/offers/'); ?>' + $(this).data('image');
+
+            var user_id = $('.prayer_options').data('userid');
+            var id = $('.prayer_options').data('id');
+            var type = $(this).data('type');
+
+            var data = {'id': id, 'user_id': user_id, 'type': type}
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo $this->url('memoralize', array('action' => 'offer')); ?>',
+                data: data,
+                success: function(data) {
+
+                    $("#light").css('display', 'block');
+                    $("#light img").attr('src', image);
+
+                }
+            });
+        });
+
+
+
+
+        var calendar = $('#calendar').fullCalendar({
+            editable: false,
+            header: {
+                left: 'prev,next',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            events: "<?php echo $this->url('event-calendar-events', array('action' => 'eventsview', 'id' => $this->id)); ?>",
+            // Convert the allDay from string to boolean
+            eventRender: function(event, element, view) {
+            }
+
+        });
+
+    });
+//         
+</script>

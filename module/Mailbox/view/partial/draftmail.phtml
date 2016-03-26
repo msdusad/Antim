@@ -1,0 +1,22 @@
+<table class="table table-mailbox" >
+    <?php if(count($paginator)>0):
+            foreach($paginator as $mail):
+    ?>
+    <tr>  
+        <td class="small-col"><input type="checkbox" name="mail[]" value="<?php echo $mail['admin_email_id'] ?>" /></td>
+        <td class="small-col"><i class="fa fa-star"></i></td>
+        <td class="name"><a href="javascript:void(0);" onclick="senddraftmail(<?php echo $mail['admin_email_id'] ?>);"><?php echo $mail['reciever'];?></a></td>
+        <td class="subject"><a href="javascript:void(0);" onclick="senddraftmail(<?php echo $mail['admin_email_id'] ?>);"><?php echo $mail['subject'];?></a></td>
+        <td class="time"><?php echo  date("(d-M-Y)  g:i A", strtotime($mail['created']));?></td>
+    </tr>
+<?php endforeach;?>
+<?php else:?>
+<tr><td colspan="5">No Draft mail in mailbox yet !</td></tr>
+<?php endif;?>
+
+</table>
+<div class="pull-right">
+<div id="pagination_section">
+<?php  echo $this->paginationControl($this->paginator,'Sliding','partial/mailpagination', array('records_number' =>$records_number,'type'=>'draft')); ?>
+</div>
+</div>

@@ -1,0 +1,212 @@
+<?php
+$this->headLink()->prependStylesheet($this->basePath() . '/css/jquery-ui-1.7.2.custom.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/fancybox/jquery.fancybox.css')
+        ->prependStylesheet($this->basePath() . '/assets/lib/chosen/chosen.css');
+
+$this->headScript()
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+        ->prependFile($this->basePath() . '/js/jquery-ui.js')
+        ->prependFile($this->basePath() . '/assets/lib/fancybox/jquery.fancybox.js');
+?>
+  <?= $this->partial('layout/top_links'); ?>
+<style>
+    .fancybox-skin{padding: 0px!important;}
+    .fancybox-inner{width:100%!important}
+    .fancybox-inner form{padding:30px}
+    .fancybox-inner form input{float:left}
+    .fancybox-inner h4{padding: 15px;background: #548ed7;color: #fff;margin: 0;border-radius: 4px 0 0 0;}  
+    
+</style>
+<div class="layout_nav">
+        <ul>
+            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
+             <li><a class="before" href="<?php echo $this->url('inbox'); ?>">Email &rsaquo;</a></li>             
+             <li><a class="before" href="<?php echo $this->url('contact-groups'); ?>">Groups &rsaquo;</a></li>
+             <li><a class="before" href="<?php echo $this->url('contact-group-users',array('id'=>$this->id)); ?>">Contacts &rsaquo;</a></li>
+             <li>Add Contacts</li> 
+        </ul>
+    </div>
+<div class='clear'></div>
+<div class="row">
+    <div class="email_main">
+        <div id="collapse4" class="body">           
+            <?php
+            $title = 'Add new contacts';
+            $this->headTitle($title);
+            ?>
+           <div class="top">
+                <h4><?php echo $this->escapeHtml($title); ?></h4>
+                <div class="emaillink">
+                    <a class="fancybox btn btn-default" href="#contacts">Import contacts</a>
+                </div>                 
+            </div>
+            <div class="form">
+            <?php
+            $form = $this->form;
+            $form->setAttribute('action', $this->url('contact-groups', array('action' => 'addusers', 'id' => $this->id)));
+            $form->prepare();
+
+            echo $this->form()->openTag($form);
+            echo $this->formCollection($form);
+            echo $this->form()->closeTag();
+            ?>
+        </div>
+    </div>
+</div>
+   
+</div>
+
+
+
+
+<div id="contacts" style="display: none;">
+    <div class="import_contacts">
+        <h4>My Contacts</h4>
+        <input type="text" class="input-small form-control" id="socialuser" placeholder="Live Search ...">
+        <ul id="list">
+
+            <?php
+            try {
+                // grab the user contacts list
+                $user_contacts = $this->contacts;
+
+                foreach ($user_contacts as $item) {
+                    if (filter_var($item->identifier, FILTER_VALIDATE_EMAIL)) {
+                        $item->identifier = $item->identifier;
+                    } else {
+
+                        $item->identifier = $item->identifier . '@facebook.com';
+                    }
+                    if ($item->displayName != '') {
+                        ?>
+                        <li>
+                            <input type="checkbox" class="case" name="ids[]" value="<?php echo $item->identifier ?>">
+                            <?php if ($item->photoURL) { ?>
+                                <?php /* <input class="floatleft conatctcheck" type="checkbox" name="users[]" data-name="<?php echo $item->displayName; ?>" data-id="<?php echo $item->identifier; ?>" data-url="<?php echo $item->photoURL; ?>" />
+                                 */ ?> 
+                                <a class="socialuser" id="<?php echo $item->identifier; ?>" data-email="<?php echo $item->email; ?>" data-id="<?php echo $item->identifier; ?>" data-url="<?php echo $item->photoURL; ?>" 
+                                   data-name="<?php echo $item->displayName; ?>" data-dob="<?php echo $item->birthday; ?>"  data-loc="<?php echo $item->location; ?>"  data-home="<?php echo $item->home; ?>" data-company="<?php echo $item->company; ?>" data-job="<?php echo $item->jobTitle; ?>" 
+                                   href="#/<?php echo $item->displayName; ?>/" style="background:url('<?php echo $item->photoURL; ?>') no-repeat left center / 32px "><?php echo $item->displayName; ?></a>
+
+                            <?php } else { ?> 
+                                <?php /* <input class="floatleft" type="checkbox" name="users[]" data-name="<?php echo $item->displayName; ?>" data-id="<?php echo $item->identifier; ?>" data-url="<?php echo $this->basePath('/img/avatar.jpg'); ?>" />
+                                 */ ?>
+                                <a class="socialuser" id="<?php echo $item->identifier; ?>" data-email="<?php echo $item->email; ?>" data-id="<?php echo $item->identifier; ?>" data-url="<?php echo $this->basePath('/img/avatar.jpg'); ?>" 
+                                   data-name="<?php echo $item->displayName; ?>" data-dob="<?php echo $item->birthday; ?>"  data-loc="<?php echo $item->location; ?>"  data-home="<?php echo $item->home; ?>" data-company="<?php echo $item->company; ?>" data-job="<?php echo $item->jobTitle; ?>" 
+                                   href="#/<?php echo $item->displayName; ?>/" style="background:url('<?php echo $this->basePath('/img/avatar.jpg'); ?>') no-repeat left center / 32px "><?php echo $item->displayName; ?></a>
+
+                            <?php } ?>  
+
+                        </li> 
+                        <?php
+                    }
+                }
+
+                if (!count($user_contacts)) {
+                    echo "No contact found!";
+                }
+            } catch (Exception $e) {
+                // if code 8 => Provider does not support this feature
+                if ($e->getCode() == 8) {
+                    echo "Provider does not support this feature. Currently only <b>Facebook, MySpace, Twitter and LinkedIn</b> do support this!
+						<br />Please refer to the user guide to know more about each adapters capabilities. <a href='http://hybridauth.sourceforge.net/userguide.html'>http://hybridauth.sourceforge.net/userguide.html</a>";
+                } else {
+                    echo "Well, got an error: " . $e->getMessage();
+                }
+            }
+            ?>
+        </ul>
+    </div>
+    <div class="importlinks">
+        <?php
+// try to get already authenticated provider list
+        try {
+            $connected_adapters_list = $this->providers;
+
+            if (count($connected_adapters_list)) {
+                ?> 
+                <ul class="social-link">
+                    <li>Connected with</li>
+                    <?php
+                    foreach ($connected_adapters_list as $adapter_id) {
+                        if ($adapter_id != 'LinkedIn') {
+                            ?>
+                            <li class="spriteslink social-link-<?php echo strtolower($adapter_id) ?> <?php if ($adapter_id == $this->currentProvider) { ?><?php echo strtolower($adapter_id) ?>active<?php } ?>">
+                                <a title="<?php echo $adapter_id; ?>" href="#"><?php echo $adapter_id; ?></a>
+                            </li>
+                        <?php
+                        }
+                    }
+                    ?>
+
+                </ul>
+
+                <?php
+            }
+        } catch (Exception $e) {
+            
+        }
+        ?> 
+        <ul class="social-link">
+            <li>Sign in</li>       
+            <?php
+            $available_providers_list = array(
+                "Google",
+                "Yahoo",
+                "Facebook",
+                "Twitter",
+            );
+
+            foreach ($available_providers_list as $adapter_id) {
+                if (in_array($adapter_id, $this->providers)) {
+                    
+                } else {
+                    ?>
+                    <li class="spriteslink social-link-<?php echo strtolower($adapter_id) ?>">
+                        <a href="<?php echo $this->url('scn-social-contact', array('provider' => $adapter_id));
+                    ?>"><?php echo $adapter_id; ?></a></li>
+                        <?php
+                    }
+                }
+                ?> 
+        </ul>
+    </div>
+       <button class="btn btn-default btn-xs" id="import">Select</button>
+</div>
+<?php $this->inlineScript()->captureStart() ?>
+
+    $(document).ready(function() {
+
+        $('.fancybox').fancybox();
+
+        $('#socialuser').change(function() {
+
+            var list = $("#list");
+            var filter = $(this).val();
+            if (filter) {
+
+                $matches = $(list).find('a:Contains(' + filter + ')').parent();
+                $('li', list).not($matches).slideUp();
+                $matches.slideDown();
+
+            } else {
+                $(list).find("li").slideDown();
+            }
+            return false;
+        }).keyup(function() {
+            $(this).change();
+        });
+
+        $("#import").click(function() {
+           
+            event.preventDefault();
+            var searchIDs = $("#list input:checkbox:checked").map(function() {
+                return $(this).val();
+            }).get().join(", ");   // <----
+            
+            $('#identity').val(searchIDs);
+            $.fancybox.close();
+        });
+    });
+<?php $this->inlineScript()->captureEnd() ?>

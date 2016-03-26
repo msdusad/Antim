@@ -1,0 +1,245 @@
+<?php
+$deactive =$this->translate('Inactive');
+$active =$this->translate('Active');
+?>
+<script>
+$(document).ready( function() {
+	$('a.state').click( function() {
+        url=$(this).attr('href');
+		rel=$(this).attr('rel');
+        setrel =(rel=='0' ? '1': '0');
+        state = (rel=='0' ? 'state btn btn-xs btn-success':'state btn btn-xs btn-danger');
+        title = (rel=='0' ? 'Inactive':'Active');
+        $(this).attr('class',state);
+        $(this).attr('rel',setrel);
+        $(this).text(title);
+		$.post(url,{state:rel});
+        return false;
+	});
+    
+       //change order
+    $('.order').bind('input', function() { 
+     var order = $(this).val();
+     var id=$(this).attr('data-id');
+     if(order >=0)
+     {
+        $.ajax({
+                type: "POST",
+                url: "<?php echo $this->url('menu',array('controller'=>'menu','action'=>'change-order')) ?>/"+id,
+                data: {order:order}
+        }).done(function( response ) {
+            $('#pagination_section').html(response);
+       });
+     }
+    
+   });
+});
+</script>
+<!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title"><?php echo $this->translate('Manage Menu Panel');?></h3>                                    
+                                </div><!-- /.box-header -->
+                          
+                           
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title"><?php echo $this->translate('All Menu List') ?></h3> 
+                                <button   style="float:right" type="button" class="btn btn-warning " data-toggle="modal" data-target="#addModal">Add</button>
+                                </div><!-- /.box-header -->
+								
+                                <div class="box-body table-responsive">
+                                <?php if(count($menu)>0):?>
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th><?php echo $this->translate('Sno');?></th>
+                                                <th><?php echo $this->translate('Name');?></th>
+                                                <th><?php echo $this->translate('label');?></th>
+                                               <!-- <th><?php echo $this->translate('Link');?></th> -->
+                                                <th><?php echo $this->translate('Type');?></th>
+                                                <th><?php echo $this->translate('Order');?></th>
+                                                <th><?php echo $this->translate('Status');?></th>
+                                                <th><?php echo $this->translate('Action');?></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php $sn=1; foreach($menu as $menudetails):?>
+                                            
+                                            <tr>
+                                                <td><?php echo $sn;?></td>
+                                                <td><a href="<?php echo $this->url('page',array('controller'=>'page','action'=>'index','alias'=>$menudetails->link)); ?>"> <?php echo $menudetails->name;?></a></td>
+                                                <td><?php echo $menudetails->label; ?></td>
+												<!-- <td><?php echo $menudetails->link; ?></td> -->
+												<td>
+												<?php 
+												$arr =array('first'=>'Header Menu','second'=>'Footer Menu','third'=>'Sidebar Menu');
+												echo $arr[$menudetails->type]; ?>
+												
+												</td>
+                                              <td><input type="text" style="width: 40px; !important;" data-id="<?php echo $menudetails->menu_id;?>" class="form-control order" name="order" value="<?php echo  $menudetails->order;  ?>" /></td>
+                                               <td><a href="<?php echo $this->url('menu',array('controller'=>'menu','action'=>'status','id'=>$menudetails->menu_id)); ?>" class='state <?php echo $menudetails->status=='0' ? ' btn btn-xs btn-danger':' btn btn-xs btn-success';?>' rel='<?php echo $menudetails->status;?>' ><?php echo $menudetails->status=='0' ? "Active" : "Inactive ";?></a></td>
+                                                
+
+                                                <td>
+                                                
+                                                <div class="btn-group">
+                                                <button class="btn btn-info" type="button">Action</button>
+                                                <button data-toggle="dropdown" class="btn btn-info dropdown-toggle" type="button">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <ul role="menu" class="dropdown-menu">
+												<li><a href="javascript:void(0);" data-toggle="modal" data-target="#edit-<?php echo $menudetails->menu_id; ?>-Modal">Edit</a></li>
+											    <li><a href="javascript:void(0);" onclick="deletemenu('<?php echo $menudetails->menu_id;?>');" >Delete</a></li>
+                                                
+                                                </ul>
+                                                </div>
+                                                
+                                                </td>
+                                            </tr>
+											 <!-- start  edit menu modal -->
+													
+													<div class="modal fade" id="edit-<?php echo $menudetails->menu_id;?>-Modal" tabindex="-1" role="dialog" aria-hidden="true">
+														<div class="modal-dialog">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+																	<h4 class="modal-title"><?php echo $this->translate('Update Menu Items');?></h4>
+																</div>
+																 <?php 
+																 $updateForm->setAttribute('action', $this->url('menu', array('controller'=>'menu','action' => 'update-menu','id'=>$menudetails->menu_id))); 
+																 echo $this->form()->openTag($updateForm);?> 
+																	<div class="modal-body">
+                                                                      	<div class="form-group">
+																			<div class="input-group">
+                                                                                <label class="input-group-addon" for="menu">Type</label>
+																				<?php echo $this->formRow($updateForm->get('type')->setValue( $menudetails->type));?>
+																			</div>
+																		</div>
+                                                                        	<div class="form-group">
+																			<div class="input-group">
+																				<?php echo $this->formRow($updateForm->get('name')->setValue( $menudetails->name));?>
+																			</div>
+																		</div>
+																	   <div class="form-group">
+																			<div class="input-group">
+																				<?php echo $this->formRow($updateForm->get('label')->setValue( $menudetails->label));?>
+																			</div>
+																		</div>
+																		<div class="form-group">
+																			<div class="input-group">
+                                                                               <label class="input-group-addon" for="menu">Pages</label>
+																				<?php echo $this->formRow($updateForm->get('alias')->setValue( $menudetails->alias));?>
+																			</div>
+																		</div>
+													
+																	</div>
+																	<div class="modal-footer clearfix">
+
+																		<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+																		<?php echo $this->formRow($updateForm->get('submit')->setValue('Update'));?>
+																	</div>
+																 <?php echo $this->form()->closeTag();?>
+															</div><!-- /.modal-content -->
+														</div><!-- /.modal-dialog -->
+													</div><!-- /.modal -->
+											<!--  end  edit menu modal -->
+                                            
+                                            <?php $sn++;
+                                            endforeach;?>
+                                            
+                                        </tbody>
+                                        
+                                    </table>
+                                    <?php endif;?>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+<script>
+function deletemenu(id)
+{
+    $('#deletemenu').attr('href',"<?php echo $this->url('menu',array('controller'=>'menu','action'=>'delete-menu')); ?>/"+id);
+    $('#deletemenu-modal').modal('show');
+}
+
+</script>
+
+
+
+<!-- delete menu modal -->
+    <div class="modal fade" id="deletemenu-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><?php echo $this->translate('Delete Menu Item');?></h4>
+                    </div>
+                    
+                        <div class="modal-body">
+                         <?php echo $this->translate("Do you want to delete this Menu Item ?"); ?>
+                        </div>
+                        <div class="modal-footer clearfix">
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> <?php echo $this->translate("Close"); ?></button>
+                          <a href="" id="deletemenu" class="btn btn-info"><?php echo $this->translate("Delete"); ?></a>
+                             
+                        </div>
+                    
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+<!-- end delete menu modal-->
+
+<!-- start  Add menu modal -->
+        
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><?php echo $this->translate('Link Menu');?></h4>
+                    </div>
+                     <?php echo $this->form()->openTag($form);?> 
+                        <div class="modal-body">
+                           	<div class="form-group">
+                                <div class="input-group">
+                                   <label class="input-group-addon" for="menu">Type</label>
+                                    <?php echo $this->formRow($form->get('type'));?>
+								</div>
+							</div>
+                            	<div class="form-group">
+                                <div class="input-group">
+                                    <?php echo $this->formRow($form->get('name'));?>
+								</div>
+							</div>
+                           <div class="form-group">
+                                <div class="input-group">
+                                    <?php echo $this->formRow($form->get('label'));?>
+								</div>
+							</div>
+							<div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="pages">Pages</label>
+                                    <?php echo $this->formRow($form->get('alias'));?>
+								</div>
+							</div>
+                          
+                        </div>
+                        <div class="modal-footer clearfix">
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                            <?php echo $this->formRow($form->get('submit'));?>
+                        </div>
+                     <?php echo $this->form()->closeTag();?>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+<!--  end  add plan modal -->

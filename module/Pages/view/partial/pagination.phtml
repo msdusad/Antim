@@ -1,0 +1,86 @@
+<style>
+.inactive {
+ cursor:pointer;
+
+}
+</style>
+
+<?php if ($this->pageCount){ ?>
+
+<div>
+
+<ul class="pagination">
+
+<!-- Previous page link -->
+
+<li>
+
+<?php if (isset($this->previous)){ ?>
+
+   <a  href="javascript:paginationbutton('<?php echo $this->previous; ?>');"> Previous</a>
+
+<?php }else{ ?>
+
+  <a href = "#" > Previous</a> 
+
+<?php } ?>
+
+</li>
+
+<!-- Numbered page links -->
+
+<?php foreach ($this->pagesInRange as $page){ ?>
+
+<li>
+
+  <?php if ($page != $this->current){ ?>
+
+  <li class = "inactive">
+	 <a href="javascript:paginationbutton('<?php echo $page; ?>');"> <?php echo $page; ?></a> 
+  </li>
+
+  <?php }else{ ?>
+
+  <li class = "active">
+
+    <a href = "#"   ><?php echo $page; ?></a> 
+
+    </li>
+
+  <?php } ?>
+
+  
+
+<?php } ?>
+
+
+
+<!-- Next page link -->
+
+<li>
+
+<?php if (isset($this->next)){ ?>
+
+
+  <a href="javascript:paginationbutton('<?php echo $this->next; ?>');">
+
+    Next 
+
+  </a>
+
+
+  
+
+<?php }else{ ?>
+
+  <a href = "#" >Next </a>
+
+<?php } ?>
+
+</li>
+
+</ul>
+
+</div>
+
+<?php } ?>

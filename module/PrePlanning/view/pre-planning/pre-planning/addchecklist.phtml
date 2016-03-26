@@ -1,0 +1,22 @@
+<div id="top"><?= $this->partial('layout/admin_top_menu', array('tittle' => 'Add new List')); ?></div>
+<div id="left"> <?= $this->partial('layout/left-menu', array('preplanning' => 'active')); ?></div> 
+<div id="content"> 
+    <div class="outer">
+        <div class="inner">
+            <?php if ($this->message != '') { ?>
+                <div class="error_message">
+                    <?php echo $this->message[0]; ?>
+                </div>
+            <?php } ?>
+            <h4><?php  echo $this->item->title;?> Checklist</h4>
+            <?php
+            $form = $this->form;
+            $form->setAttribute('action', $this->url('admin/pre-planning', array('action' => 'addchecklist','category'=>$this->category,'id'=>$this->id)));           
+            $form->prepare();
+            echo $this->form()->openTag($form);
+            echo $this->formCollection($form);
+            echo $this->form()->closeTag();
+            ?>
+        </div>
+    </div>
+</div>

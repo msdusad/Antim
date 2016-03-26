@@ -1,0 +1,304 @@
+<?php
+
+$sm = $this->getHelperPluginManager()->getServiceLocator();
+
+$authorize = $sm->get('BjyAuthorize\Provider\Identity\ProviderInterface');
+
+$admin = $sm->get('Admin\Model\CityTable');
+
+$roles = $authorize->getIdentityRoles();
+
+$country = 'USA';
+
+$date = date('d:m:Y');
+
+$time = date('H:m a');
+
+$weather = 'cloudy';
+
+$currentCity = 'San Francisco';
+
+if (isset($_COOKIE["PHPSESSID"])) {
+
+    if (isset($_SESSION['base']) && $_SESSION['base'] != '') {
+
+
+
+        if (isset($_SESSION['base']['country']) && $_SESSION['base']['country'] != '') {
+
+            $country = $_SESSION['base']['country'];
+
+            if($country=='US'){
+
+                $country = "USA";
+
+            } else if($country=="IN"){
+
+                $country = "INDIA";
+
+            }
+
+        }
+
+        if (isset($_SESSION['base']['weather']) && $_SESSION['base']['weather'] != '') {
+
+            $weather = $_SESSION['base']['weather'];
+
+        }
+
+        if (isset($_SESSION['base']['date']) && $_SESSION['base']['date'] != '') {
+
+            $date = $_SESSION['base']['date'];
+
+        }
+
+        if (isset($_SESSION['base']['time']) && $_SESSION['base']['time'] != '') {
+
+            $time = $_SESSION['base']['time'];
+
+        }
+
+        if (isset($_SESSION['base']['city']) && $_SESSION['base']['city'] != '') {
+
+            $currentCity = $_SESSION['base']['city'];
+
+        }
+
+    }
+
+}
+
+
+
+$indiaStates = $admin->getIndianStates();
+
+$usStates = $admin->getUsStates();
+
+?>
+
+<!-- .navbar -->
+
+<nav class="navbar navbar-inverse navbar-static-top" >
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+
+    <header class="navbar-header" >
+
+
+		<div class="col-md-4 col-sm-3">
+        <a href="<?php echo $this->basePath('/'); ?>" class="navbar-brand img-responsive">
+            <img class="logo img-responsive" src="<?php echo $this->basePath('/assets/img/logo.png'); ?>" alt="">
+        </a>
+		</div>
+
+	<div class="col-md-5 col-sm-6 col-xs-7 header-menu-mob" >
+        <ul class="header-menu">
+
+            <li class="odd"><a href="#">English</a></li>
+
+            <li class="odd">
+
+                <div class="dropdown">
+
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo ucwords($country) ; ?></a>
+
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+
+                        <li class="dropdown-submenu">
+
+                            <a tabindex="-1" href="#">INDIA</a>
+
+                            <ul class="dropdown-menu">
+
+                                <?php foreach ($indiaStates as $states) { ?>
+
+                                    <li class="dropdown-submenu">
+
+                                        <a tabindex="-1" href="#"><?php echo $states['state']; ?></a>
+
+                                        <?php $mainCities = $admin->getIndianMainCities($states['state']); ?>
+
+                                        <ul class="dropdown-menu">
+
+                                            <?php foreach ($mainCities as $main) { ?>
+
+                                                <li class="dropdown-submenu">
+
+                                                    <a tabindex="-2" href="#"><?php echo $main['main_city']; ?></a>
+
+                                                    <?php $cities = $admin->getIndianCities($states['state'], $main['main_city']); ?>
+
+                                                    <ul class="dropdown-menu">
+
+                                                        <?php foreach ($cities as $city) { ?>
+
+                                                            <li> <a tabindex="-3" href="#" class="city" data-lat="<?php echo $city['latitude']; ?>" data-lang="<?php echo $city['longitude']; ?>"><?php echo $city['city']; ?></a></li>
+
+                                                        <?php } ?>
+
+                                                    </ul>
+
+
+
+                                                </li>
+
+                                            <?php } ?>
+
+                                        </ul>
+
+                                    </li>
+
+                                <?php } ?>
+
+                            </ul>
+
+                        </li>
+
+                        <li class="dropdown-submenu">
+
+                            <a tabindex="-1" href="#">USA</a>
+
+                            <ul class="dropdown-menu">
+
+                                <?php foreach ($usStates as $states) { ?>
+
+                                    <li class="dropdown-submenu">
+
+                                        <a tabindex="-1" href="#"><?php echo $states['state']; ?></a> 
+
+                                        <?php $cities = $admin->getUsCities($states['state_code']); ?>
+
+                                        <ul class="dropdown-menu">
+
+                                            <?php foreach ($cities as $city) { ?>
+
+                                                <li> <a class="city" tabindex="-2" href="#" data-lat="<?php echo $city['latitude']; ?>" data-lang="<?php echo $city['longitude']; ?>"><?php echo $city['city']; ?></a></li>
+
+                                            <?php } ?>
+
+                                        </ul>
+
+                                    </li>
+
+                                <?php } ?>
+
+                            </ul>
+
+                        </li>
+
+                    </ul>
+
+
+
+                </div>
+
+            </li>
+
+            <li class="odd"><a href="#"><?php echo ucfirst($currentCity); ?></a></li>
+
+            <li class="even"><a href="#" ><?php echo $date; ?></a></li>
+
+            <li class="even"><a href="#" ><?php echo $time; ?></a></li>
+
+            <li class="even"><a href="#" ><?php echo ucfirst($weather); ?></a></li>
+        </ul> 
+       </div>
+
+		<div class="col-md-3 col-sm-3 col-xs-5 pull-right imandir-mob" >
+        
+<div class="imandir" style="margin-top:-5px; border:0px;">
+
+             
+<!--            <img src="<?php //echo $this->basePath('/assets/img/imandir.jpg');     ?>" alt="">-->
+
+            <ul>
+
+                <?php if ($roles[0] != 'guest') { ?>
+
+                    <li style="margin-top:2px;"><a class="logout" href="<?php echo $this->basePath('/user/logout'); ?>">Logout</a></li>
+
+                <?php } else { ?>
+
+                    <li style="padding-top:3px;"><a class="fancybox logintop" href="#login" >Login</a></li>
+
+                <?php } ?>
+
+                <li style="margin-top: -20px; margin-left: 66px;">
+                    <a href="<?php echo $this->url('page', array('id' => 'about-us')); ?>">About Us</a></li>
+
+                
+                <li style="margin-top: 18px;"><a href="antimnew/public/i-mandir">imandir</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo $this->url('special-needs'); ?>">Special Needs</a></li>
+
+            </ul>
+
+        </div>
+	</div>
+    </header>    
+
+
+
+</nav>
+
+<div id="login" class="login" style="display:none;">
+
+    <div class="loginpopup">
+
+        <img src="<?php echo $this->basePath('/assets/img/login-logo.gif'); ?>" />
+
+        <?php
+
+        echo $this->zfcUserLoginWidget();
+
+        echo $this->UserLoginWidget();
+
+        ?>
+
+    </div>
+
+</div>
+
+
+
+<form method="POST" action="<?php echo $this->url('city'); ?>" id="city_form">
+
+    <input type="hidden" name="lat" id="latitude" value="37.7749295">
+
+    <input type="hidden" name="lang" id="langitude" value="-122.4194155">
+
+</form>
+
+
+
+
+
+<script>
+
+    $(document).ready(function() {
+
+
+
+        $('.dropdown-toggle').dropdown();
+
+
+
+        $('.fancybox').fancybox();
+
+
+
+        $('.city').click(function(e) {
+
+            $('#latitude').val($(this).data('lat'));
+
+            $('#langitude').val($(this).data('lang'));
+
+            $('#city_form').submit();
+
+        });
+
+        //<?php if (!isset($_COOKIE["PHPSESSID"])) { echo "$('#city_form').submit()";}?>
+
+       
+
+    });
+
+</script>

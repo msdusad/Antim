@@ -1,0 +1,1271 @@
+<?php
+
+$this->headLink()
+
+        ->prependStylesheet($this->basePath() . '/assets/lib/fancybox/jquery.fancybox.css')
+
+        ->prependStylesheet($this->basePath() . '/assets/lib/chosen/chosen.css')->prependStylesheet($this->basePath() . '/assets/css/ui.css');
+
+
+
+$this->headScript()
+
+        ->prependFile($this->basePath() . '/assets/lib/touch-punch/jquery.ui.touch-punch.min.js')
+
+        ->prependFile($this->basePath() . '/assets/lib/datatables/DT_bootstrap.js')
+
+        ->prependFile($this->basePath() . '/js/sharedtask.js')
+
+        ->prependFile($this->basePath() . '/assets/lib/timepicker/js/bootstrap-timepicker.js')
+
+        ->prependFile($this->basePath() . '/assets/lib/chosen/chosen.jquery.js')
+
+        ->prependFile($this->basePath() . '/js/jquery.validate.js')
+
+        ->prependFile($this->basePath() . '/assets/lib/datatables/jquery.dataTables.js')
+
+        ->prependFile($this->basePath() . '/js/jquery-ui.js')
+
+        ->prependFile($this->basePath() . '/assets/lib/fancybox/jquery.fancybox.js');
+
+
+
+$form = $this->form;
+
+$form->setAttribute('action', $this->url('sharedtasks', array('action' => 'addtask')));
+
+$form->setAttribute('id', 'taskForm');
+
+$form->setAttribute('title', 'Add new record');
+
+
+
+$form->prepare();
+
+$sharedUsers = $this->shareList;
+
+?>
+
+<?php $this->partial('layout/top_links'); ?>
+
+<style>
+
+    .fancybox-skin{padding: 0px!important;}
+
+    .fancybox-inner{width:100%!important}
+
+    .fancybox-inner form{padding:30px}
+
+    .fancybox-inner h4{padding: 15px;background: #548ed7;color: #fff;margin: 0;border-radius: 4px 0 0 0;}
+
+     button,.submit{background-color: #F79647;border-radius: 0 !important;color: #FFFFFF !important;}
+
+    .dataTables_scrollBody{overflow-y: scroll!important;height: 345px!important;}
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+.sharedmain{ border:1px solid #f79647;}
+.sharedmain:hover{ border:1px solid #f79647; box-shadow:0 0 2px #f79647;}
+.sharedmain h5 {
+    border: 1px solid #dfdfdf;
+    color: #f79647;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 11px 0;
+    padding: 17px 10px;
+}
+.sharedmain h5:hover{  border: 1px solid #dfdfdf; box-shadow:0 0 2px #ccc;}
+.sharedmain p {
+    background: #f79647 none repeat scroll 0 0;
+    color: #fff;
+    padding: 9px;
+	font-size:16px;
+	margin:10px 0 0;
+}
+.topbuttons {
+    display: block;
+    float: left;
+    margin: 10px 1px 0;
+    text-align: center;
+    width: 100%;
+	border:1px solid #dfdfdf;
+	padding:10px 0px;
+}
+.topbuttons:hover {
+	border:1px solid #dfdfdf;
+	box-shadow:0 0 2px #ccc;
+}
+.topbuttons select {
+    border: 1px solid #adadad;
+    padding: 6px 4px;
+}
+.fancybox.btn.btn-default.btn-sm {
+	background:#d9534f;
+	color:#fff;
+}
+.date-task1 {
+    width: 250px;
+    background-color: #ccc;
+    color: #000;
+    padding: 10px 0;
+    border: 0;
+}
+.date-task1:hover{ background-color:#ddd; color:#777;}
+.fancybox.btn.btn-default.btn-sm.btn-bt1 {
+    margin: 0;
+	background:#9fd256;
+}
+table{
+	table-layout:fixed;
+	}
+th, td{
+	word-wrap:break-word;	
+	}
+.table-condensed.table-hover.table-striped.sharedtable.dataTable > thead {
+    background: #ccc none repeat scroll 0 0; color:#fff; font-size:16px;
+}
+.table-condensed > thead > tr > th, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > tbody > tr > td, .table-condensed > tfoot > tr > td{ padding:10px 4px;  border-right:1px solid #dfdfdf;}
+.disabled.sharedrows.even:hover{ background-color:#f9f9f9 !important;}
+.border-left{ border-left:1px solid #f79647; box-shadow:0 0 2px #f79647;}
+.sharedmain {
+    border: 1px solid #dfdfdf;
+    display: inline-block;
+    margin: 0 20px;
+    width: 97%;
+}
+
+
+.main{ width:98%; margin:0 15px;}
+
+.edit {
+    margin: 0 10px 0 0;
+}
+.add-taskss{ float:left; margin:0px 0 0; width:100%;}
+
+.dataTables_scrollBody{
+	    height: 520px !important;
+    /*overflow: hidden !important;*/
+    width: 100%;}
+
+.drag-datable-left .dataTables_scrollBody{
+	    height: 620px !important;
+    /*overflow: hidden !important;*/
+    width: 100%;}
+
+	
+.collapse4 .dataTables_scrollBody{ height:545px !important;}
+.sharedmain p span{ float:right; text-decoration:underline; color:#fff;}
+.fancybox.btn.btn-default.btn-sm.date-task1{ background:#ccc; color:#000 !important; font-size:15px; width:100%;}
+
+#top #top_main{width: 100%; padding:0 20px; background:#ff7f50;}
+.navbar-brand {
+    float: left;
+    font-size: 18px;
+    line-height: 20px;
+    padding: 15px;
+    width: 630px;
+}
+.profile-id > select {
+    width: 220px;
+}
+.red-btn { margin-right:2%;}
+.green-btn { float:right; margin-right:0%;}
+.profile-id { float:left; margin-right:2%;}
+
+
+
+.shared-col1 { width:10%; }
+.shared-col2 { width:30%; }
+.shared-col3 { width:10%; }
+.shared-col4 { width:9%; }
+.shared-col5 { width:6.5%; }
+.shared-col6 { width:14%; }
+.shared-col7 { width:9%; }
+.shared-col8 { width:8%; }
+
+
+
+
+@media (max-width:1420px)
+{
+	.sharedmain{
+	width:96%;
+}
+}
+@media (max-width:1250px)
+{
+	.topbuttons select {
+    border: 1px solid #adadad;
+    padding: 6px 4px;
+}
+.fancybox.btn.btn-default.btn-sm {
+	background:#d9534f;
+	color:#fff;
+}
+.sharedmain{
+	width:96%;
+}
+}
+
+@media (max-width:1150px)
+{
+	.topbuttons select {
+    border: 1px solid #adadad;
+    padding: 6px 4px;
+}
+.fancybox.btn.btn-default.btn-sm {
+	background:#d9534f;
+	color:#fff;
+}
+.sharedmain{
+	width:95%;
+}
+.red-btn { width:86%; margin-bottom:10px;}
+.green-btn { width:86%; margin-bottom:10px;}
+.profile-id { width:80%; margin-bottom:10px;}
+.fancybox.btn.btn-default.btn-sm { width:258px;}
+.add-more-tasks { width:100% !important; padding:10px 15px;}
+}
+
+@media (max-width:1050px)
+{
+	.topbuttons select {
+    border: 1px solid #adadad;
+    padding: 6px 4px;
+}
+.fancybox.btn.btn-default.btn-sm {
+	background:#d9534f;
+	color:#fff;
+}
+.sharedmain{
+	width:94%;
+}
+.rightbox{ overflow-x:scroll !important;}
+.rightbox .dataTables_scroll{ width:900px !important; overflow-x:scroll !important; }
+.rightbox .dataTables_scrollHeadInner { width:100% !important;}
+.rightbox .dataTables_scrollHeadInner table { width:100% !important;}
+.rightbox .dataTables_scrollBody table { width:100% !important;}
+
+}
+
+@media (max-width:991) {
+.mobie-shared-style { float:none; text-align:left; }
+
+}
+@media (max-width:767px) {
+.red-btn {  margin-right:2%; width:100%; margin-top:10px}
+.green-btn { float:left; margin-right:2%; margin-top:10px; width:100%;}
+.profile-id { float:left; margin-right:2%; width:100%; margin-top:10px;}
+.fancybox.btn.btn-default.btn-sm { width:50%;}
+.add-taskss {
+    width: 53.5%;
+}
+.main {
+    margin: 0 5px;
+    width: 98%;
+}
+.topbuttons select { width:44%;}
+.add-more-tasks { width:100% !important; padding:10px 15px;}
+}
+
+@media (max-width:900px) {
+.rightbox{ overflow-x:scroll !important;}
+.rightbox .dataTables_scroll{ width:900px !important; overflow-x:scroll !important; }
+.rightbox .dataTables_scrollHeadInner { width:100% !important;}
+.rightbox .dataTables_scrollHeadInner table { width:100% !important;}
+.rightbox .dataTables_scrollBody table { width:100% !important;}
+}
+
+
+
+
+</style>
+
+
+<script>
+	$(document).ready(function() {
+    var table = $('#example').DataTable( {
+        "scrollY": "200px",
+        "paging": false
+    } );
+ 
+    $('a.toggle-vis').on( 'click', function (e) {
+        e.preventDefault();
+ 
+        // Get the column API object
+        var column = table.column( $(this).attr('data-column') );
+ 
+        // Toggle the visibility
+        column.visible( ! column.visible() );
+    } );
+} );
+
+</script>
+
+<div class="sharedmain">
+
+    <div class="col-md-4 col-sm-12 col-xs-12 floatleft ">
+
+        <h5>Drag and drop the task to share </h5>        
+<div class="text-center add-taskss date-moress">
+
+            <a class="fancybox btn btn-default btn-sm date-task1 add-more-tasks " href="#addtask">Add more task to list</a>
+
+        </div>
+      <div class="clearfix"> </div>
+        <div class="box">
+
+
+
+            <div id="collapse4" class="drag-datable-left">
+
+                <table id="dataTable" width="100%" data-type="<?php echo $this->type; ?>" data-profile="<?php echo $this->id; ?>" class="table-condensed table-hover table-striped sharedtable" >
+
+                    <thead >
+
+                        <tr>        
+
+                            <th width="30%">Category</th> 
+
+                            <th width="60%">Task</th> 
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody >
+
+                        <?php foreach ($this->tasks as $task) : ?>
+
+                            <tr>
+
+                                <td width="30%" class="dragevent"  data-id ="<?php echo $this->escapeHtml($task->id); ?>"><?php echo $this->escapeHtml($task->category); ?></td>     
+
+                                <td width="60%" class="dragevent"  data-id ="<?php echo $this->escapeHtml($task->id); ?>"><?php echo $this->escapeHtml($task->title); ?></td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    </tbody>
+
+                </table>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="col-md-8 col-sm-12 col-xs-12 floatleft border-left">
+
+
+
+        <div class="topbuttons row-cls">
+
+
+
+        <div class="col-md-5 mobie-shared-style">   
+			<div class="profile-id">
+            <label>Profile Id</label>
+
+            <select id="profile_id" name="profile_id">
+            <option value="">Please Select</option>
+ <?php foreach ($this->profiles as $profiles) : ?>
+<option value="<?php echo $profiles['id'];?>" <?php if($this->id==$profiles['id']){ echo "selected"; }?>><?php echo $profiles['name']; ?></option>
+<?php endforeach; ?>
+            </select>
+			</div>
+		</div>
+
+		<div class="col-md-4 mobie-shared-style">			
+			<div class="red-btn">
+            <div class="btn btn-danger"></div>
+            <a class="fancybox btn btn-default btn-sm" href="#sharetask">Shared List by Helper</a>
+			</div>
+		</div>
+            
+		<div class="col-md-3 row mobie-shared-style">          
+          <div class="green-btn">
+            <div class="btn btn-metis-2"></div>
+            <a class="fancybox btn btn-default btn-sm btn-bt1" href="#whosonline">Helper's Online</a>
+			</div>
+        </div>
+     </div>
+
+        <div class="clear"></div>
+
+        <div id="collapse4" class="body shared-table">
+        <!--<div class="text-center add-taskss date-moress">
+
+            <a class="fancybox btn btn-default btn-sm date-task1 add-more-tasks " href="#addtask">Add more task to list</a>
+
+        </div>-->
+        <div class="clearfix"></div>
+
+           <p>Shared Tasks <a href="javascript:void(0)" onclick="history.go(-1)"><span>Back</span></a></p>
+
+            <div class="box rightbox">                
+
+                <table id="sharedTable" class="table-condensed table-striped sharedtable" width="100%">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="  shared-col1">Status</th> 
+
+                            <th class="  shared-col2">Task</th> 
+
+                            <th class="shared-col3">Due Date</th> 
+
+                            <th class="shared-col4">Due Time</th>                             
+
+                            <th class="shared-col5">Priority</th>                             
+
+                            <th class="shared-col6">Notes</th> 
+
+                            <th class="shared-col7">Helpers</th> 
+
+                            <th class="shared-col8">Action</th> 
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+<?php foreach ($this->sharedTasks as $task) : ?>
+
+                            <tr class="disabled sharedrows" id="<?php echo $task['id']; ?>">
+
+                                <td class="shared-col1" ><?php echo $task['status']; ?></td>   
+
+                                <td class="shared-col2" ><?php echo $task['task']; ?></td>                               
+
+                                <td class="shared-col3"><?php echo date('m-d-Y',strtotime($task['due_date'])); ?></td>
+
+                                <td class="shared-col4"><?php $stemp=explode(':',$task['due_time']); echo $stemp[0].":".$stemp[1]; ?></td>                               
+
+                                <td class="shared-col5"><?php echo $task['priority']; ?></td>
+
+                                <td class="shared-col6"><?php echo $task['notes']; ?></td>
+
+                                <td class="shared-col7"><?php echo $task['userName']; ?></td>
+
+                                <td class="shared-col8">
+
+                                    <a href="#taskedit" class="edit" data-id="<?php echo $task['id']; ?>" data-status="<?php echo $task['status']; ?>"  data-date="<?php echo $task['due_date']; ?>" 
+
+                                       data-time="<?php echo $task['due_time']; ?>" data-priority="<?php echo $task['priority']; ?>" data-notes="<?php echo $task['notes']; ?>" data-user="<?php echo $task['assigned_to'] . ','; ?>">
+
+                                        <i class="fa fa-pencil"></i></a>
+
+                                    <a href="<?php echo $this->url('sharedtasks', array('action' => 'delete', 'id' => $task['id']));
+
+                                   ?>"><i class="fa fa-archive"></i></a>
+
+                                </td>
+
+                            </tr>
+
+<?php endforeach; ?>
+
+
+
+                    </tbody>
+
+                </table>
+
+
+
+            </div>
+
+        </div>
+
+<?php if (count($this->sharedWithme) > 0) { ?>
+
+
+
+            <div id="collapse4" class="body">
+
+                <h5><?php echo ucfirst($this->sharedWithme[0]['ownerName']); ?> Shared the following Task</h5>   
+
+                <div class="box">                       
+
+                    <table id="sharedWith"  class="table-condensed table-hover table-striped">
+
+                        <thead>
+
+                            <tr>
+
+                                <th  class="shared-col1" >Task</th> 
+
+                                <th class="shared-col2">Due Date</th> 
+
+                                <th class="shared-col3">Due Time</th>                                 
+
+                                <th class="shared-col4">Prioriy</th> 
+
+                                <th class="shared-col5">Status</th> 
+
+                                <th class="shared-col6">Notes</th> 
+
+                                <th class="shared-col7">HelpWidth</th>
+
+    <?php if ($this->sharedWithme[0]['user_level'] == 1) { ?>
+
+                                    <th class="shared-col8">Action</th> 
+
+                            <?php } ?>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+    <?php foreach ($this->sharedWithme as $task) : ?>
+
+                                <tr class="disabled sharedrows" id="<?php echo $task['id']; ?>" data-user="<?php echo $task['owner_id']; ?>"  >
+
+                                    <td class="shared-col1"><?php echo $task['task']; ?></td>
+
+                                    <td class="shared-col2"><?php echo $task['due_date']; ?></td>
+
+                                    <td class="shared-col3"><?php echo $task['due_time']; ?></td>                                   
+
+                                    <td class="shared-col4"><?php echo $task['priority']; ?></td>
+
+                                    <td class="shared-col5"><?php echo $task['status']; ?></td>
+
+                                    <td class="shared-col6"><?php echo $task['notes']; ?></td>
+
+                                    <td class="shared-col7"><?php echo $task['userName']; ?></td>
+
+        <?php if ($task['user_level'] == 1) { ?>
+
+                                        <td class="shared-col8">
+
+                                            <a href="#taskedit" class="edit" data-id="<?php echo $task['id']; ?>" data-status="<?php echo $task['status']; ?>"  data-date="<?php echo $task['due_date']; ?>" 
+
+                                               data-time="<?php echo $task['due_time']; ?>" data-priority="<?php echo $task['priority']; ?>" data-notes="<?php echo $task['notes']; ?>" data-user="<?php echo $task['assigned_to'] . ','; ?>">
+
+                                                <i class="fa fa-pencil"></i></a>
+
+                                            <a href="<?php echo $this->url('sharedtasks', array('action' => 'delete', 'id' => $task['id']));
+
+            ?>"><i class="fa fa-archive"></i></a>
+
+                                        </td>
+
+        <?php } ?>
+
+                                </tr>
+
+    <?php endforeach; ?>
+
+
+
+                        </tbody>
+
+                    </table>
+
+
+
+                </div>
+
+            </div>
+
+<?php } ?>
+
+    </div>
+
+</div> 
+
+
+
+
+
+<!-- Custom form for adding new records -->
+
+<div id="addtask" style="display: none;">
+
+    <h4>Add More tasks To List</h4>
+
+        <?php echo $this->form()->openTag($form); ?>
+
+    <label for="category_id">Category</label><br />
+
+    <select name="category_id" id="category_id" class="form-control" rel="0">
+
+<?php foreach ($this->categories as $category) { ?>
+
+            <option value="<?php echo $category['value']; ?>"><?php echo $category['label']; ?></option>
+
+<?php } ?>
+
+    </select>
+
+    <br />
+
+    <label for="browser">Title</label><br />
+
+    <input type="text" name="title" id="title"  class="form-control" rel="1" />
+
+    <br />
+
+    <label for="description">Description</label><br />
+
+    <textarea name="description" id="description" class="form-control" rel="2" maxlength="120"></textarea>
+
+    <br />
+
+
+
+    <input type="hidden" name="user_id" id="user_id" value="<?php echo $this->userid; ?>"/>
+
+    <input type="hidden" name="id" id="id" value=""/>
+
+    <button id="send" onclick="addTask()" class="btn ">Add Task</button>
+
+<?php echo $this->form()->closeTag(); ?>
+
+</div>
+
+<div id="sharetask">
+
+    <h4>Sharing Settings</h4>
+
+    <form id="shareEdit" method="POST" action="<?php echo $this->url('sharedtasks', array('action' => 'share')); ?>">
+
+
+
+        <div>
+
+            <p>Link to share (only accessible by Helpers)</p>
+
+            <input type="text" readonly value="<?php echo $this->url('sharedtasks', array('action' => 'view', 'id' => $this->userid)); ?>" class="form-control"/>
+
+        </div>
+
+        <hr/>
+
+        <div class="sharelist">
+
+                <?php //echo '<pre>';print_r($sharedUsers);die;     ?>
+
+            <p>Who has access</p>
+
+            <ul>
+
+                <li>
+
+                    You Owner</li>
+
+<?php foreach ($sharedUsers as $key => $users) { ?>
+
+                    <li>
+
+                        <div class="userdetails">
+
+                            <div class="user">
+
+                                <img src="<?php echo $this->basePath('/assets/img/icons/user_icon.gif'); ?>" width="20" height="20"/>
+
+                                <br/>
+
+                                <img src="<?php echo $this->basePath('/assets/img/icons/email_icon.gif'); ?>" width="20" height="20"/>
+
+                            </div>
+
+
+
+                            <div style="line-height: 2;">
+
+                            <?php echo $users['username'] . ' ' . $users['display_name']; ?><br /> 
+
+                            <?php echo $users['email']; ?>  </div> 
+
+                        </div>
+
+                        <div class="useraction">
+
+
+
+                            <?php if ($users['user_level'] == 0) { ?>
+
+                                <select name="level" id="level_<?php echo$users['id'] ?>" data-user="<?php echo$users['user_id'] ?>" class="chzn-select userlevel" >           
+
+                                    <option value="1" >Can Edit</option>
+
+                                    <option value="0" selected>Can View</option>
+
+                                </select>
+
+        <?php
+
+    } else {
+
+        ?> 
+
+                                <select name="level" id="level_<?php echo$users['id'] ?>" data-user="<?php echo$users['user_id'] ?>" class="chzn-select userlevel">           
+
+                                    <option value="1" selected>Can Edit</option>
+
+                                    <option value="0">Can View</option>
+
+                                </select><?php } ?>                              
+
+                            <input type="hidden" name="id[]" id="shareid" value="<?php echo $users['id'] ?>"/>
+
+
+
+                            <a class="sharedelete" data-id="<?php echo$users['id'] ?>" href="javascript:" data-action="<?php echo $this->url('sharedtasks', array('action' => 'deleteshares', 'id' => $users['id']));
+
+                ?>"><i class="fa fa-archive"></i></a>
+
+                        </div>
+
+                    </li>
+
+<?php } ?>
+
+
+
+            </ul>
+
+        </div>
+
+    </form>
+
+    <form id="shareForm" method="POST" action="<?php echo $this->url('sharedtasks', array('action' => 'share')); ?>">
+
+        <div class="invitebg">
+
+            <p>Inform people</p>
+
+            <select name="users[]"  id="users" data-placeholder="+ Add names" multiple class="chosen-select-no-results" tabindex="11">
+
+<?php foreach ($this->userList as $key => $user) { ?>
+
+                    <option value="<?php echo $key; ?>"><?php echo $user; ?></option>
+
+<?php } ?>
+
+            </select>
+
+            <select name="level" id="level" class="chzn-select">           
+
+                <option value="1">Can Edit</option>
+
+                <option value="0" selected>Can View</option>
+
+            </select>
+
+            <input type="hidden" name="user_id" id="user_id" value="<?php echo $this->userid; ?>"/>
+
+        </div>   
+
+        <div class="sharebutton">
+
+            <a class="btn btn-sm submit" onclick="share()">Share</a>
+
+            <a class="btn btn-default btn-sm cancelfancy" onclick="cancel()" href="javascript:">Cancel</a>
+
+        </div>
+
+        <div>
+
+            <button class="btn btn-sm" id="done" onclick="done()" >Done</button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div id="whosonline" style="display:none">
+
+    <h4>Helpers's Online</h4>
+
+    <ul>
+
+        <?php
+
+        foreach ($this->loggedList as $logged) {
+
+            if (isset($logged['logged']) && $logged['logged'] != '') {
+
+                $class = 'online';
+
+            } else {
+
+                $class = 'offline';
+
+            }
+
+            echo '<li class="' . $class . '">' . $logged['username'] . ' ' . $logged['display_name'] . '</li>';
+
+        }
+
+        ?>
+
+    </ul>
+
+</div>
+
+<input type="hidden" name="sharedurl" id="sharedurl" value="" data-profile='<?php echo $this->id; ?>' data-url="<?php echo $this->url('sharedtasks', array('action' => 'add')); ?>"/>
+
+<input type="hidden" name="drag_task" id="drag_task" value="" />
+
+
+
+<div id="taskedit" style="display:none">
+
+    <h4>Edit Task</h4>
+
+    <form method="post" id="edittaskform" action="<?php echo $this->url('sharedtasks', array('action' => 'edit')); ?>">
+
+        <ul class="shareedit">
+
+            <li>
+
+                <label>Status</label>
+
+                <select name="status">
+
+                    <option value="pending">Pending</option>
+
+                    <option value="completed">Completed</option>
+
+                </select>
+
+            </li>
+
+            <li>
+
+                <label>Due Date</label>
+
+                <input type="text" name="due_date" readonly="true" class="datepicker">
+
+            </li>
+
+            <li>
+
+                <label>Due Time</label>
+
+                <input type="text" name="due_time"  data-time-format="H:i:s" class="timepicker">
+
+            </li>
+
+
+
+            <li>
+
+                <label>Priority</label>
+
+                <input type="text" name="priority">
+
+            </li>
+
+            <li>
+
+                <label>Notes</label>
+
+                <textarea name="notes"></textarea>
+
+            </li>
+
+            <li>
+
+                <label>Helpers</label>
+
+                <select name="assigned_to[]" id="assigned_to" multiple class="multiple">
+
+<?php foreach ($this->userList as $key => $user) { ?>
+
+                        <option value="<?php echo $key; ?>"><?php echo $user; ?></option>
+
+<?php } ?>
+
+                </select>
+
+            </li>
+
+            <li>
+
+                <label>&nbsp;</label>
+
+                <input type="hidden" name="id"/>
+
+                <input type="button" id="savetask" value="Save"/>
+
+            </li>
+
+        </ul>
+
+    </form>
+
+
+
+</div>  
+
+<div id="test"></div>
+
+<?php //$this->inlineScript()->captureStart()      ?>
+
+
+
+<script>
+
+
+
+        $('#savetask').click(function(e) {
+
+
+
+            var data = $('#edittaskform').serialize();
+
+            var url = $('#edittaskform').attr('action');
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: url,
+
+                data: data,
+
+                success: function(data) {
+
+
+
+                    //$(this).before("<p><strong>Success! Your feedback has been sent, thanks :)</strong></p>");
+
+                    setTimeout("$.fancybox.close()", 500);
+
+                    setTimeout(" location.reload();", 1000);
+
+
+
+                }
+
+            });
+
+        });
+
+        $('.edit').fancybox().click(function() {
+
+
+
+            //$('[name="helpers"]').multiselect("refresh")
+
+            $('[name="status"]').val($(this).data('status'));
+
+            $('[name="id"]').val($(this).data('id'));
+
+            $('[name="due_date"]').val($(this).data('date'));
+
+            $('[name="due_time"]').val($(this).data('time'));
+
+            $('[name="priority"]').val($(this).data('priority'));
+
+            $('[name="notes"]').val($(this).data('notes'));
+
+
+
+            var users = $(this).data('user').split(',');
+
+//alert(users);
+
+            $('#assigned_to').val(users);
+
+            // Then refresh
+
+            $('#assigned_to').multiselect("refresh");
+
+
+
+        });
+
+
+
+        $('.invitebg').click(function(e) {
+
+
+
+            $(".sharebutton").css('display', 'block');
+
+            $("#done").css('display', 'none');
+
+        });
+
+        $('.sharedelete').click(function(e) {
+
+
+
+            var updateUrl = $(this).data('action');
+
+            var id = $(this).data('id');
+
+
+
+            // if both validate we attempt to send the e-mail
+
+            // first we hide the submit btn so the user doesnt click twice
+
+            // $("#send").replaceWith("<em>Saving...</em>");
+
+            var data = {
+
+                'id': id,
+
+            }
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: updateUrl,
+
+                data: data,
+
+                success: function(data) {
+
+
+
+                    //$(this).before("<p><strong>Success! Your feedback has been sent, thanks :)</strong></p>");
+
+                    setTimeout("$.fancybox.close()", 500);
+
+                    setTimeout(" location.reload();", 1000);
+
+
+
+                }
+
+            });
+
+        });
+
+
+
+        var userLoad = '<?php echo $this->url('sharedtasks', array('action' => 'users')); ?>';
+
+        var userUpdate = '<?php echo $this->url('sharedtasks', array('action' => 'edit')); ?>';
+
+$(window).resize(function(){ window.location = window.location;});
+
+        $(document).ready(function() {
+
+
+
+           $('.userlevel').change(function(e) {
+
+                e.preventDefault();
+
+                var level = $(this).val();
+
+                var user = $(this).data('user');
+
+                var data = {
+
+                    userid: user,
+
+                    level: level,
+
+                }
+
+                var taskUrl = '<?php echo $this->url('sharedtasks', array('action' => 'updatelavel')); ?>';
+
+
+
+                $.ajax({
+
+                    type: 'POST',
+
+                    url: taskUrl,
+
+                    data: data,
+
+                    success: function(data) {
+
+
+
+                        setTimeout("$.fancybox.close()", 500);
+
+                        setTimeout(" location.reload();", 1000);
+
+
+
+                    }
+
+                });
+
+            });
+
+
+
+           
+
+        var taskUrl;
+
+        var thisType = '<?php echo $this->type ?>';
+
+
+
+        taskUrl = '<?php echo $this->url('sharedtasks', array('action' => 'obituarytasks')); ?>';
+
+
+
+        var data = {
+
+            'user_id': '<?php echo $this->userid; ?>',
+
+        }
+
+        $.ajax({
+
+            type: 'POST',
+
+            url: taskUrl,
+
+            data: data,
+
+            success: function(data) {
+
+
+
+               // $('#profile_id').html(data);
+
+              //   var id= '<?php echo $this->id;?>';                        
+
+              //  $("#profile_id").val(id);
+
+
+
+            }
+
+        });
+
+            
+
+
+
+            $('#profile_id').change(function(e) {
+
+                var id = $(this).val();
+
+                //var type = $('#type').val();
+						var type ="obituary";
+                if(id!='' && id!=0){
+
+                window.location.href = '<?php echo $this->url('sharedtasks'); ?>/' + id + '/' + type;
+
+                }else {
+                	 window.location.href = '<?php echo $this->url('sharedtasks'); ?>';
+                }
+
+            });
+
+
+
+            $('.fancybox').fancybox();
+
+            $('.datepicker').datepicker();
+
+            $('.timepicker').timepicker();
+
+            var config = {
+
+                '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!', width: "76%"},
+
+            }
+
+            for (var selector in config) {
+
+                $(selector).chosen(config[selector]);
+
+            }
+
+
+
+
+
+            $('#dataTable').dataTable({
+
+                "sScrollY": "200px",
+
+                "bPaginate": false,
+
+                "bScrollCollapse": true,
+
+                "bFilter": false,
+
+                "bInfo": false,
+				"responsive": true
+
+            });
+
+            
+
+         
+
+           
+
+           sharedTable(userLoad, userUpdate, 'sharedTable', '0');
+
+           
+
+
+
+        });
+
+<?php
+
+if (count($this->sharedWithme) > 0) {
+
+    if ($this->sharedWithme[0]['user_level'] == 1) {
+
+        ?>
+
+ sharedTable(userLoad, userUpdate, 'sharedWith', '1');
+
+    <?php } else { ?>
+
+                $('#sharedWith').dataTable({
+
+                    "sScrollY": "300px",
+
+                    "bPaginate": false,
+
+                    "bScrollCollapse": true,
+
+                    "bFilter": false,
+
+                    "bInfo": false,
+					"responsive": true
+
+                });
+
+        <?php
+
+    }
+
+}
+
+?>
+
+
+
+</script>
+
+<?php
+
+// $this->inlineScript()->captureEnd()    ?>
