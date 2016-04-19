@@ -11,79 +11,48 @@ $createobj=new FormChecklistLink();
 $viewresult=$createobj->viewdata();
 $showads=$createobj->adsdata();
 $viewcontntent=$createobj->middlecontent();
-?>
-<style>
-    .black_overlay{
-        display: none;
-        position: absolute;
-        top: 0%;
-        left: 0%;
-        width: 100%;
-        height: 120%;
-        background-color: black;
-        z-index:1001;
-        -moz-opacity: 0.8;
-        opacity:.80;
-        filter: alpha(opacity=80);
-    }
-    .white_content {
-        display: none;
-        position: absolute;
-        left: 20%;
-		top:18%;
-        width: 100%;
-        height: 70%;
-        padding: 16px;
-        border: 16px solid orange;
-        background-color: white;
-        z-index:1002;
-        overflow: auto;
-    }
-	#closebutton{
-	margin-left:95%;
-		height:20px;
-		width:30px;
-		background-color:orange
-	}
-	
-	#ad-images{
-	padding-top:30px;
-	}
-	#ad-images-images{
-	padding-top:20px;
-	}
+//echo $this->headScript()->prependFile($this->basePath() . '/assets/js/pre_planning_protect.js');
+ echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css'); 
+echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/pre_planning_protect.css'); 
+
+echo  $this->partial('layout/top_links'); ?>
+<style type="text/css">
+        .ui-dialog .ui-dialog-titlebar-close{
+        
+background-image: url("addthis/jquery-ui-images/images/ui-icons_222222_256x240.png");
+background-position: -96px -128px;
+}
+
 </style>
-  
-<script>
-	
-		function videoPlay(videoNum)
+<script type="text/javascript">
+       function videoPlay(videoNum)
     {
-	 document.getElementById('light').style.display='block';
-	document.getElementById('fade').style.display='block';
+     document.getElementById('light').style.display='block';
+    document.getElementById('fade').style.display='block';
 document.getElementById("video-box").setAttribute("src",videoNum);
 document.getElementById("video-box").load();
 document.getElementById("video-box").play();
     }
-	
-		function videoclose(xyz)
-    {	
+    
+        function videoclose(xyz)
+    {   
 document.getElementById('light').style.display='none';
 document.getElementById('fade').style.display='none';
-	var vid=document.getElementById("video-box");
-		 vid.pause(); 
+    var vid=document.getElementById("video-box");
+         vid.pause(); 
     }
-	
-		
+    
+        
 function getState(val) {
-	var menu= document.getElementById('ajax_menu').value; 
-	var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
-	//alert(menu);
-	$.ajax({
-	type: "POST",
-	url: "<?php echo $this->url('state', array('action' => 'index')); ?>",
-	data:{country_id:val,srch_menu:menu,srch_sub_menu:sub_menu},
-		//data:'country_id='+val+'menu_serch'+menu,
-	success: function(data){
+    var menu= document.getElementById('ajax_menu').value; 
+    var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
+    //alert(menu);
+    $.ajax({
+    type: "POST",
+    url: "<?php echo $this->url('state', array('action' => 'index')); ?>",
+    data:{country_id:val,srch_menu:menu,srch_sub_menu:sub_menu},
+        //data:'country_id='+val+'menu_serch'+menu,
+    success: function(data){
 var ss=$('#state-list').html(jQuery(data).find('#result').html()); 
 var ss1=$('#output-checklist').html(jQuery(data).find('#checklist').html()); 
 var ss2=$('#output-forms').html(jQuery(data).find('#forms').html()); 
@@ -92,57 +61,56 @@ var ss4=$('#output-articals').html(jQuery(data).find('#articals').html());
 var ss5=$('#output-tools').html(jQuery(data).find('#tools').html());
 var ss6=$('#view_ads').html(jQuery(data).find('#ads').html());
 
-	}
-	});
+    }
+    });
 }
 function getCity(val) {
-	var count_id=document.getElementById('country-list').value;
-	var menu= document.getElementById('ajax_menu').value; 
-	var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
-	
-	$.ajax({
-	type: "POST",
-	url: "<?php echo $this->url('state', array('action' => 'index')); ?>",
-	data:{state_id:val,country_id:count_id,srch_menu:menu,srch_sub_menu:sub_menu},
-	//data:'state_id='+val,
-	success: function(data){
-	var ss=$('#city-list').html(jQuery(data).find('#cities').html()); 
+    var count_id=document.getElementById('country-list').value;
+    var menu= document.getElementById('ajax_menu').value; 
+    var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
+    
+    $.ajax({
+    type: "POST",
+    url: "<?php echo $this->url('state', array('action' => 'index')); ?>",
+    data:{state_id:val,country_id:count_id,srch_menu:menu,srch_sub_menu:sub_menu},
+    //data:'state_id='+val,
+    success: function(data){
+    var ss=$('#city-list').html(jQuery(data).find('#cities').html()); 
 var ss1=$('#output-checklist').html(jQuery(data).find('#checklist').html()); 
 var ss2=$('#output-forms').html(jQuery(data).find('#forms').html()); 
 var ss3=$('#output-resources').html(jQuery(data).find('#resources').html()); 
 var ss4=$('#output-articals').html(jQuery(data).find('#articals').html()); 
 var ss5=$('#output-tools').html(jQuery(data).find('#tools').html());
 var ss6=$('#view_ads').html(jQuery(data).find('#ads').html());
-	}
-	});
+    }
+    });
 }
-	
-	function SubmitCity(val) {
-		var state=document.getElementById('state-list').value;
-	var count_id =document.getElementById('country-list').value;
-	var menu= document.getElementById('ajax_menu').value; 
-	var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
-		
-	$.ajax({
-	type: "POST",
-	url: "<?php echo $this->url('state', array('action' => 'index')); ?>",
-	data:{city_id:val,state_id:state,country_id:count_id,srch_menu:menu,srch_sub_menu:sub_menu},
-		//data:'city_id='+val,
-	success: function(data){
-	//var ss=$('#state-list').html(jQuery(data).find('#result').html()); 
+    
+    function SubmitCity(val) {
+        var state=document.getElementById('state-list').value;
+    var count_id =document.getElementById('country-list').value;
+    var menu= document.getElementById('ajax_menu').value; 
+    var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
+        
+    $.ajax({
+    type: "POST",
+    url: "<?php echo $this->url('state', array('action' => 'index')); ?>",
+    data:{city_id:val,state_id:state,country_id:count_id,srch_menu:menu,srch_sub_menu:sub_menu},
+        //data:'city_id='+val,
+    success: function(data){
+    //var ss=$('#state-list').html(jQuery(data).find('#result').html()); 
 var ss1=$('#output-checklist').html(jQuery(data).find('#checklist').html()); 
 var ss2=$('#output-forms').html(jQuery(data).find('#forms').html()); 
 var ss3=$('#output-resources').html(jQuery(data).find('#resources').html()); 
 var ss4=$('#output-articals').html(jQuery(data).find('#articals').html()); 
 var ss5=$('#output-tools').html(jQuery(data).find('#tools').html());
 var ss6=$('#view_ads').html(jQuery(data).find('#ads').html());
-	}
-	});
+    }
+    });
 }
-</script>
-<script>
-	
-	$(document).ready(function () {   
+
+    
+    $(document).ready(function () {   
 $("#forms").click(function(){
 $( "#preplanning-forms" ).dialog({
    width: 900,
@@ -150,26 +118,26 @@ $( "#preplanning-forms" ).dialog({
 });
 });
 });
-	
-	$(document).ready(function () {   
+    
+    $(document).ready(function () {   
 $("#checklists").click(function(){
 $( "#preplanning-checklists" ).dialog({
    width: 900,
    modal:true
 });
 });
-});	
-	
-		$(document).ready(function () {   
+}); 
+    
+        $(document).ready(function () {   
 $("#lockbox").click(function(){
 $( "#lockbox-view" ).dialog({
    width: 900,
    modal:true
 });
 });
-});	
-	
-		$(document).ready(function () {   
+}); 
+    
+        $(document).ready(function () {   
 $("#tab1primarypop1").click(function(){
 $( "#tab1primary" ).dialog({
    width: 900,
@@ -177,8 +145,8 @@ $( "#tab1primary" ).dialog({
 });
 });
 });
-	
-			$(document).ready(function () {   
+    
+            $(document).ready(function () {   
 $("#tab2primarypop2").click(function(){
 $( "#tab2primary" ).dialog({
    width: 900,
@@ -186,8 +154,8 @@ $( "#tab2primary" ).dialog({
 });
 });
 });
-	
-			$(document).ready(function () {   
+    
+            $(document).ready(function () {   
 $("#tab3primarypop3").click(function(){
 $( "#tab3primary" ).dialog({
    width: 900,
@@ -195,23 +163,11 @@ $( "#tab3primary" ).dialog({
 });
 });
 });
-	
+    
 </script>
-
-
-
-<style>
-	.ui-dialog .ui-dialog-titlebar-close{
-		
-background-image: url("addthis/jquery-ui-images/images/ui-icons_222222_256x240.png");
-background-position: -96px -128px;
-}
-</style>
-<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css'); ?>
-<?php $this->partial('layout/top_links'); ?>
-<div class="layout_nav" style="margin-top:-35px;">
+<div class="layout_nav" id="brecurmsdiv">
     <ul>
-        <li style="margin-left:15px;"><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>             
+        <li id="menu_bredcurms"><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>             
         <li>Pre Planning</li> 
     </ul>
 </div>
@@ -382,7 +338,7 @@ $ads_name=$showads[$x]['name'];
 						{ ?>
 										<a href="javascript:void(0)" id="playzoom" onclick="videoPlay('<?php echo $ads_pic;?>')">	
     <img <?php if($showads[$x]['tumbnail']!=""){ echo 'src="data:image/jpeg;base64,'.base64_encode( $showads[$x]['tumbnail'] ).'" ';
-    echo ' style="height: 215px;width: 120;" ';
+    echo ' style="height: 115px;width: 120;" ';
 }
 else{
 ?>
@@ -400,7 +356,7 @@ else{
 						{ ?>
 									
                                 	<img  <?php if($showads[$x]['tumbnail']!=""){ echo 'src="data:image/jpeg;base64,'.base64_encode( $showads[$x]['tumbnail'] ).'" ';
-    echo ' style="height: 215px;width: 120;" ';
+    echo ' style="height: 115px;width: 120;" ';
 }
 else{
 ?>
@@ -520,7 +476,9 @@ echo "<a href='$url' target='_blank'>".$viewresult[$x]['title']."</a><br>";
                 </div>
             </div>
         <?php } ?>
-    </div>
+
+        
+    </div> <!-- // end of goherland -->
 </div>
 
 <!-- for pre-panninf Forms -->

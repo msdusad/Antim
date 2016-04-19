@@ -8,10 +8,10 @@ $this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
         ->prependFile($this->basePath() . '/assets/lib/fullcalendar-1.6.2/fullcalendar/fullcalendar.min.js');
 ?>
   <?= $this->partial('layout/top_links'); ?>
-  <div class="layout_nav">
+  <div class="layout_nav" id="brecurmsdiv">
         <ul>
-            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+          <!--   <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
             <li><a class="before" href="<?php echo $this->url('event-calendar-events'); ?>">Events &rsaquo;</a></li> 
             <li>Indian Holidays</li>
         </ul>
@@ -52,6 +52,7 @@ $(document).ready(function() {
 </script>
 
 <div class="eventmenu" data-role="content" > 
+<div style="position: absolute;display: inline-block;">
     <select name="create" id="create">
          <option value="">Create</option>
         <option value="event">Event</option>
@@ -64,6 +65,10 @@ $(document).ready(function() {
         <li><a href="<?php echo $this->url('event-calendar-events', array('action' => 'us')); ?>">US Holidays</a></li> 
    </ul>
 </div>
-<div class="eventmain">
-    <div id="calendar" ></div>
+  
+
+  <div class="eventmain">
+    <iframe src="https://calendar.google.com/calendar/embed?src=en.indian%23holiday%40group.v.calendar.google.com&ctz=Asia/Calcutta" style="border: 0;margin-left: 280px;" width="800" height="600" frameborder="0" scrolling="no"></iframe>
 </div>
+</div>
+ 

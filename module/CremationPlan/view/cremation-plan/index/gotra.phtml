@@ -6,10 +6,10 @@ $this->headScript()->prependFile($this->basePath() . '/assets/lib/CLEditor1_4_3/
 echo $this->partial('layout/top_links');
 ?>
 <div class="row">
-<div class="layout_nav">
+<div class="layout_nav" id="brecurmsdiv">
         <ul>
-            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+           <!--  <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
             <li>Gotra</li> 
         </ul>
     </div>
@@ -33,9 +33,13 @@ echo $this->partial('layout/top_links');
         <?php } else { ?>
             <div id="tabs">
                 <ul>
-                    <?php foreach ($this->gotraList as $key => $val) { ?>
+                    <?php 
 
-                        <li><a href="#fragment-<?php echo $key; ?>"><span><?php echo $val['title']; ?></span></a></li>
+$total=count($gotraList);
+ $width=100/$total;
+                    foreach ($this->gotraList as $key => $val) { ?>
+
+                        <li style="width:<?=$width?>%"><a href="#fragment-<?php echo $key; ?>"><span><?php echo $val['title']; ?></span></a></li>
                     <?php } ?>
                 </ul>
                 <?php foreach ($this->gotraList as $key => $val) { ?>

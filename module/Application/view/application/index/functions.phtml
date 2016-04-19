@@ -1,4 +1,8 @@
 <?
+if(!isset($_SESSION)){
+	session_start();
+}
+
 	function get_product_name($pid){
 		$result=mysql_query("select p_name from products where p_id=$pid");
 		$row=mysql_fetch_array($result);

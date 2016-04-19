@@ -6,10 +6,10 @@ $this->headScript()->prependFile($this->basePath() . '/assets/lib/CLEditor1_4_3/
 echo $this->partial('layout/top_links');
 ?>
 <div class="row">
-<div class="layout_nav">
+<div class="layout_nav" id="brecurmsdiv" >
         <ul>
-            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+           <!--  <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
             <li>Rituals</li> 
         </ul>
     </div>
@@ -26,7 +26,7 @@ echo $this->partial('layout/top_links');
 				
             </select>          
         </form>
-        <a href="<?php echo $this->url('cremation-plans', array('action' => 'edit-rituals','id'=>$this->id)); ?>" class="btn btn-default">Customize</a>
+        <a style="float: right;" href="<?php echo $this->basePath('/events/add'); ?>" class="btn btn-default">Create Event</a>
     </div>
 
     <div class="mainrituals">
@@ -43,9 +43,20 @@ echo $this->partial('layout/top_links');
                     <?php } else { ?>
                 <div id="tabs">
                     <ul>
-                        <?php foreach ($this->daysList as $key => $day) { ?>
+                        <?php 
 
-                            <li><a href="#fragment-<?php echo $key; ?>"><span>Day <?php echo $key + 1; ?></span></a></li>
+$total=count($daysList);
+             if($total=='0'){
+  $width='';   
+                        }
+                        else{
+                       
+                         $width=100/$total;
+                        }
+                        foreach ($this->daysList as $key => $day) {  ?>
+
+
+                            <li style="width:<?=$width?>%"><a href="#fragment-<?php echo $key; ?>"><span>Day <?php echo $key + 1; ?></span></a></li>
                     <?php } ?>
                     </ul>
                         <?php foreach ($this->daysList as $key => $day) { ?>

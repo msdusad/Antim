@@ -1,4 +1,5 @@
 		  <?php
+		  error_reporting(0);
 if(isset($_GET['edit'])){
 $id=$_GET['edit'];
 	?>
@@ -34,7 +35,7 @@ if(isset($_POST['submit'])){
 	$s_location=mysql_real_escape_string($_POST['location']);
 	$s_contact=mysql_real_escape_string($_POST['contact']);
 	$s_ontent=mysql_real_escape_string($_POST['content']);
-	$sql=mysql_query("update  event_list set profile_type='$s_profile_type',name='$s_profile_id',title='$s_title',edate='$s_edate',start='$s_startsate',end='$s_enddate',location='$s_location',	contact='$s_contact',content='$s_ontent' where id='$id'");
+	$sql=mysql_query("update  event_list set profile_type='$s_profile_type',name='$s_profile_id',title='$s_title',edate='$s_edate',start='$s_startsate',end='$s_enddate',location='$s_location',contact='$s_contact',content='$s_ontent' where id='$id'");
 	
 	if($sql){
 

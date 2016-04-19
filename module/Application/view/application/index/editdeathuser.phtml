@@ -78,6 +78,24 @@ background-position: -96px -128px;
 }
 </style>
 <?php
+
+
+if(isset($_POST['submit'])){
+echo "<script type='text/javascript'>alert('fi');</script>";
+
+$fst=$_POST['first_image'];
+$sec=$_POST['second_image'];
+require_once("ImgMerge.php");
+function getimage($first,$second){
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+Header( "Content-type: image/png");
+$merge = new ImgMerge(array($first, $second), 'center');
+}
+
+getimage($fst,$sec);
+}
+
 if (count ( $emp_all ) > 0) {
 	foreach ( $emp_all as $empl1 ) {
 		// $emplAll[] =$empl1;
@@ -739,6 +757,15 @@ for($i = $count; $i < 8; $i ++) {
        <img src="addthis/images/mala-2.png" /> 
       </a>
     </div>
+
+ <!-- form for submit name of image for image merge -->
+<form method="post" action="" >
+<input type="text" name="first_image" value="<?php echo $src2;?>" style="display: none;">
+<input type="text" name="second_image" value="<?php echo "addthis/images/mala-2.png";?> " style="display: none;">
+<input type="submit" name="submit" value="Get Image">
+</form>
+<!-- End Here -->
+
     <div class="greetings">
    
     				<p> <span>Offerings</span> </p>

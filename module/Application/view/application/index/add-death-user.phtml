@@ -761,7 +761,7 @@ for($i = $count; $i < 8; $i ++) {
                     </div> 
                     </div>
      </div>
-    <p class="set-thumbs"  style="cursor:pointer;">Created by: Rajeev Bhatia</p>
+    <p class="set-thumbs"  style="cursor:pointer;">Created by: <?php  if(isset($this->obituary->created_by)){ echo ucwords($this->obituary->created_by);}?></p>
 
     <?php
    //if($deathuserid){

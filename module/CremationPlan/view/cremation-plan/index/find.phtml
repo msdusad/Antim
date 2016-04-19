@@ -1,7 +1,7 @@
 <style>
     .ulnav li {
     display: inline-block;
-    width: 24%;
+   /* width: 24%;*/
     list-style-type: none;
     text-decoration: none;
     padding-top: 30px;
@@ -21,17 +21,6 @@
     margin-right: 5px;
     margin-top: 10px;
 }
-    .layout_nav{
-        margin-left:-123px;
-            margin-top: -33px;
-    }
-.ulnav li{ 
-	display:inline-block; 
-    width:24%;
-	 list-style-type: none;
-text-decoration: none; 
-	
-}
 	.ulnav li #main-li{ 
 	color:orange;
 		font-size:14px;
@@ -48,7 +37,7 @@ text-decoration: none;
 </style>
 <script>
 function show(){
-    alert('gfg');
+   // alert('gfg');
     var data=document.getElementById('ss').innerHTML.value=avx;
 }
 </script>
@@ -114,10 +103,15 @@ $this->headScript()->prependFile($this->basePath() . '/assets/js/main.js')
  zoom: 14,
  mapTypeId: google.maps.MapTypeId.ROADMAP,
  mapTypeControl: false,
+
  mapTypeControlOptions: {
  style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR
  },
- navigationControl: true,
+ navigationControl: false,
+  scrollwheel: false,
+  draggable: false,
+    mapTypeControl: false,
+
  navigationControlOptions: {
  style: google.maps.NavigationControlStyle.SMALL
  }
@@ -142,10 +136,10 @@ echo ("addMarker($langi, $Longi);\n");
 <body onload="initMap()" style="margin:0px; border:0px; padding:0px;">
 <div class="container">
 <div class="pandit-page-style">
-<div class="layout_nav" style="margin-top:-40px;">
+<div class="layout_nav" style="margin-left:12px;margin-top:-40px;">
     <ul>
 <!--        <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>-->
-        <li style="margin-left:28%;"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+        <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
         <li><a class="before" href="<?php echo $this->url('cremation-plans', array('action' => 'find', 'id' => $this->find['id'])); ?>">Find &rsaquo;</a></li> 
         <li><?php echo $this->category; ?></li>
     </ul>
@@ -178,8 +172,10 @@ echo ("addMarker($langi, $Longi);\n");
 		<?php
 		$cat=explode('->',$this->category);             
 if($cat[0]=='Special Vendors'){
+    echo "<script> window.onload = function() { 
+        document.getElementById('main_find').style.display='none'; };</script>";
 ?>
-				
+			
 		<div class="menu" id="menus"  style="display:block;position:absolute;z-index:10;background-color:white;width:66%;"  >
 
 			<ul class="ulnav" >
@@ -205,7 +201,7 @@ while($row1=mysql_fetch_array($qry1)){
 	}
 ?>
 		
-        <div class="main_find" style="display:none">
+        <div class="main_find">
             <div id="findlist" > 
                 <?php if (empty($this->findList)) { ?>
 

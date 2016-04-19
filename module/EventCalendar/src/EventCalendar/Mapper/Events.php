@@ -155,6 +155,7 @@ class Events extends AbstractDbMapper implements EventsInterface {
         $data->title = $entity->title;
         $data->content = $entity->content;       
         $data->id = $entity->id;
+       
          
         $this->getEventManager()->trigger('find', $this, array('entity' => $data));
 

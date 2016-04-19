@@ -10,7 +10,7 @@ $roles = $authorize->getIdentityRoles();
 <?php if ($roles[0] != 'guest') { ?>
     <!-- .navbar -->
   
-    <nav class="navbar navbar-inverse navbar-static-top inlinemenu">
+    <nav class="navbar navbar-inverse navbar-static-top inlinemenu" >
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <!-- .nav -->
             <ul class="nav navbar-nav" style="background-color: #d4d5db;">
@@ -28,7 +28,8 @@ $roles = $authorize->getIdentityRoles();
                         <ul class="dropdown-menu">
                             <li><a href="<?php echo $this->basePath('/user'); ?>">Dashboard</a></li>  
                             <li><a href="<?php echo $this->basePath('/inbox'); ?>">Email</a></li>
-                            <li><a href="<?php echo $this->basePath('/obituary'); ?>">Obituary</a></li>
+                           <!--  <li><a href="<?php //echo $this->basePath('/obituary'); ?>">Obituary</a></li> -->
+                            <li><a href="<?php echo $this->basePath('/add-death-user'); ?>">Obituary</a></li>
                             <li><a href="<?php echo $this->basePath('/memoralize'); ?>">Memoralize</a></li>
                             <li><a href="<?php echo $this->basePath('/cremation-plans'); ?>">Cremation Planning</a></li>
                             <li><a href="<?php echo $this->basePath('/pre-planning'); ?>">Pre Planning</a></li>
@@ -46,5 +47,12 @@ $roles = $authorize->getIdentityRoles();
             <!-- /.nav -->
         </div>   
     </nav>
+
+ <style type="text/css">
+#menu_bredcurms{
+    margin-left:15%;
+}
+    </style>
+    
 <?php
 }?>

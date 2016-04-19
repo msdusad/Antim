@@ -4,11 +4,22 @@ echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/ritua
 $this->headScript()->prependFile($this->basePath() . '/assets/lib/NicEditor/nicEdit.js');
 echo $this->partial('layout/top_links');
 ?>
+<script type="text/javascript">
+    CKEDITOR.replace('text_edit'),{
+               
+                width: "500",
+                height: "500"
+                 
+        };
+
+
+</script>
 <div class="row">
-    <div class="layout_nav">
+    <div class="layout_nav" id="brecurmsdiv">
         <ul>
-            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+           <!--  <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+            
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
             <li>Customize Rituals</li> 
         </ul>
     </div>
@@ -42,15 +53,30 @@ echo $this->partial('layout/top_links');
                 <div id="tabs">
                     <form method="post" action="">
                     <ul>
-                        <?php foreach ($this->daysList as $key => $day) { ?>
+                        <?php 
+                        $total=count($daysList);
+                        if($total=='0'){
+  $width='';   
+                        }
+                        else{
+                       
+                         $width=100/$total;
+                        }
+                         
+                        }
+                        }
+ foreach ($this->daysList as $key => $day) { ?>
 
-                            <li><a href="#fragment-<?php echo $key; ?>"><span>Day <?php echo $key + 1; ?></span></a></li>
+                            <li style="width:<?=$width?>%"><a href="#fragment-<?php echo $key; ?>"><span>Day <?php echo $key + 1; ?></span></a></li>
                         <?php } ?>
                     </ul>
                    
-                    <?php foreach ($this->daysList as $key => $day) { ?>
+                    <?php 
+
+                    foreach ($this->daysList as $key => $day) { 
+                        ?>
                         <div id="fragment-<?php echo $key; ?>"> 
-                        <textarea  rows="6" id="editor-<?php echo $key; ?>" name="content[]"> <?php echo $day['content']; ?></textarea>   
+                        <textarea name="text_edit"  rows="6" id="editor-<?php echo $key; ?>" name="content[]"> <?php echo $day['content']; ?></textarea>   
                         <input type="hidden" name="id[]" value="<?php echo $day['id']; ?>"/>
                         </div>
                         

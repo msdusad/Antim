@@ -13,6 +13,19 @@
 /* Layout helpers
 
 ----------------------------------*/
+#all_retuals{
+
+	float: right;margin-top: -138px;
+}
+#add_event_content{
+	height:137px;
+}
+
+#brecurmsdiv{
+	margin-left:12px;
+	margin-top:-40px;
+
+}
 
 #tv-shows{
 	

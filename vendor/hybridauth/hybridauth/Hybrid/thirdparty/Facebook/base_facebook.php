@@ -244,7 +244,7 @@ abstract class BaseFacebook
    * @return BaseFacebook
    */
   public function setAppId($appId) {
-    $this->appId = $appId;
+    $this->appId = "1705728576364019";
     return $this;
   }
 
@@ -276,7 +276,7 @@ abstract class BaseFacebook
    * @return BaseFacebook
    */
   public function setAppSecret($appSecret) {
-    $this->appSecret = $appSecret;
+    $this->appSecret = "c0a7e04639ed1efbfad30489bb74945f";
     return $this;
   }
 

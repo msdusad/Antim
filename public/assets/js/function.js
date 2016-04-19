@@ -30,24 +30,7 @@ width: 400,
     swipe: {onMouse: false, onTouch: false}});
    });
 
-//filter sub category////
-function showData(cat)
-{  
-     $.ajax({
-          type: "POST",
-          data: { cat:cat},
-          url: "get_data.php",
-          success: function(data) 
-          { 
-              //alert(data);
-              $("#hide").html(data);
-          }
-        });
-    //var fullid="hide-"+show;
-    //alert(show);
-    //document.getElementById(fullid).style.display="block";
-    //document.getElementById(hide).style.display="none";    
-}
+
 
 //filter country state city in select box//
 $(document).ready(function()
@@ -59,12 +42,14 @@ $(document).ready(function()
   $.ajax
   ({
    type: "POST",
-   url: "get_data.php",
+   url: "getdata",
    data: dataString,
    cache: false,
-   success: function(html)
+   success: function(data)
    {
-      $("#state").html(html);
+     // $("#state").html(html);
+       var ss=$('#state').html(jQuery(data).find('#state_list').html()); 
+       
    } 
    });
   });
@@ -75,12 +60,14 @@ $(document).ready(function()
  $.ajax
   ({
    type: "POST",
-   url: "get_data.php",
+   url: "getdata",
    data: dataString,
    cache: false,
-   success: function(html)
+   success: function(data)
    { 
-    $("#city").html(html);
+    //$("#city").html(html);
+    var ss=$('#city').html(jQuery(data).find('#city_list').html()); 
+    
    } 
    });
   }); 
@@ -91,12 +78,116 @@ function subcat(catval,subcat){
         $.ajax
         ({
         type: "POST",
-        url: "get_data.php",
+        url: "getdata",
         data: {cat_value:catval,sub_cat:subcat},
-        success: function(html)
+        success: function(data)
         {   
-            //alert(html);
-            $("#pro_items").html(html);
+            
+             var ss=$('#pro_items').html(jQuery(data).find('#data1').html()); 
+           // $("#pro_items").html(html);
+          
         } 
         });
     }
+
+
+// gorccrry copied
+
+  function searchproduct(searchthis)
+    {
+
+  $.ajax
+  ({
+   type: "POST",
+   url: "getdata",
+   data: {searchpro:searchthis},
+   cache: false,
+   success: function(data)
+   {
+     // $("#state").html(html);
+       var ss=$('#pro_items').html(jQuery(data).find('#data1').html()); 
+       
+   } 
+   });
+
+    }
+
+
+    function addtocart(pid)
+    {
+        document.form1.productid.value=pid;
+        document.form1.command.value='add';
+        document.form1.submit();
+        //window.location=document.getElementById('redirecthere').href; 
+    }
+    
+///filter product according country state city ////////
+   $('.act a').click(function(e) {
+    e.preventDefault(); 
+    $('.act a').removeClass('selected');
+    var show=$(this).addClass('selected');
+       //alert(show);
+});
+function country_data(country){
+    cat_val=$('ul#ajax_cat_val').find('li.active').data('interest');
+    subcat_val=$('ul#ajax_subcat_val').find('li.active').data('interest');
+    //alert(cat_val);
+    //alert(subcat_val);
+    //alert(country);
+        $.ajax({
+          type: "POST",
+          data: { cat_val:cat_val,subcat_val:subcat_val,country:country},
+          url: "getdata",
+          success: function(data) 
+          {  
+              //$("#pro_items").html(data);
+               var ss=$('#pro_items').html(jQuery(data).find('#data1').html()); 
+          }
+        });
+      }
+
+      function brandfilter(brandfiltervalue){
+
+  $.ajax({
+          type: "POST",
+          data: { searchbrand:brandfiltervalue},
+          url: "getdata",
+          success: function(data) 
+          {  
+             // $("#pro_items").html(data);
+              var ss=$('#pro_items').html(jQuery(data).find('#data1').html()); 
+          }
+        });
+
+      }
+
+
+
+function state_data(country,state){
+    cat_val=$('ul#ajax_cat_val').find('li.active').data('interest');
+    subcat_val=$('ul#ajax_subcat_val').find('li.active').data('interest');
+        $.ajax({
+          type: "POST",
+          data: { cat_val:cat_val,subcat_val:subcat_val,country_id:country,state_id:state},
+          url: "getdata",
+          success: function(data) 
+          { 
+            //$("#pro_items").html(data);
+             var ss=$('#pro_items').html(jQuery(data).find('#data1').html()); 
+          }
+        });
+      }
+function city_data(country,state,city){
+    cat_val=$('ul#ajax_cat_val').find('li.active').data('interest');
+    subcat_val=$('ul#ajax_subcat_val').find('li.active').data('interest');
+        $.ajax({
+          type: "POST",
+          data: { cat_val:cat_val,subcat_val:subcat_val,country_ids:country,state_ids:state,city_ids:city},
+          url: "getdata",
+          success: function(data) 
+          { 
+           // $("#pro_items").html(data);
+             var ss=$('#pro_items').html(jQuery(data).find('#data1').html()); 
+          }
+        });
+      }    

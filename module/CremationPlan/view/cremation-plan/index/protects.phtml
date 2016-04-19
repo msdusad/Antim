@@ -1,23 +1,273 @@
 
 <?php
-echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css')
-        ->prependStylesheet($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.css');
-$this->headScript()->prependFile($this->basePath() . '/assets/lib/CLEditor1_4_3/jquery.cleditor.min.js');
+ error_reporting(0);
+require_once('config/autoload/conn.php');
+//require_once('dbcontroller.php');
+ include_once('protectfilter.phtml');
+$db_handle = new DBController();
+$query ="SELECT * FROM country";
+$results = $db_handle->runQuery($query);
+$createobj=new FormChecklistLink();
+$viewresult=$createobj->viewdata();
+$showads=$createobj->adsdata();
+$viewcontntent=$createobj->middlecontent();
+
+echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css');
+ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/pre_planning_protect.css');
+//$this->headScript()->prependFile($this->basePath() . '/assets/js/pre_planning_protect.js');
 echo $this->partial('layout/top_links');
+
 ?>
+<style type="text/css">
+        .ui-dialog .ui-dialog-titlebar-close{
+        
+background-image: url("/antimnew/public/addthis/jquery-ui-images/images/ui-icons_222222_256x240.png");
+background-position: -96px -128px;
+}
+    
+</style>
+<script type="text/javascript">
+    
+       function videoPlay(videoNum)
+    {
+
+     document.getElementById('light').style.display='block';
+    document.getElementById('fade').style.display='block';
+document.getElementById("video-box").setAttribute("src",'/antimnew/public/'+videoNum);
+document.getElementById("video-box").load();
+document.getElementById("video-box").play();
+    }
+    
+        function videoclose(xyz)
+    {   
+document.getElementById('light').style.display='none';
+document.getElementById('fade').style.display='none';
+    var vid=document.getElementById("video-box");
+         vid.pause(); 
+    }
+    
+        
+function getState(val) {
+    var menu= document.getElementById('ajax_menu').value; 
+    var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
+    //alert(menu);
+    $.ajax({
+    type: "POST",
+    url: "<?php echo $this->url('cremation-plans', array('action' => 'protectfilter')); ?>",
+    data:{country_id:val,srch_menu:menu,srch_sub_menu:sub_menu},
+        //data:'country_id='+val+'menu_serch'+menu,
+    success: function(data){
+var ss=$('#state-list').html(jQuery(data).find('#result').html()); 
+var ss1=$('#output-checklist').html(jQuery(data).find('#checklist').html()); 
+var ss2=$('#output-forms').html(jQuery(data).find('#forms').html()); 
+var ss3=$('#output-resources').html(jQuery(data).find('#resources').html()); 
+var ss4=$('#output-articals').html(jQuery(data).find('#articals').html()); 
+var ss5=$('#output-tools').html(jQuery(data).find('#tools').html());
+var ss6=$('#view_ads').html(jQuery(data).find('#ads').html());
+
+    }
+    });
+}
+function getCity(val) {
+    var count_id=document.getElementById('country-list').value;
+    var menu= document.getElementById('ajax_menu').value; 
+    var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
+    
+    $.ajax({
+    type: "POST",
+    url: "<?php echo $this->url('cremation-plans', array('action' => 'protectfilter')); ?>",
+    data:{state_id:val,country_id:count_id,srch_menu:menu,srch_sub_menu:sub_menu},
+    //data:'state_id='+val,
+    success: function(data){
+    var ss=$('#city-list').html(jQuery(data).find('#cities').html()); 
+var ss1=$('#output-checklist').html(jQuery(data).find('#checklist').html()); 
+var ss2=$('#output-forms').html(jQuery(data).find('#forms').html()); 
+var ss3=$('#output-resources').html(jQuery(data).find('#resources').html()); 
+var ss4=$('#output-articals').html(jQuery(data).find('#articals').html()); 
+var ss5=$('#output-tools').html(jQuery(data).find('#tools').html());
+var ss6=$('#view_ads').html(jQuery(data).find('#ads').html());
+    }
+    });
+}
+    
+    function SubmitCity(val) {
+        var state=document.getElementById('state-list').value;
+    var count_id =document.getElementById('country-list').value;
+    var menu= document.getElementById('ajax_menu').value; 
+    var sub_menu=$('ul#ajax_sub_menu').find('li.active').data('interest'); 
+        
+    $.ajax({
+    type: "POST",
+    url: "<?php echo $this->url('cremation-plans', array('action' => 'protectfilter')); ?>",
+    data:{city_id:val,state_id:state,country_id:count_id,srch_menu:menu,srch_sub_menu:sub_menu},
+        //data:'city_id='+val,
+    success: function(data){
+    //var ss=$('#state-list').html(jQuery(data).find('#result').html()); 
+var ss1=$('#output-checklist').html(jQuery(data).find('#checklist').html()); 
+var ss2=$('#output-forms').html(jQuery(data).find('#forms').html()); 
+var ss3=$('#output-resources').html(jQuery(data).find('#resources').html()); 
+var ss4=$('#output-articals').html(jQuery(data).find('#articals').html()); 
+var ss5=$('#output-tools').html(jQuery(data).find('#tools').html());
+var ss6=$('#view_ads').html(jQuery(data).find('#ads').html());
+    }
+    });
+}
+
+  function protectsub_cat(val) {
+     var divId="protectsubcatajax";      
+    $.ajax({
+    type: "POST",
+    url: "<?php echo $this->url('cremation-plans', array('action' => 'protectfilter')); ?>",
+    data:{protectsubcategory:val},
+      
+    success: function(data){
+    
+var ss7=$('#sub_cats').html(jQuery(data).find('#protectsubcatajax').html());
+
+  
+
+    }
+    });
+}
+    
+    $(document).ready(function () {   
+$("#forms").click(function(){
+$( "#preplanning-forms" ).dialog({
+   width: 900,
+   modal:true
+});
+});
+});
+    
+    $(document).ready(function () {   
+$("#checklists").click(function(){
+$( "#preplanning-checklists" ).dialog({
+   width: 900,
+   modal:true
+});
+});
+}); 
+    
+        $(document).ready(function () {   
+$("#lockbox").click(function(){
+$( "#lockbox-view" ).dialog({
+   width: 900,
+   modal:true
+});
+});
+}); 
+    
+        $(document).ready(function () {   
+$("#tab1primarypop1").click(function(){
+$( "#tab1primary" ).dialog({
+   width: 900,
+   modal:true
+});
+});
+});
+    
+            $(document).ready(function () {   
+$("#tab2primarypop2").click(function(){
+$( "#tab2primary" ).dialog({
+   width: 900,
+   modal:true
+});
+});
+});
+    
+            $(document).ready(function () {   
+$("#tab3primarypop3").click(function(){
+$( "#tab3primary" ).dialog({
+   width: 900,
+   modal:true
+});
+});
+});
+    
+
+</script>
 <div class="row">
-<div class="layout_nav">
+<div class="layout_nav" id="brecurmsdiv">
         <ul>
-            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+            <!-- <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
             <li>Protect</li> 
         </ul>
+        
     </div>
     <div class='clear'></div>
     <div class="topbar">
         <h3>Protect</h3>
     </div>
     <div id="gothralist"> 
+
+
+<div class="search-fields" >
+        <div class="col-md-3 col-sm-3 col-xs-3 spacing leftspace" style="width:20%;margin-left: -8px;">
+            
+                <select onchange="protectsub_cat(this.value);" name="category_id"  class="form-control" id="ajax_menu">                   
+                    <?php $ftech=mysql_query("select * from category where type='protect'");
+                    if($ftech && mysql_num_rows($ftech) >0){
+ while($category=mysql_fetch_array($ftech)){
+?>
+<option value="<?php echo $category['id'] ?>"><?php echo $category['title'] ?></option>
+                    <?php
+ }
+                    }
+                    else{
+                        echo "No Data Found";
+                    }
+
+                ?>
+                </select>
+            
+        </div>
+        
+        
+        <!-- search Filer strt-->
+                                
+            <div class="col-md-3 col-sm-3 col-xs-3 spacing leftspace" style="width:20%;" >
+                    <select name="country" id="country-list"  onchange="getState(this.value);"  class="form-control txt-height">
+                    <option value="">Select Country</option>
+                        <?php
+foreach($results as $country) {
+?>
+<option value="<?php echo $country["id"]; ?>"><?php echo $country["name"]; ?></option>
+<?php
+}
+?>            </select> 
+             </div>
+                    
+             <div class="col-md-3 col-sm-3 col-xs-3 spacing" style="width:20%;">       
+                    <select name="state" id="state-list" onchange="getCity(this.value);" class="form-control txt-height">
+                    <option value="">Select State</option>
+                  
+                    </select>   
+                </div> 
+                                      
+              
+              <div class="col-md-3 col-sm-3 col-xs-3 spacing" style="width:20%;"> 
+                   
+                    <select name="city" id="city-list" onchange="SubmitCity(this.value)" class="form-control txt-height">
+                    <option value="">City</option>
+                   
+                    </select>
+                        </div>
+              <div class="col-md-3 col-sm-3 col-xs-3 spacing" style="width:20%;">
+              <div class="rightspace">          
+                    <select name="postalCode" id="postalCode" class="form-control txt-height">
+                    <option value="">Zip/Postal Code </option>
+                   
+                    </select>   
+               </div> 
+             </div>   
+        <br><br>
+        </div>  
+
+
+
+
+
 
         <?php if (empty($this->protectList)) { ?>
             <ul>
@@ -27,25 +277,407 @@ echo $this->partial('layout/top_links');
             </ul>
 
         <?php } else { ?>
-            <div id="tabs">
-                <ul>
-                    <?php foreach ($this->protectList as $key => $val) { ?>
+            <div id="tabs" style="border: 0px;">
+      
+        <?php  
+$qry=mysql_query("SELECT * FROM protectp WHERE category_id=(SELECT id from category where type='protect' limit 1)");
+    $rows = array();
+    while($row=mysql_fetch_array($qry)){
+//start here 
+        $rows[] = $row;
+    }
 
-                        <li id='index-<?php echo $val['id'] ?>'><a href="#fragment-<?php echo $val['id']; ?>"><span><?php echo $val['title']; ?></span></a></li>
-                    <?php } ?>
-                </ul>
-                <?php foreach ($this->protectList as $key => $val) { ?>
-                    <div id="fragment-<?php echo $val['id']; ?>">
-                        <?php echo $val['content']; ?>
+ echo '<span id="sub_cats"><ul id="ullist">';
+ $total=count($rows);
+ $width=100/$total;
+  foreach($rows as $row){ 
+$idofcat=$row['id'];
+$titleofcat=$row['title'];
+echo "<li id='index-$idofcat'><a href='#fragment-$idofcat'><span >$titleofcat</span></a></li>";
+ }
+            echo "</ul>";
+      foreach($rows as $row){ 
+$idofcat1=$row['id'];
+ $discription=$row['description'];
+                   echo "<div id='fragment-$idofcat1' style='width:58%;'>$discription</div>";
+                 }
+                
+                echo "</span>";
 
+               
+//end here 
+?>
+
+  <div class="add-place" style="margin-top: -1px;">
+                    <div class="col-md-5 col-sm-12 col-xs-12 pull-right row">
+                        
+                  
+                        
+                        <div class="legal-act row">
+                            <div class="legal-act-boxes"> 
+                                <div class="legal-forms">
+                                    <div class="legal-forms-head" style="height:70px;">
+                                    <h4><a href="#" id="forms" > Forms </a></h4><!-- onclick="viewforms('preplanning-checklists','main-div','preplanning-forms');" -->
+                                   <p> save print email</p> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="legal-act-boxes"> 
+                                <div class="legal-forms">
+                                    <div class="legal-forms-head">
+                                    <h4> <a href="#" id="checklists" >Checklist</a></h4>
+                                <!-- onclick="viewforms('preplanning-forms','main-div','preplanning-checklists');" -->
+                                    <p> save print email</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="legal-act-boxes"> 
+                                <div class="legal-forms">
+                                    <div class="legal-forms-head">
+                                    <h4><a href="#" id="lockbox"> Lockbox </a></h4>
+                                    <p> save print email</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="legal-act-boxes"> 
+                                <div class="legal-forms">
+                                    <div class="legal-forms-head">
+                                    <h4><a href=""> Contacts </a></h4>
+                                    <p> save print email</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <div class="clearfix"> </div>
+                                                 
+                        <div class="legal-adv-adds row" id="view_ads">
+                             <?php
+for ($x = 0; $x < count($showads); $x++) {
+$ads_name=$showads[$x]['name'];
+    $ads_pic=$showads[$x]['image'];
+    $info=pathinfo($ads_pic);
+                        $ext=$info['extension'];
+    ?>
+    <div class="legal-adv-box">
+            
+                                <div class="adviser-adds" style="width:100%;height:100%;"> 
+                                <?php   if($ext=='mp4' || $ext=='webm' || $ext=='ogg' || $ext=='flv'|| $ext=='avi'|| $ext=='wmv'|| $ext=='mpeg'|| $ext=='3gp'|| $ext=='mxf'|| $ext=='m4v'|| $ext=='yuv'|| $ext=='vob')
+                        { ?>
+                                        <a href="javascript:void(0)" id="playzoom" onclick="videoPlay('<?php echo $ads_pic;?>')">   
+    <img <?php if($showads[$x]['tumbnail']!=""){ echo 'src="data:image/jpeg;base64,'.base64_encode( $showads[$x]['tumbnail'] ).'" ';
+    echo ' style="height: 115px;width: 120;" ';
+}
+else{
+?>
+    src='<?php echo $this->basePath("/images/videoplay.png"); ?>' style="height: 115px;width: 120;"
+    <?php
+}
+
+    ?> class="img-responsive" alt="adv" id="ad-images-images"  />
+                                        </a>    
+                                    <?php
+}
+        ?>
+                                    
+                                                        <?php   if($ext=='mp3' || $ext=='mpeg' || $ext=='mp2'|| $ext=='wav'|| $ext=='wma')
+                        { ?>
+                                    
+                                    <img  <?php if($showads[$x]['tumbnail']!=""){ echo 'src="data:image/jpeg;base64,'.base64_encode( $showads[$x]['tumbnail'] ).'" ';
+    echo ' style="height: 115px;width: 120;" ';
+}
+else{
+?>
+    src='<?php echo $this->basePath("/images/audio1.png"); ?>' style="height: 115px;width: 120;"
+    <?php
+}
+
+    ?> class="img-responsive" alt="adv" id="ad-images-images" />
+                                        
+                                    <?php
+}
+        ?>
+                                    
+                                    
+    <?php   if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif'|| $ext=='bmp' || $ext=='swe')
+                        { ?>
+                                    <img src='<?php echo $this->basePath("/img/ads/images/$ads_pic"); ?>' class="img-responsive" alt="adv" id="ad-images-images" />
+                                    <?php
+}
+        ?>
+                                    
+                                    <?php //echo $ads_name. " ".$ext;?> 
+                                </div>
+                            </div>
+                            
+    <?php
+}
+?>  
+                            
+                        </div>
+                        
+                        <div class="clearfix"> </div>
+                        
+                        
+                    <div class="legal-resources row">
+                  
+                       <div class="panel with-nav-tabs panel-default">
+                        <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active" ><a href="#" data-toggle="tab" id="tab1primarypop1">Resources</a></li>
+                            <li><a href="#" data-toggle="tab" id="tab2primarypop2">Articles</a></li>
+                            <li><a href="#" data-toggle="tab" id="tab3primarypop3">Tools</a></li>
+                            <!-- href="#tab3primary" -->
+                        </ul>
                     </div>
-                <?php } ?>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab1primary" style="background-color:#428bca;;display:none;">
+                             <div class="topbar">
+        <h3>Resources</h3>
+
+    </div>
+                            <div id="output-resources " style="background-color:white;padding:10px;">
+                        <?php
+
+for ($x = 0; $x < count($viewresult); $x++) {
+    if($viewresult[$x]['preplanning_type']=='pre_links' && $viewresult[$x]['category']=='resource'){
+    $url=$viewresult[$x]['url'];
+echo "<a href='$url' target='_blank'>".$viewresult[$x]['title']."</a><br>";
+    }
+}
+?>  
+                                </div>
+                            
+                        </div>
+                        <div class="tab-pane fade in active" id="tab2primary" style="background-color:#428bca;;display:none;">  
+                             <div class="topbar" >
+        <h3>Articles</h3>
+
+    </div>
+        <div id="output-articals" style="background-color:white;padding:10px;">
+  <?php
+
+for ($x = 0; $x < count($viewresult); $x++) {
+    if($viewresult[$x]['preplanning_type']=='pre_links' && $viewresult[$x]['category']=='article'){
+    $url=$viewresult[$x]['url'];
+echo "<a href='$url' target='_blank'>".$viewresult[$x]['title']."</a><br>";
+    }
+}
+?>  
+                            </div>
+                                
+                            </div>
+                        
+                        <div class="tab-pane fade in active" id="tab3primary" style="background-color:#428bca;;display:none;">
+                             <div class="topbar">
+        <h3>Tools</h3>
+
+    </div>
+        <div id="output-tools" style="background-color:white;padding:10px;">
+  <?php
+for ($x = 0; $x < count($viewresult); $x++) {
+    if($viewresult[$x]['preplanning_type']=='pre_links' && $viewresult[$x]['category']=='tools'){
+    $url=$viewresult[$x]['url'];
+echo "<a href='$url' target='_blank'>".$viewresult[$x]['title']."</a><br>";
+    }
+}
+?>                          </div>
+                                
+                            </div>
+                        
+                            <div class="tab-pane fade" id="tab4primary">Primary 4</div>
+                            <div class="tab-pane fade" id="tab5primary">Primary 5</div>
+                    </div>
+                </div>
+            </div>
+                            
+                        </div>
+                        
+                    </div>
+                   </div>
+
+
+
+
+
+
+
+
+
 
             </div>
         <?php } ?>
+
+
+
+                      
+
+
+
     </div>
     <input type="hidden" name="category" id="category" value="#index-<?php echo $this->id ?>"/>
+
+
+
 </div>
+
+<!-- for pre-panninf Forms -->
+
+<div class="row" id="preplanning-forms" style="display:none;background-color:#428bca;">
+     <div class="topbar">
+        <h3>Forms</h3>
+
+    </div>
+    <div class="panel with-nav-tabs panel-default" id="output-forms" style="padding:10px;">
+    <?php
+
+for ($x = 0; $x < count($viewresult); $x++) {
+    if($viewresult[$x]['preplanning_type']=='forms'){
+    $url=$viewresult[$x]['url'];
+echo "<a href='$url' target='_blank'>".$viewresult[$x]['title']."</a><br>";
+    }
+}
+?>          
+</div>
+    </div>
+
+<!-- for pre-panninf Forms End -->
+
+<!-- for pre-panninf  Checklists -->
+<div class="row" id="preplanning-checklists" style="display:none;background-color:#428bca;;">
+     <div class="topbar">
+        <h3>Checklists</h3>
+
+    </div>
+    <div class="panel with-nav-tabs panel-default" id="output-checklist" style="padding:10px;">
+    <?php
+
+for ($x = 0; $x < count($viewresult); $x++) {
+    if($viewresult[$x]['preplanning_type']=='checklist'){
+        $url=$viewresult[$x]['url'];
+    echo "<a href='$url' target='_blank'>".$viewresult[$x]['title']."</a><br>";
+    }
+}
+?>  
+        
+</div>
+    </div>
+<!-- for pre-panninf  Checklists End -->
+
+
+                            <!-- div for video play -->
+<div class="row">
+<div id="light" class="white_content" style="width:900px;">
+    <div id="closebutton">
+    <a  href="javascript:void(0)" onclick="videoclose()">&times;</a>  
+        </div>
+    <video id="video-box" style="height:70%;width:100%;"  controls>
+  <source src="img/ads/video/hdfc_video.mp4" type="video/mp4">
+</video>
+    
+</div>
+    <div id="fade" class="black_overlay"></div>
+</div>
+
+           <!-- end video popup -->
+                            
+
+
+<!-- for pre-panninf  Lockbox start -->
+<div class="row" id="lockbox-view" style="display:none;background-color:#428bca;;">
+    <div class="panel with-nav-tabs panel-default" style="padding:10px;">
+        <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#" data-toggle="tab">Lockbox</a></li>
+                            <li class=""><a href="#" data-toggle="tab">Wishes</a></li>  
+                            <li class=""><a href="#" data-toggle="tab">Contacts</a></li>  
+                            <li class=""><a href="#" data-toggle="tab">Documents</a></li>  
+                            <li class=""><a href="#" data-toggle="tab">Estate</a></li> 
+                            <li class=""><a href="#" data-toggle="tab">Insurance</a></li>  
+                        </ul>
+                </div>
+        <div>
+         <div class="col-md-3 col-sm-12 col-xs-12 pull-left row">
+        
+    <div class="adviser-adds"> 
+                                    <br><img src="<?php echo $this->basePath('/img/legal-adv-dummy.jpg'); ?>" class="img-responsive" alt="adv" />
+                                    <h4> Bank Image </h4>
+                                </div>
+             </div>
+             <div class="col-md-9 col-sm-12 col-xs-12 pull-right row" style="background-color:white;">
+             <div class="adviser-adds"> 
+                                    <p style="text-align:justify">I am creating this profile to guide my family & friends  and to save them of the burden of having to make rational decisions under stress and grief. I want to let my last wishes, my spiritual beliefs,  my religious philosophy and my budget be known so  that my wishes can be carried out after my death, to the extent possible.  Also, included is a list of my important documents, advisors and some guidance that will help protect my estate. Wherever possible, I have given guidance, suggestions and hints about specific topics and decisions that will guide people in making informed decisions.</p>
+                                    
+                                </div>
+             </div>
+        
+        </div>
+    <?php
+
+//$sql=mysql_query("select * from preplanning_checklist");
+//while($row=mysql_fetch_array($sql)){
+//  $url=$row['url'];
+//echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";  
+//}
+?>  
+        
+</div>
+    </div>
+<!-- for pre-panninf  Lockbox End -->
+<script>
+                    $(function() {
+                        $("#tabs").tabs();
+                        $('.article').tabs();
+                        $('.fancybox').fancybox();
+
+                    });
+                    function printDiv(divid) {
+
+                        var divToPrint = $('#' + divid + ' > li').find('input[type=checkbox]:checked').map(function() {
+                            return $(this).next('a').text();
+                        }).get().join(',');
+
+                        var mywindow = window.open('', 'my div', 'height=600,width=800');
+                        mywindow.document.write('<html><head><title>my div</title>');
+                        /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
+                        mywindow.document.write('</head><body >');
+                        mywindow.document.write(divToPrint);
+                        mywindow.document.write('</body></html>');
+
+                        mywindow.print();
+                        mywindow.close();
+
+                        return true;
+                    }
+                    $('.save').click(function() {
+                        var userid = '<?php echo $this->userid; ?>';
+                        if (userid == 0) {
+                            $('.logintop').trigger('click');
+                            //return false;
+                        }
+                        else {
+                            var ids = $('input:checkbox:checked.check').map(function() {
+                                return this.value;
+                            }).get();
+                            var data = {'ids': ids, type: $(this).data('type')}
+                            $.ajax({
+                                type: 'POST',
+                                url: '<?php echo $this->url('pre-planning', array('action' => 'save')); ?>',
+                                data: data,
+                                success: function(data) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    });
+
+</script>
+
+
 
 <?php $this->inlineScript()->captureStart() ?>
 

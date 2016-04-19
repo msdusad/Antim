@@ -101,11 +101,11 @@ $("#player").attr('src', chg);
 </script>
 
 <div class="row">
-<div class="layout_nav" style="margin-left:12px;margin-top:-40px;">
+<div class="layout_nav" id="brecurmsdiv">
      
         <ul >
-            <li style="margin-left:15%";><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+          <!--   <li style="margin-left:15%";><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
             <li>Hinduism</li> 
         </ul>
     </div>
@@ -280,6 +280,8 @@ echo "<li class='next'><a href='?scriptures=$total_pages'>".'Next →'."</a></li
 // code for first Philospy module
 
                         if($val['id']=='2'){
+
+
 $num_pages=9;
                             if (isset($_GET["philospy"])) { $page= $_GET["philospy"];
                                                       
@@ -325,6 +327,12 @@ echo "<li class='next'><a href='?philospy=$total_pages'>".'Next →'."</a></li> 
 
                         }
 
+
+//code for  amazon books
+ if($val['id']=='3'){
+                ?>   <iframe src="http://astore.amazon.com/antimsanskar19-20" width="100%" height="800" frameborder="0" scrolling="no"></iframe>
+                <?php
+}
 
 // code for first Pligrimages module
 
@@ -440,7 +448,7 @@ echo "<li class='next'><a href='?news=$total_pages'>".'Next →'."</a></li> ";
     <div id="closebutton">
     <a id="closevideo" href="#" onclick="videoclose()" >&times;</a>  <!-- onclick="videoclose()"-->
         </div>
- <iframe id="player" style="height:90%;width:100%" src="https://www.youtube.com/embed/EA27xM71m0g" frameborder="0" allowfullscreen="true" allowscriptaccess="always"></iframe>
+ <iframe id="player" style="height:90%;width:100%" src="" frameborder="0" allowfullscreen="true" allowscriptaccess="always"></iframe>
 
     <video id="video-box" style="height:100%;width:100%;display:none">
   <!-- <source src="" type="video/mp4"> -->

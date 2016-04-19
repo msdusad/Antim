@@ -1,6 +1,6 @@
 <?php
 require_once('config/autoload/conn.php');
-	include("functions.php");
+	include("functions.phtml");
 	$msg="";
 	if($_REQUEST['command']=='delete' && $_REQUEST['pid']>0){
 		remove_product($_REQUEST['pid']);
@@ -28,11 +28,8 @@ require_once('config/autoload/conn.php');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Shopping Cart</title>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-<link rel="stylesheet" href="css/groceries.css">         
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="js/function.js"></script>   
+<link rel="stylesheet" href="<?php echo $this->basePath() . '/assets/css/groceries.css';?>"/>
+ <script src="<?php echo $this->basePath() . '/assets/js/function.js';?>"></script>
 <script language="javascript">
 	function del(pid){
 		if(confirm('Do you really mean to delete this item')){
@@ -60,7 +57,7 @@ require_once('config/autoload/conn.php');
 <input type="hidden" name="command" class="form-control"/>
 	<div class="cart_container" >
     <div class="cart_box">
-    	<h1 align="center">Your Shopping Cart</h1>
+    	
     </div>
     	<div class="msg"><?php echo $msg; ?></div>
     	<table  class="table-bordered" id="tab">
@@ -89,7 +86,7 @@ require_once('config/autoload/conn.php');
                     </td>                    
                     <td><?='&#8377;'." ".get_price($pid)*$q?></td>
                         <td><a href="javascript:del(<?=$pid?>)">
-                            <img src="images/1457977601_Close_Box_Red.png" class="opt_btn">
+                            <img src="<?php echo $this->basePath() . '/assets/images/1457977601_Close_Box_Red.png';?>" class="opt_btn">
                             </a></td></tr></tbody>
             <?					
 				}

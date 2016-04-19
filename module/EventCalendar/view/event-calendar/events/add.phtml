@@ -4,20 +4,117 @@ $this->headLink()
         ->prependStylesheet($this->basePath() . '/assets/css/rituals.css');
 
 $this->headScript()->prependFile($this->basePath() . '/assets/lib/timepicker/js/bootstrap-timepicker.min.js');
+
+ error_reporting(0);
+require_once('config/autoload/conn.php');
 ?>
+<script type="text/javascript">
+    function ritualcat(ritual_cat){  
+       
+ $.ajax({
+     
+          type: "POST",
+          data: {traditional_id:ritual_cat},
+          url: "<?php echo $this->url('getdata'); ?>",
+          
+          success: function(data) 
+          {       
+           //   alert(data);       
+              var ss=$('#hide_data').html(jQuery(data).find('#ritual_details_all').html()); 
+              //$("#hide").html(data); 
+
+          }
+        });
+
+    }
+
+    function showdata(getvalue){
+
+if(getvalue=='Cultural'){
+  
+var ab=$("#cultural").html();
+$("#add_event_content").html(ab);
+}
+
+
+if(getvalue=='Preference'){
+  
+var ab=$("#preference").html();
+$("#add_event_content").html(ab);
+}
+
+if(getvalue=='Practical'){
+  
+var ab=$("#practical").html();
+$("#add_event_content").html(ab);
+}
+
+
+if(getvalue=='Interfaith'){
+  
+var ab=$("#interfaith").html();
+$("#add_event_content").html(ab);
+}
+
+
+if(getvalue=='Other'){
+  
+var ab=$("#other").html();
+$("#add_event_content").html(ab);
+}
+
+
+if(getvalue=='Traditional'){
+  
+ var ab=$("#id").html();
+// $("#add_event_content").html(ab);
+days_detail(ab);
+
+}
+
+    }
+
+    function days_detail(serch_cat_value){
+
+//var ritual_cat=$document.getElementById('#rt_cat').value;
+//var ritual_filter=$document.getElementById('#category_list').value;
+         $.ajax({
+     
+          type: "POST",
+          data: {ritual_id_day:serch_cat_value,},
+          url: "<?php echo $this->url('getdata'); ?>",
+          
+          success: function(data) 
+          {             
+              var ss=$('#days_list').html(jQuery(data).find('#ritual_day_list').html()); 
+              //$("#hide").html(data);  
+          }
+        });
+    }
+
+    function getday_detail(day_content){
+       
+$("#add_event_content").html(day_content);
+    } 
+
+
+</script>
+
+
+<div id="hide_data" style="display:none;"></div>
+
 <div class="container">
 <?php echo $this->partial('layout/top_links'); ?>
 
 
-<div class="layout_nav">
+<div class="layout_nav" id="brecurmsdiv">
         <ul>
-            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+           <!--  <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
             <li><a class="before" href="<?php echo $this->url('event-calendar-events'); ?>">Events &rsaquo;</a></li> 
             <li>Add Event</li> 
         </ul>
  </div>
-
 <div class='clear'></div>
 
 <div class="col-md-4 col-sm-5 col-xs-5">
@@ -58,6 +155,7 @@ $this->headScript()->prependFile($this->basePath() . '/assets/lib/timepicker/js/
 			 <option value="preplanning">iMandir</option>
 			 <option value="preplanning">Anniversary</option>
 			 <option value="preplanning">Special Event</option>
+             <option value="retiuals">Rituals</option>
         </select>
         </div>
 
@@ -106,17 +204,60 @@ $this->headScript()->prependFile($this->basePath() . '/assets/lib/timepicker/js/
 
         <div class="clear"> </div>
                 
-        <div  class="obituary-creation100"> 
+        <div  class="obituary-creation100" style="display:inline-block;"> 
+        <div style="width:75%;">
           <label> Content </label>
-        <textarea type="text" id="nicedit" name="content" class="form-control"> </textarea>     
+        <textarea id="add_event_content" type="text" id="nicedit" name="content" class="form-control"> </textarea> 
+</div>
+<div id="all_retuals" >
+<div>
+<select id="rt_cat" class="btn btn-primary" onchange="ritualcat(this.value)" > 
+<option>Please Select</option>
+<?php 
+$qry=mysql_query("select * from rituals_traditional");
+while($row=mysql_fetch_array($qry)){
+     $id=$row['id'];
+    $name=$row['name'];
+echo "<option value='$id'> $name</option>";
+}
+?>
+
+</select>
+</div>
+<br>
+<div>
+<select id="category_list" onchange="showdata(this.value)" class="btn btn-primary" > 
+<option value="">Please Select</option>
+ <option value='Traditional'>Traditional</option>
+    <option value='Cultural'>Cultural</option>
+    <option value='Preference'>Preference</option>
+   <option value='Practical'>Practical</option>
+     <option value='Interfaith'>Interfaith</option>
+     <option value='Other'>Other</option>
+
+
+</select>
+
+</div>
+<br>
+<div>
+<select id="days_list" class="btn btn-primary" onchange="getday_detail(this.value)" > 
+<option value="">Please Select</option>
+</select>
+</div>
+</div>
+
+
         </div>
-        
+  
         <div  class="obituary-creation2"> </div>
         
         <div class="clear"> </div>
         <div class="add-btn-block">
         <input id="submitbutton" class="btn btn-lg btn-primary btn-block" type="submit" value="Add" name="submit">
         </div>
+
+
         
     <?php
     //echo $this->formCollection($form);

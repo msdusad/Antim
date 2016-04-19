@@ -7,10 +7,10 @@ $this->headScript()->prependFile($this->basePath() . '/assets/lib/timepicker/js/
 ?>
 <?php echo $this->partial('layout/top_links'); ?>
 
-<div class="layout_nav">
+<div class="layout_nav" id="brecurmsdiv">
         <ul>
-            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+           <!--  <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
             <li><a class="before" href="<?php echo $this->url('event-calendar-events'); ?>">Events &rsaquo;</a></li> 
             <li>Add Event</li> 
         </ul>

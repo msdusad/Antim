@@ -1,0 +1,463 @@
+
+<style>
+		#ad-images{
+	padding-top:30px;
+	}
+	#ad-images-images{
+	padding-top:20px;
+	}
+</style>
+<?php error_reporting(0);
+require_once('config/autoload/conn.php');
+
+class DBController {
+	function runQuery($query) {
+		$result = mysql_query($query);
+		while($row=mysql_fetch_assoc($result)) {
+			$resultset[] = $row;
+		}		
+		if(!empty($resultset))
+			return $resultset;
+	}
+	
+	function numRows($query) {
+		$result  = mysql_query($query);
+		$rowcount = mysql_num_rows($result);
+		return $rowcount;	
+	}
+}
+$db_handle = new DBController();
+
+if(isset($_POST["protectsubcategory"])) {
+	$catid=$_POST['protectsubcategory'];
+	$qry=mysql_query("select * from protectp where category_id='$catid'");
+	$rows = array();
+	while($row=mysql_fetch_array($qry)){
+//start here 
+		$rows[] = $row;
+	}
+echo '<span id="protectsubcatajax"><ul id="ullist">';
+
+  foreach($rows as $row){ 
+$idofcat=$row['id'];
+$titleofcat=$row['title'];
+echo "<li id='index-$idofcat'><a href='#fragment-$idofcat'><span >$titleofcat</span></a></li>";
+ }
+            echo "</ul>";
+      foreach($rows as $row){ 
+$idofcat1=$row['id'];
+ $discription=$row['description'];
+                   echo "<div id='fragment-$idofcat1' style='width:58%;'>$discription</div>";
+                 }
+           echo "</span>";           
+//end here 
+}
+
+
+
+elseif(isset($_POST["country_id"]) && !isset($_POST["state_id"])) {
+		$country=$_POST["country_id"];
+	   $menu=$_POST["srch_menu"];
+	     $sub_menu=$_POST["srch_sub_menu"];
+	
+	$query ="SELECT * FROM  states WHERE country_id = '" . $_POST["country_id"] . "' ";
+	$results = $db_handle->runQuery($query);
+echo "<div id='result'><option value=''>Select State</option>";
+	foreach($results as $state) {
+?>
+	<option value="<?php echo $state['id']; ?>"><?php echo $state['name']; ?></option>
+<?php
+	}
+	echo "</div>";
+	// code for feaching form,artical,tool,checklist according country
+
+	$sql="select * from protect_type where country='$country' && sub_menu='$menu' && sub_menu_tabs='$sub_menu' ";
+	$results1 = $db_handle->runQuery($sql);	
+	
+foreach($results1 as $row) {
+	// for checklist div
+	
+		if($row['preplanning_type']=='checklist'){
+echo "<div id='checklist'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+			echo "</div>";	
+		}
+	
+	if($row['preplanning_type']=='forms'){
+	// for form div
+	echo "<div id='forms'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	
+	}
+	// for Resourecs div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='resource'  ){
+		echo "<div id='resources'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+		// for Articals div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='article'){
+		echo "<div id='articals'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+		// for Tools div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='tools'){
+		echo "<div id='tools'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+	//end all
+}
+		
+	
+	
+	// query for search ads according country
+
+	$ads=mysql_query("select * from protect_ads where country='$country' && sub_menu='$menu' && sub_menu_tabs='$sub_menu' ");
+	if($ads){
+	if(mysql_num_rows($ads)>0){
+		echo "<div id='ads'>";
+while($ads_row=mysql_fetch_array($ads)){
+	$ads_name=$ads_row['name'];
+	$ads_pic=$ads_row['image'];
+	$info=pathinfo($ads_pic);
+	                    $ext=$info['extension'];
+	?>
+	       	<div class="legal-adv-box">
+			
+                            	<div class="adviser-adds" style="width:100%;height:100%;"> 
+								<?php	if($ext=='mp4' || $ext=='webm' || $ext=='ogg' || $ext=='flv'|| $ext=='avi'|| $ext=='wmv'|| $ext=='mpeg'|| $ext=='3gp'|| $ext=='mxf'|| $ext=='m4v'|| $ext=='yuv'|| $ext=='vob')
+						{ ?>
+									<a href="javascript:void(0)" id="playzoom" onclick="videoPlay('<?php echo $ads_pic;?>')">	
+                                	<img src='<?php echo $this->basePath("/images/videoplay.png"); ?>' class="img-responsive" alt="adv" id="ad-images" />
+										</a>
+									<?php
+}
+		?>
+									
+														<?php	if($ext=='mp3' || $ext=='mpeg' || $ext=='mp2'|| $ext=='wav'|| $ext=='wma')
+						{ ?>
+                                	<img src='<?php echo $this->basePath("/images/audio1.png"); ?>' class="img-responsive" alt="adv" id="ad-images" />
+									<?php
+}
+		?>
+									
+									
+	<?php	if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif'|| $ext=='bmp' || $ext=='swe')
+						{ ?>
+                                	<img src='<?php echo $this->basePath("/img/ads/images/$ads_pic"); ?>' class="img-responsive" alt="adv"  id="ad-images-images" />
+									<?php
+}
+		?>
+									
+                                    <?php //echo $ads_name. " ".$ext;?> 
+                                </div>
+                            </div>
+	<?php
+	
+}
+		echo "</div>";
+	}
+		else{
+		echo "No Data Found";
+		}
+	}
+	else{
+	echo "Check Query";
+	}
+	
+	//end hear
+}
+
+// Second condition for country and  state  match data
+
+
+elseif(isset($_POST["country_id"]) && isset($_POST["state_id"])) {
+	$state=$_POST["state_id"];
+	$country=$_POST["country_id"];
+	   $menu=$_POST["srch_menu"];
+	     $sub_menu=$_POST["srch_sub_menu"];
+	
+	$query ="SELECT * FROM  cities WHERE state_id = '" . $_POST["state_id"] . "'";
+	$results = $db_handle->runQuery($query);
+?>
+<div id="cities">
+	
+<option value="">Select City</option>
+<?php
+	foreach($results as $city) {
+?>
+	<option value="<?php echo $city["id"]; ?>"><?php echo $city["name"]; ?></option>
+<?php
+	}
+		?>
+	</div>
+	<?php
+	
+	$sql="select * from protect_type where country='$country' && state='$state' && sub_menu='$menu' && sub_menu_tabs='$sub_menu' ";
+	$results1 = $db_handle->runQuery($sql);	
+	
+foreach($results1 as $row) {
+	// for checklist div
+	
+		if($row['preplanning_type']=='checklist'){
+echo "<div id='checklist'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+			echo "</div>";	
+		}
+	
+	if($row['preplanning_type']=='forms'){
+	// for form div
+	echo "<div id='forms'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	
+	}
+	// for Resourecs div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='resource'  ){
+		echo "<div id='resources'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+		// for Articals div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='article'){
+		echo "<div id='articals'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+		// for Tools div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='tools'){
+		echo "<div id='tools'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+	//end all
+}
+		
+	
+	
+	// query for search ads according country
+
+	$ads=mysql_query("select * from protect_ads where country='$country' && state='$state' && sub_menu='$menu' && sub_menu_tabs='$sub_menu' ");
+	if($ads){
+	if(mysql_num_rows($ads)>0){
+		echo "<div id='ads'>";
+while($ads_row=mysql_fetch_array($ads)){
+	$ads_name=$ads_row['name'];
+	$ads_pic=$ads_row['image'];
+	$info=pathinfo($ads_pic);
+	                    $ext=$info['extension'];
+	?>
+	       	<div class="legal-adv-box">
+			
+                            	<div class="adviser-adds" style="width:100%;height:100%;"> 
+								<?php	if($ext=='mp4' || $ext=='webm' || $ext=='ogg' || $ext=='flv'|| $ext=='avi'|| $ext=='wmv'|| $ext=='mpeg'|| $ext=='3gp'|| $ext=='mxf'|| $ext=='m4v'|| $ext=='yuv'|| $ext=='vob')
+						{ ?>
+									<a href="javascript:void(0)" id="playzoom" onclick="videoPlay('<?php echo $ads_pic;?>')">	
+                                	<img src='<?php echo $this->basePath("/images/videoplay.png"); ?>' class="img-responsive" alt="adv" id="ad-images" />
+										</a>
+									<?php
+}
+		?>
+									
+														<?php	if($ext=='mp3' || $ext=='mpeg' || $ext=='mp2'|| $ext=='wav'|| $ext=='wma')
+						{ ?>
+                                	<img src='<?php echo $this->basePath("/images/audio1.png"); ?>' class="img-responsive" alt="adv" id="ad-images" />
+									<?php
+}
+		?>
+									
+									
+	<?php	if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif'|| $ext=='bmp' || $ext=='swe')
+						{ ?>
+                                	<img src='<?php echo $this->basePath("/img/ads/images/$ads_pic"); ?>' class="img-responsive" alt="adv"  id="ad-images-images" />
+									<?php
+}
+		?>
+									
+                                   <?php //echo $ads_name. " ".$ext;?> 
+                                </div>
+                            </div>
+	<?php
+	
+}
+		echo "</div>";
+	}
+		else{
+		echo "No Data Found";
+		}
+	}
+	else{
+	echo "Check Query";
+	}
+	
+	//end hear
+	
+}
+
+
+
+// third condition for country , state and city match
+
+elseif(isset($_POST["country_id"]) && isset($_POST["state_id"]) && isset($_POST["city_id"])) {
+	$city_id=$_POST["city_id"];
+    $state=$_POST["state_id"];
+	$country=$_POST["country_id"];
+	$menu=$_POST["srch_menu"];
+	$sub_menu=$_POST["srch_sub_menu"];
+	
+	$sql="select * from protect_type where country='$country' && state='$state' && city='$city_id' && sub_menu='$menu' && sub_menu_tabs='$sub_menu' ";
+	$results1 = $db_handle->runQuery($sql);	
+	
+foreach($results1 as $row) {
+	// for checklist div
+	
+		if($row['preplanning_type']=='checklist'){
+echo "<div id='checklist'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+			echo "</div>";	
+		}
+	
+	if($row['preplanning_type']=='forms'){
+	// for form div
+	echo "<div id='forms'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	
+	}
+	// for Resourecs div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='resource'  ){
+		echo "<div id='resources'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+		// for Articals div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='article'){
+		echo "<div id='articals'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+		// for Tools div
+	if($row['preplanning_type']=='pre_links' && $row['category']=='tools'){
+		echo "<div id='tools'>";
+	$url=$row['url'];
+echo "<a href='$url' target='_blank'>".$row['title']."</a><br>";
+		echo "</div>";	
+	}
+	//end all
+}
+		
+	
+	
+	// query for search ads according country
+
+	$ads=mysql_query("select * from protect_ads where country='$country' && state='$state' && city='$city_id' && sub_menu='$menu' && sub_menu_tabs='$sub_menu' ");
+	if($ads){
+	if(mysql_num_rows($ads)>0){
+		echo "<div id='ads'>";
+while($ads_row=mysql_fetch_array($ads)){
+	$ads_name=$ads_row['name'];
+	$ads_pic=$ads_row['image'];
+	$info=pathinfo($ads_pic);
+	                    $ext=$info['extension'];
+	?>
+		<div class="legal-adv-box">
+			
+                            	<div class="adviser-adds" style="width:100%;height:100%;"> 
+								<?php	if($ext=='mp4' || $ext=='webm' || $ext=='ogg' || $ext=='flv'|| $ext=='avi'|| $ext=='wmv'|| $ext=='mpeg'|| $ext=='3gp'|| $ext=='mxf'|| $ext=='m4v'|| $ext=='yuv'|| $ext=='vob')
+						{ ?>
+									<a href="javascript:void(0)" id="playzoom" onclick="videoPlay('<?php echo $ads_pic;?>')">	
+                                	<img src='<?php echo $this->basePath("/images/videoplay.png"); ?>' class="img-responsive" alt="adv" id="ad-images" />
+										</a>
+									<?php
+}
+		?>
+									
+														<?php	if($ext=='mp3' || $ext=='mpeg' || $ext=='mp2'|| $ext=='wav'|| $ext=='wma')
+						{ ?>
+                                	<img src='<?php echo $this->basePath("/images/audio1.png"); ?>' class="img-responsive" alt="adv" id="ad-images" />
+									<?php
+}
+		?>
+									
+									
+	<?php	if($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='gif'|| $ext=='bmp' || $ext=='swe')
+						{ ?>
+                                	<img src='<?php echo $this->basePath("/img/ads/images/$ads_pic"); ?>' class="img-responsive" alt="adv"  id="ad-images-images" />
+									<?php
+}
+		?>
+									
+                             <?php //echo $ads_name. " ".$ext;?> 
+                                </div>
+                            </div>
+
+	<?php
+	
+}
+		echo "</div>";
+	}
+		else{
+		echo "No Data Found";
+		}
+	}
+	else{
+	echo "Check Query";
+	}
+	
+	//end hear
+
+}
+
+else{
+class FormChecklistLink{
+	
+public function viewdata(){
+$sql=mysql_query("select * from protect_type where country='231' limit 6");
+$chcklist=array();
+while($row=mysql_fetch_array($sql)){
+	 $chcklist[]=$row;
+}
+return $chcklist;
+}
+	
+public function adsdata(){	
+$adssql=mysql_query("select * from protect_ads where country='231' limit 6");
+$fixads=array();
+while($viewads=mysql_fetch_array($adssql)){
+	 $fixads[]=$viewads;
+}
+return $fixads;	
+}
+	
+	
+public function middlecontent(){	
+$contsql=mysql_query("select * from protectp where category_id=(SELECT id from category where type='protect' limit 1) && country='231' limit 6");
+$contant=array();
+while($contantrow=mysql_fetch_array($contsql)){
+	 $contant[]=$contantrow;
+}
+return $contant;	
+}		
+}
+
+}
+
+?>	
+

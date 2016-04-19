@@ -170,6 +170,13 @@ class IndexController extends AbstractActionController {
         ));
     }  
     
+
+    public function protectfilterAction() {
+
+        return new ViewModel();
+    } 
+
+
 //    public function hinduismdetailAction() {
 //
 //        $hindusimsListdetail = $this->getAllTable()->getHindusimsdetail();

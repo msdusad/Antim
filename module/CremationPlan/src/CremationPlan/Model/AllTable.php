@@ -301,6 +301,7 @@ class AllTable {
         foreach ($days as $key => $value) {
             
             $sql .= 'UPDATE rituals_days SET content = "'.$value.'" WHERE id ='. $ids[$key].';';
+           
         }
        
         $statement = $this->tableGateway->getAdapter()->query($sql);

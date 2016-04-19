@@ -1,102 +1,204 @@
-
-<?= $this->partial('layout/top_links'); ?>
-<div class="layout_nav">
-        <ul>
-            <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
-             <li><a class="before" href="<?php echo $this->url('cremation-plans', array('action' => 'impacts', 'id' => $this->id)); ?>">Impact &rsaquo;</a></li>
-            <li><?php echo $this->category; ?></li> 
-        </ul>
-    </div>
-<div class='clear'></div>
-<div class="row">
-    <div class="find">
-        <div class="topbar">
-            <h3><?php echo $this->category; ?></h3>
-            <div class="main_search">
-                <form action="" method="POST" >
-                    <input type="text" name="name" class="form-control" value="<?php echo $this->impact['name']; ?>" placeholder="Enter keywords,eg,Ganga"/>
-                    <input type="submit" class="btn btn-default" value="Go"/>           
-                </form>
-
-            </div>
-
-        </div>
-
-        <div class="main_impact">
-            <div id="categories">
-                <ul>
-                    <?php foreach ($this->impactList as $key => $impact) { ?>
-                        <li  <?php if ($key == 0) { ?> class="active" <?php } ?>>
-                            <a href="<?php echo $this->url('cremation-plans', array('action' => 'impact-details', 'id' => $impact['id'])); ?>">
-                                <?php echo $impact['title'] ?>
-                            </a>
-                        </li>
-                    <?php } ?>
-                </ul>  
-            </div>
-
-            <div class="impactlist"> 
-                <?php if (empty($this->impactList)) { ?>
-                    <ul>
-                        <li>
-                            No records
-                        </li>
-                    </ul>
-
-                <?php } ?>
-                <div class="impactmain">
-                    <?php $i = 0;
-                    foreach ($this->impactList as $list) {
-                        ?>
-                        <div>
-                            <img class="impactimg" src="<?php echo $this->basePath('/../module/Admin/assets/impact/thumb/' . $list['id'] . '_' . $list['photo_url']); ?>" width="100" height="120"/>
-
-                            <div>       <h4><?php echo $list['title'] ?></h4>
-                                <p><?php echo substr(strip_tags($list['content']), 0, 240).'.....'; ?></p>
-
-                                <a href="<?php echo $this->url('cremation-plans', array('action' => 'impact-details', 'id' => $list['id'])); ?>" class="btn btn-default">Read More</a>
-                                <?php if ($list['country'] != '' && $list['location']) { ?>
-                                    <a style="font-size:22px;color:#000" onClick="window.open('https://www.google.com/maps?q=<?php echo $list['country'] . ',' . $list['location']; ?>', '', 'width=800,height=600')" href="#"  class="fa fa-map-marker fa-fw mapicon"></a>
-    <?php } ?>
-                                <!-- AddThis Button BEGIN -->
-                                <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52f07ae406c6fbf3">
-                                    <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0;margin-top: 7px;"/>
-                                </a>
-                                <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
-                                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-52f07ae406c6fbf3"></script>
-                                <!-- AddThis Button END -->
-                            </div>    
-                        </div>
-                        <?php
-                        if ($i == 2) {
-                            break;
-                        }$i++;
-                    }
-                    ?>
-                </div>
-            </div>
-            <div class="advertisement">
-                <img src="<?php echo $this->basePath('/img/add-1.png'); ?>"  width="300" height="250"/>
-                <img src="<?php echo $this->basePath('/img/add-2.jpg'); ?>"  width="300" height="250"/>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-
-</script>
-<?php $this->inlineScript()->captureStart() ?>
-
-$(document).ready(function() {
-$('#dataTable').dataTable( {
-"bPaginate": true,
-"bFilter": false,
-"bInfo": false,
-"bSort": false,
-"bLengthChange": false,
-} );
-} );
-<?php $this->inlineScript()->captureEnd() ?>
-
-
+
+
+<?= $this->partial('layout/top_links'); ?>
+
+<div class="layout_nav"  style="margin-left:12px;margin-top:-40px;">
+
+        <ul>
+
+          <!--   <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+
+             <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+
+             <li><a class="before" href="<?php echo $this->url('cremation-plans', array('action' => 'impacts', 'id' => $this->id)); ?>">Impact &rsaquo;</a></li>
+
+            <li><?php echo $this->category; ?></li> 
+
+        </ul>
+
+    </div>
+
+<div class='clear'></div>
+
+<div class="row">
+
+    <div class="find">
+
+        <div class="topbar">
+
+            <h3><?php echo $this->category; ?></h3>
+
+            <div class="main_search">
+
+                <form action="" method="POST" >
+
+                    <input type="text" name="name" class="form-control" value="<?php echo $this->impact['name']; ?>" placeholder="Enter keywords,eg,Ganga"/>
+
+                    <input type="submit" class="btn btn-default" value="Go"/>           
+
+                </form>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="main_impact">
+
+            <div id="categories">
+
+                <ul>
+
+                    <?php foreach ($this->impactList as $key => $impact) { ?>
+
+                        <li  <?php if ($key == 0) { ?> class="active" <?php } ?>>
+
+                            <a href="<?php echo $this->url('cremation-plans', array('action' => 'impact-details', 'id' => $impact['id'])); ?>">
+
+                                <?php echo $impact['title'] ?>
+
+                            </a>
+
+                        </li>
+
+                    <?php } ?>
+
+                </ul>  
+
+            </div>
+
+
+
+            <div class="impactlist"> 
+
+                <?php if (empty($this->impactList)) { ?>
+
+                    <ul>
+
+                        <li>
+
+                            No records
+
+                        </li>
+
+                    </ul>
+
+
+
+                <?php } ?>
+
+                <div class="impactmain">
+
+                    <?php $i = 0;
+
+                    foreach ($this->impactList as $list) {
+
+                        ?>
+
+                        <div>
+
+                            <img class="impactimg" src="<?php echo $this->basePath('/../module/Admin/assets/impact/thumb/' . $list['id'] . '_' . $list['photo_url']); ?>" width="100" height="120"/>
+
+
+
+                            <div>       <h4><?php echo $list['title'] ?></h4>
+
+                                <p><?php echo substr(strip_tags($list['content']), 0, 240).'.....'; ?></p>
+
+
+
+                                <a href="<?php echo $this->url('cremation-plans', array('action' => 'impact-details', 'id' => $list['id'])); ?>" class="btn btn-default">Read More</a>
+
+                                <?php if ($list['country'] != '' && $list['location']) { ?>
+
+                                    <a style="font-size:22px;color:#000" onClick="window.open('https://www.google.com/maps?q=<?php echo $list['country'] . ',' . $list['location']; ?>', '', 'width=800,height=600')" href="#"  class="fa fa-map-marker fa-fw mapicon"></a>
+
+    <?php } ?>
+
+                                <!-- AddThis Button BEGIN -->
+
+                                <a class="addthis_button" href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=ra-52f07ae406c6fbf3">
+
+                                    <img src="http://s7.addthis.com/static/btn/v2/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0;margin-top: 7px;"/>
+
+                                </a>
+
+                                <script type="text/javascript">var addthis_config = {"data_track_addressbar": true};</script>
+
+                                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-52f07ae406c6fbf3"></script>
+
+                                <!-- AddThis Button END -->
+
+                            </div>    
+
+                        </div>
+
+                        <?php
+
+                        if ($i == 2) {
+
+                            break;
+
+                        }$i++;
+
+                    }
+
+                    ?>
+
+                </div>
+
+            </div>
+
+            <div class="advertisement">
+
+                <img src="<?php echo $this->basePath('/img/add-1.png'); ?>"  width="300" height="250"/>
+
+                <img src="<?php echo $this->basePath('/img/add-2.jpg'); ?>"  width="300" height="250"/>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+
+
+</script>
+
+<?php $this->inlineScript()->captureStart() ?>
+
+
+
+$(document).ready(function() {
+
+$('#dataTable').dataTable( {
+
+"bPaginate": true,
+
+"bFilter": false,
+
+"bInfo": false,
+
+"bSort": false,
+
+"bLengthChange": false,
+
+} );
+
+} );
+
+<?php $this->inlineScript()->captureEnd() ?>
+
+
+
+
+

@@ -1,13 +1,136 @@
 <?php
 require_once("edit-events.phtml");
 $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.css');
-?>
-<?php echo $this->partial('layout/top_links'); ?>
+echo $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/pre_planning_protect.css'); 
 
-<div class="layout_nav">
+?>
+<?php echo $this->partial('layout/top_links'); 
+ error_reporting(0);
+require_once('config/autoload/conn.php');
+?>
+<style type="text/css">
+        .ui-dialog .ui-dialog-titlebar-close{
+        
+background-image: url("addthis/jquery-ui-images/images/ui-icons_222222_256x240.png");
+background-position: -96px -128px;
+}
+.form{
+  cursor: pointer;
+}
+</style>
+<script type="text/javascript">
+
+$(document).ready(function () {   
+$(".form").click(function(event){
+  var abcd=event.target.id;
+ var abc=$("#"+abcd).data("value");
+ var changingurl=$("#view_location").attr('src', abc);
+//  $("#view_location").setAttribute("src",abc);
+//alert(abc);
+$( "#preplanning-forms" ).dialog({
+   width: 700,
+   modal:true
+});
+});
+});
+
+    function ritualcat(ritual_cat){  
+       
+ $.ajax({
+     
+          type: "POST",
+          data: {traditional_id:ritual_cat},
+          url: "<?php echo $this->url('getdata'); ?>",
+          
+          success: function(data) 
+          {       
+           //   alert(data);       
+              var ss=$('#hide_data').html(jQuery(data).find('#ritual_details_all').html()); 
+              //$("#hide").html(data); 
+
+          }
+        });
+
+    }
+
+    function showdata(getvalue){
+
+if(getvalue=='Cultural'){
+  
+var ab=$("#cultural").html();
+$("#add_event_content").html(ab);
+}
+
+
+if(getvalue=='Preference'){
+  
+var ab=$("#preference").html();
+$("#add_event_content").html(ab);
+}
+
+if(getvalue=='Practical'){
+  
+var ab=$("#practical").html();
+$("#add_event_content").html(ab);
+}
+
+
+if(getvalue=='Interfaith'){
+  
+var ab=$("#interfaith").html();
+$("#add_event_content").html(ab);
+}
+
+
+if(getvalue=='Other'){
+  
+var ab=$("#other").html();
+$("#add_event_content").html(ab);
+}
+
+
+if(getvalue=='Traditional'){
+  
+ var ab=$("#id").html();
+// $("#add_event_content").html(ab);
+days_detail(ab);
+
+}
+
+    }
+
+    function days_detail(serch_cat_value){
+
+//var ritual_cat=$document.getElementById('#rt_cat').value;
+//var ritual_filter=$document.getElementById('#category_list').value;
+         $.ajax({
+     
+          type: "POST",
+          data: {ritual_id_day:serch_cat_value,},
+          url: "<?php echo $this->url('getdata'); ?>",
+          
+          success: function(data) 
+          {             
+              var ss=$('#days_list').html(jQuery(data).find('#ritual_day_list').html()); 
+              //$("#hide").html(data);  
+          }
+        });
+    }
+
+    function getday_detail(day_content){
+       
+$("#add_event_content").html(day_content);
+    } 
+
+
+</script>
+
+
+<div id="hide_data" style="display:none;"></div>
+<div class="layout_nav" id="brecurmsdiv">
   <ul>
-    <li><a class="before" href="<?php echo $this->basePath('/'); ?>">Home &rsaquo; </a></li>
-    <li><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
+   <!--  <li><a class="before" href="<?php //echo $this->basePath('/'); ?>">Home &rsaquo; </a></li> -->
+    <li id="menu_bredcurms"><a class="before" href="<?php echo $this->url('cremation-plans'); ?>">Cremation Planning &rsaquo;</a></li>
     <li>Events</li>
   </ul>
 </div>
@@ -70,24 +193,33 @@ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.cs
         <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$dailyid;?>
         <!--<div class=" col-md-3 event-time"> 
         <div class="row-cls">
-        <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$dailyid;?>
-        <a href="<?php echo $link; ?>"> <span class="start-time"> <?php echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> 
+        <?php //$link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$dailyid;?>
+        <a href="<?php //echo $link; ?>"> <span class="start-time"> <?php //echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php //echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> 
         </div>
         </div>-->
         <div class="col-md-9 event-content">
           <div class="event-details">
             <div class="extended">
 				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
-				<a href="?delete=<?php echo $weekly['id'];?>" id="delete-button">Delete</a>
-                  <p class="description"><strong>Profile Type:</strong> <?php echo $weekly['profile_type'];?></p>
+				<a href="?delete=<?php echo $weekly['id'];?>" id="delete-button" onclick="return confirm('are you sure want to Delete?')">Delete</a>
+                  <p class="description"><strong>Profile Type:</strong> <?php echo ucfirst($weekly['profile_type']);?></p>
        
            <p class="description"><a href="<?php echo $link; ?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
+           
           <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
-			<p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
-              <p class="contact"><strong>Start Time:</strong> <?php echo date('H:i',strtotime($weekly['start']));?></p>
-              <p class="contact"><strong>End Time:</strong> <?php echo date('H:i',strtotime($weekly['end']));?></p>
+			<p class="contact"><strong>Event Date:</strong> <?php
+      $address=$weekly['location'];
+              $id=$weekly['id'];
+$date=$weekly['edate'];
+$time = strtotime($date);
+$myFormatForView = date("l, F jS, Y", $time);
+echo $myFormatForView;
+
+      ?></p>
+              <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
+              <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
              
-             <p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+             <p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?>  <a href="#" class="form" id="<?php echo $id;;?>" data-value="https://maps.google.it/maps?q=<?php echo $address; ?>&output=embed"> View Locaton</a></p>
               <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
               <p class="description"><strong>Content:</strong> <?php echo $weekly['content'];?></p>
              
@@ -125,22 +257,27 @@ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.cs
 <?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$weeklyid;?>
         <!--<div class=" col-md-3 event-time"> 
         <div class="row-cls">
-<?php $link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$weeklyid;?>
-        <a href="<?php echo $link;?>"> <span class="start-time"> <?php echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> </div>
+<?php //$link= $this->url('event-calendar-events',array('action'=>'eventsview'), array('force_canonical' => true)).'?id='.$weeklyid;?>
+        <a href="<?php//echo $link;?>"> <span class="start-time"> <?php //echo date('H:i:s',strtotime($weekly['start']));?> </span> - <span class="end-time"><?php //echo date('H:i:s',strtotime($weekly['end']));?> </span> </a> </div>
         </div>-->
         <div class="col-md-9 event-content">
           <div class="event-details">
             <div class="extended">
 				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
-				<a href="?delete=<?php echo $weekly['id'];?>" id="delete-button">Delete</a>
-            <p class="description"><strong>Profile Type:</strong> <?php echo $weekly['profile_type'];?></p>
+				<a href="?delete=<?php echo $weekly['id'];?>" id="delete-button" onclick="return confirm('are you sure want to Delete?')">Delete</a>
+            <p class="description"><strong>Profile Type:</strong> <?php echo ucfirst($weekly['profile_type']);?></p>
           <p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
 
           <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
-                            <p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+                            <p class="contact"><strong>Event Date:</strong> <?php $date=$weekly['edate'];
+                            $address=$weekly['location'];
+              $id=$weekly['id'];
+$time = strtotime($date);
+$myFormatForView = date("l, F jS, Y", $time);
+echo $myFormatForView;?></p>
               <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
               <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
-<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?> <a href="#" class="form" id="<?php echo $id;;?>" data-value="https://maps.google.it/maps?q=<?php echo $address; ?>&output=embed"> View Locaton</a></p>
               <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
  
  <p class="description"><strong>Content:</strong> <?php echo $weekly['content'];?></p>
@@ -187,16 +324,21 @@ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.cs
             <div class="extended">
 				<p class="description">	
 				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
-	<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button" >Delete</a>
+	<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button"  onclick="return confirm('are you sure want to Delete?')">Delete</a>
 				</p>
-   <p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['profile_type'];?></a></p>
+   <p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo ucfirst($weekly['profile_type']);?></a></p>
 <p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
        
                      <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
-              <p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+              <p class="contact"><strong>Event Date:</strong> <?php $date=$weekly['edate'];
+              $address=$weekly['location'];
+              $id=$weekly['id'];
+$time = strtotime($date);
+$myFormatForView = date("l, F jS, Y", $time);
+echo $myFormatForView;?></p>
               <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
               <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
-<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?> <a  class="form" id="<?php echo $id;;?>" data-value="https://maps.google.it/maps?q=<?php echo $address; ?>&output=embed"> View Locaton</a></p>
               <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
           
            <p class="description"><strong>Content:</strong> <?php echo $weekly['content'];?></p>
@@ -210,9 +352,15 @@ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.cs
 		  
       </div>
        <hr />
+
+
       <?php
 			}
       ?> 
+
+
+
+
     </div>
     <div id="tabs-4" class="eventscontent">
       <h4> <?php echo date('D M j, Y');?> </h4>
@@ -243,15 +391,20 @@ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.cs
           <div class="event-details">
             <div class="extended">
 				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
-				<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button" >Delete</a>
-<p class="description"><strong>Profile Type:</strong> <?php echo $weekly['profile_type'];?></p>
+				<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button" onclick="return confirm('are you sure want to Delete?')" >Delete</a>
+<p class="description"><strong>Profile Type:</strong> <?php echo ucfirst($weekly['profile_type']);?></p>
 <p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
      
                      <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
-              				  <p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+              				  <p class="contact"><strong>Event Date:</strong> <?php $date=$weekly['edate'];
+                        $address=$weekly['location'];
+              $id=$weekly['id'];
+$time = strtotime($date);
+$myFormatForView = date("l, F jS, Y", $time);
+echo $myFormatForView;?></p>
               <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
               <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
-<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?> <a href="#" class="form" id="<?php echo $id;;?>" data-value="https://maps.google.it/maps?q=<?php echo $address; ?>&output=embed"> View Locaton</a></p>
               <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
          
           <p class="description"><strong>Content:</strong> <?php echo $weekly['content'];?></p>
@@ -296,15 +449,20 @@ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.cs
           <div class="event-details">
             <div class="extended">
 				<a href="?edit=<?php echo $weekly['id'];?>&profile_type=<?php echo $weekly['profile_type'];?>&title=<?php echo $weekly['title'];?>&eventdate=<?php echo $weekly['edate'];?>&startsate=<?php echo $weekly['start'];?>&enddate=<?php echo $weekly['end'];?>&location=<?php echo $weekly['location'];?>&contact=<?php echo $weekly['contact'];?>&content=<?php echo $weekly['content'];?>" class="btn btn-info" style="color:black;" id="edit-button">Edit</a>
-				<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button" >Delete</a>
-            <p class="description"><strong>Profile Type:</strong> <?php echo $weekly['profile_type'];?></p>
+				<a href="?delete=<?php echo $weekly['id'];?> " id="delete-button" onclick="return confirm('are you sure want to Delete?')">Delete</a>
+            <p class="description"><strong>Profile Type:</strong> <?php echo ucfirst($weekly['profile_type']);?></p>
 <p class="description"><a href="<?php echo $link;?>"><strong>Title:</strong> <?php echo $weekly['title'];?></a></p>
          
                      <!--<div class="fb-icon" style="float:left"> <img alt="Add to Facebook" src="/Antimsanskar/Source/public/img/search.jpg" width="35" height="35" title="Add to Facebook"> </div>-->
-              				  <p class="contact"><strong>Event Date:</strong> <?php echo $weekly['edate'];?></p>
+              				  <p class="contact"><strong>Event Date:</strong> <?php $date=$weekly['edate'];
+                        $address=$weekly['location'];
+              $id=$weekly['id'];
+$time = strtotime($date);
+$myFormatForView = date("l, F jS, Y", $time);
+echo $myFormatForView;?></p>
               <p class="contact"><strong>Start Time:</strong> <?php echo $weekly['start'];?></p>
               <p class="contact"><strong>End Time:</strong> <?php echo $weekly['end'];?></p>
-<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?></p>
+<p class="location"><strong>Location:</strong> <?php echo $weekly['location'];?> <a href="#" class="form" id="<?php echo $id;;?>" data-value="https://maps.google.it/maps?q=<?php echo $address; ?>&output=embed"> View Locaton</a></p>
               <p class="contact"><strong>Contact:</strong> <?php echo $weekly['contact'];?></p>
          
          <p class="description"><strong>Description:</strong> <?php echo $weekly['content'];?></p>
@@ -392,11 +550,59 @@ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.cs
         </div>
 
         <div class="clear"> </div>
+              
+
+<!-- new added -->
+<div class="clear"> </div>
                 
-        <div  class="obituary-creation100"> 
+        <div  class="obituary-creation100" style="display:inline-block;"> 
+        <div style="width:75%;">
           <label> Content </label>
-        <textarea type="text" id="nicedit" name="content" class="form-control" value="<?php echo $content;?>"> </textarea>     
+        <textarea id="add_event_content" type="text" id="nicedit" name="content" class="form-control"> <?php echo $content;?> </textarea> 
+</div>
+<div id="all_retuals" >
+<div>
+<select id="rt_cat" class="btn btn-primary" onchange="ritualcat(this.value)" > 
+<option>Please Select</option>
+<?php 
+$qry=mysql_query("select * from rituals_traditional");
+while($row=mysql_fetch_array($qry)){
+     $id=$row['id'];
+    $name=$row['name'];
+echo "<option value='$id'> $name</option>";
+}
+?>
+
+</select>
+</div>
+<br>
+<div>
+<select id="category_list" onchange="showdata(this.value)" class="btn btn-primary" > 
+<option value="">Please Select</option>
+ <option value='Traditional'>Traditional</option>
+    <option value='Cultural'>Cultural</option>
+    <option value='Preference'>Preference</option>
+   <option value='Practical'>Practical</option>
+     <option value='Interfaith'>Interfaith</option>
+     <option value='Other'>Other</option>
+
+
+</select>
+
+</div>
+<br>
+<div>
+<select id="days_list" class="btn btn-primary" onchange="getday_detail(this.value)" > 
+<option value="">Please Select</option>
+</select>
+</div>
+</div>
+
+
         </div>
+
+<!-- end here -->
+
         
         <div  class="obituary-creation2"> </div>
         
@@ -420,6 +626,17 @@ $this->headLink()->prependStylesheet($this->basePath() . '/assets/css/rituals.cs
 		
 <form id="eventadd" method="GET">
 </form>
+<div class="row" id="preplanning-forms" style="display:none;background-color:#428bca;">
+   <div class="topbar">
+        <h3>Location</h3>
+
+    </div>
+  <div class="panel with-nav-tabs panel-default" id="output-forms" style="padding:10px;">
+  <iframe id="view_location" width="640" height="480" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src=""></iframe>
+</div>
+  </div>
+
+
 <script>
 
     $(document).ready(function() {
